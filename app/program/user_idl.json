@@ -1,0 +1,78 @@
+{
+  "version": "0.1.0",
+  "name": "user",
+  "instructions": [
+    {
+      "name": "createUserStats",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "userStats",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "changeUserName",
+      "accounts": [
+        {
+          "name": "user",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "userStats",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "newName",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "UserStats",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "level",
+            "type": "u16"
+          },
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "9qegYrQ2y1673bJd6B6QUzuLqBsUQoFLm6HHPiEXQmuk"
+  }
+}

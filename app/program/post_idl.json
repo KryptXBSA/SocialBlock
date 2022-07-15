@@ -1,0 +1,163 @@
+{
+  "version": "0.1.0",
+  "name": "post",
+  "instructions": [
+    {
+      "name": "sendPost",
+      "accounts": [
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "author",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "topic",
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "type": "string"
+        },
+        {
+          "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "like",
+      "accounts": [
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "ownerr",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "unlike",
+      "accounts": [
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "ownerr",
+          "type": "publicKey"
+        }
+      ]
+    },
+    {
+      "name": "comment",
+      "accounts": [
+        {
+          "name": "post",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Post",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "author",
+            "type": "publicKey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "topic",
+            "type": "string"
+          },
+          {
+            "name": "content",
+            "type": "string"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "name": "likes",
+            "type": {
+              "vec": "publicKey"
+            }
+          },
+          {
+            "name": "comments",
+            "type": "u32"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "TopicTooLong",
+      "msg": "The provided topic should be 50 characters long maximum."
+    },
+    {
+      "code": 6001,
+      "name": "ContentTooLong",
+      "msg": "The provided content should be 280 characters long maximum."
+    },
+    {
+      "code": 6002,
+      "name": "AlreadyLiked",
+      "msg": "Already liked"
+    },
+    {
+      "code": 6003,
+      "name": "AlreadyUnliked",
+      "msg": "Already Unliked"
+    }
+  ],
+  "metadata": {
+    "address": "8VjrWpqzuA68wEkaniJGbTezwm4x4uqJdkVgiXGxGZSM"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 7000",
+    "build": "next build",
+    "start": "next start -p 7000",
+    "export": "next build && next export"
+  },
+  "dependencies": {
+    "@badrap/bar-of-progress": "^0.2.1",
+    "@heroicons/react": "^1.0.6",
+    "@project-serum/anchor": "^0.24.2",
+    "@solana/wallet-adapter-base": "^0.9.5",
+    "@solana/wallet-adapter-react": "^0.15.5",
+    "@solana/wallet-adapter-react-ui": "^0.9.7",
+    "@solana/wallet-adapter-wallets": "^0.16.1",
+    "animate.css": "^4.1.1",
+    "daisyui": "^2.15.2",
+    "flowbite": "^1.4.7",
+    "moment": "^2.29.3",
+    "nanoid": "^4.0.0",
+    "next": "latest",
+    "next-themes": "^0.2.0",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-headless-notifier": "^0.1.6"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.11",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.0.24",
+    "typescript": "^4.7.3"
+  }
+}

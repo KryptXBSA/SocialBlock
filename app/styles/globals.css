@@ -1,0 +1,29 @@
+/** @format */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+ body {
+  @apply bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-gray-200;
+  @apply min-h-screen;
+ }
+
+ ::selection {
+  @apply text-white bg-indigo-500;
+ }
+ .tabtext {
+  @apply;
+ }
+ /* .btn {
+  @apply inline-block flex-row rounded-lg hover:bg-indigo-600 transition duration-300 shadow-lg bg-indigo-500 text-white capitalize tracking-wider font-semibold text-sm sm:text-xl   whitespace-nowrap;
+ } */
+ .btn1 {
+  @apply inline-block flex-row rounded-lg dark:hover:bg-sky-500 transition duration-300 shadow-lg bg-indigo-500 text-white  tracking-wider font-semibold text-sm sm:text-xl whitespace-nowrap;
+ }
+ .wallet-adapter-button {
+  @apply bg-blue-300 !important;
+    /* These styles should have higher specificity and override the defaults */;
+ }
+}
