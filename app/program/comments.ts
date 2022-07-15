@@ -1,7 +1,6 @@
 /** @format */
 
 import * as anchor from "@project-serum/anchor";
-import bs58 from "bs58";
 import { PublicKey } from "@solana/web3.js";
 const Transaction = anchor.web3.Transaction;
 import { Comment, AccountData } from "./comment.ts";

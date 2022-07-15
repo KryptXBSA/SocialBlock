@@ -16,7 +16,6 @@ let initialState = {
 
 function reducer(state, user) {
   if (user?.action === 'welcome') {
-    console.log('WELCOOMEEEE');
     return { user: state.user, didWelcome: true }
   }
   if (user?.action === 'username') {
@@ -34,9 +33,6 @@ export function ProgramWrapper({ children }) {
   const { userProgram } = useUserProgram({ connection, wallet });
   const { program } = useProgram({ connection, wallet });
   const { commentProgram } = useCommentProgram({ connection, wallet });
-  function name(params) {
-
-  }
   return (
     <ProgramContext.Provider value={{ userProgram, program, commentProgram, state, changeState, getWallet: wallet }}>
       {children}

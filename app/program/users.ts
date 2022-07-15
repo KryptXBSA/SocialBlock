@@ -1,10 +1,8 @@
 /** @format */
 
 import * as anchor from "@project-serum/anchor";
-import bs58 from "bs58";
 import { PublicKey } from "@solana/web3.js";
 
-import { User, AccountData } from "./user.ts";
 
 export const findUsernamePDA = async ({ userProgram, pubKey }: any) => {
  const [userStatsPDA, _] = await PublicKey.findProgramAddress(

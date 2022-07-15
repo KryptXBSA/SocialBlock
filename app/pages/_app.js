@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <ConnectionProvider endpoint={endpoint}>
       <ThemeProvider enableSystem={true} attribute="class">
-        <WalletProvider autoConnect={true}>
+        <WalletProvider autoConnect={false}>
           <ProgramWrapper>
             <NotifierContextProvider
               // All props are optional, those are the values by default
