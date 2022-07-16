@@ -28,7 +28,8 @@ export const Commentt = ({data}:any) => {
                         </div>
                     </div> */}
                 </div>
-                <Link href={`/users?pubkey=${data.authorDisplay}`}> <p style={{ marginTop: -6 }} className=" text-sm text-blue-500  hover:underline truncate w-44" >{data.authorDisplay}</p></Link>
+                <Link href={`/users?pubkey=${data.authorDisplay}`}> 
+                <p style={{ marginTop: -6 }} className=" text-sm cursor-pointer text-blue-500  hover:underline truncate w-44" >{data.authorDisplay}</p></Link>
                 <p className=" w-fit break-words" >{data.content}</p>
                 {/* <span className="flex mt-3 text-violet-500">{data.topic}</span> */}
                 <div className="flex   justify-around items-stretch flex-row">
@@ -77,8 +78,11 @@ export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubk
         
         let result = undefined
         try {
+            
             result = await newComment(comment, postPubKey)
         } catch (e) {
+            
+            console.log(e);
             
         }
         

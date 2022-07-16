@@ -3,7 +3,7 @@
 import * as anchor from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
 const Transaction = anchor.web3.Transaction;
-import { Comment, AccountData } from "./comment.ts";
+import { Comment, AccountData } from "./comment";
 
 export const newComment = async ({
     commentProgram,
@@ -13,8 +13,8 @@ export const newComment = async ({
     content,
 }: any) => {
     const newCommentAccount = anchor.web3.Keypair.generate();
-
-    await commentProgram.methods
+try {
+     let result=  await commentProgram.methods
         .newComment(postPubkey, username, content)
         .accounts({
             comment: newCommentAccount.publicKey,
@@ -23,17 +23,13 @@ export const newComment = async ({
         .signers([newCommentAccount])
         .rpc();
 
-    let newComment = {};
-    // setTimeout(async () => {
-    //     newComment = await commentProgram.account.comment.fetch(
-    //         newCommentAccount.publicKey
-    //     );
-    //     
-    //     
 
-
-    //     // return newComment;
-    // }, 15000);
+} catch (error) {
+    
+    console.log(error);
+    
+}
+     
     const newCommentAccount0: AccountData = {
         author: walletPubkey,
         postPubkey: postPubkey,
@@ -43,18 +39,14 @@ export const newComment = async ({
         username,
     };
     return newCommentAccount0
-    // 
-    // 
-    // 
-    // 
-    
-    // return new Comment(newCommentAccount, newCommentAccount0)
 };
 export const getAllComments = async ({ program, filter = [] }: any) => {
 
     
 
     const postsRaw = await program.account.comment.all(filter);
+    console.log(postsRaw);
+    
     const posts = postsRaw.map((t: any) => new Comment(t.publicKey, t.account));
     return posts;
 };

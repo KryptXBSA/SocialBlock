@@ -127,11 +127,12 @@ export async function newComment0(
    />
   );
   //  increase comment count on post
-  await comment({
+  let c = await comment({
    wallet: wallet,
    program: program,
    postPubkey: postPubkey,
   });
+
   return commentResult;
  }
 }
@@ -149,9 +150,7 @@ export async function likePost(
  } else {
   try {
    return await like({ wallet, program, postPubkey });
-  } catch (e) {
-   
-  }
+  } catch (e) {}
  }
 }
 
@@ -166,11 +165,8 @@ export async function unlikePost(
    <DangerAlert text="Please connect to a wallet." dismiss={undefined} />
   );
  } else {
-  
   try {
    return await unlike({ wallet, program, postPubkey });
-  } catch (e) {
-   
-  }
+  } catch (e) {}
  }
 }

@@ -1,7 +1,6 @@
 /** @format */
 
 import { ProfileSidebar } from "../components/profile-sidebar";
-import Link from "next/link";
 import Layout from "../sections/Layout";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction } from "react";
@@ -10,7 +9,7 @@ import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { getAllPosts, sendPost, like, unlike, comment } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { Post, Commentt } from "../components/posts";
-import { getAllComments } from "../program/comments";
+import { getAllComments, newComment } from "../program/comments";
 
 import { useNotifier } from "react-headless-notifier";
 import {
@@ -40,16 +39,20 @@ export default function Home() {
   let result = await getUsername({ userProgram, userStatsPDA });
 
   if (result) {
-   let username = result.user.username;
+   let username = result.user.username.name;
    changeState(username);
    setUsername(username);
    return username;
   }
+
   // setUsername(null)
   return "Not registered";
  }
  const [alreadyFetched, setAlreadyFetched] = useState(false);
  useEffect(() => {
+  if (getWallet?.publicKey && !username) {
+   getUsername0(getWallet?.publicKey);
+  }
   if (program && router?.query?.pubkey && !alreadyFetched) {
    setSearchContent(router?.query?.pubkey);
    getPosts(router?.query?.pubkey);
@@ -57,11 +60,6 @@ export default function Home() {
    setAlreadyFetched(true);
   }
   setContent();
-  if (!username) {
-   if (getWallet) {
-    let username = getUsername0(getWallet.publicKey);
-   }
-  }
  }, [router, program, getWallet, comments, username, posts, activeTab]);
  function changeTab(tab: SetStateAction<string>) {
   setActiveTab(tab);
@@ -89,13 +87,25 @@ export default function Home() {
   }
  }
  async function newComment0(commentContent: any, postPubkey: any) {
-  // let commentResult = await newComment({ commentProgram, postPubkey: postPubkey, walletPubkey: getWallet.publicKey, username: username, content: commentContent })
+  let commentResult = await newComment({
+   commentProgram,
+   postPubkey: postPubkey,
+   walletPubkey: getWallet.publicKey,
+   username: username,
+   content: commentContent,
+  });
+  notify(
+   <InfoAlert
+    text="Please also confirm the next transaction."
+    dismiss={undefined}
+   />
+  );
   let commenta = await comment({
    wallet: getWallet,
    program: program,
    postPubkey: postPubkey,
   });
-  // return commentResult;
+  return commentResult;
  }
  const [tabContent, setTabContent] = useState("");
  function setContent(tab?: string | undefined) {
@@ -109,14 +119,20 @@ export default function Home() {
   setTabContent(content);
  }
 
- async function getAllComments0(pubkey?: string | string[] | undefined) {
+ async function getAllComments0(pubkey?: any) {
   let searchValue = searchInputRef?.current?.value;
   // queryValue better variable name :/
-  let value = searchValue ? searchValue : pubkey;
 
+  let value = searchValue ? searchValue : pubkey;
+  if (router?.query?.pubKey) {
+    value = router?.query?.pubKey
+  }
+  console.log(value);
+  
+  // value = value ? value : router.query?.pubkey;
   const authorFilter = (authorBase58PublicKey: any) => ({
    memcmp: {
-    offset: 8, // Discriminator.
+    offset: 40, // Discriminator.
     bytes: authorBase58PublicKey,
    },
   });
@@ -128,6 +144,8 @@ export default function Home() {
     program: commentProgram,
     filter: filter,
    });
+   console.log(commentResult);
+   
   } catch (e) {
    // notify(
    //           <SpecialAlert
@@ -142,7 +160,8 @@ export default function Home() {
   ) {
    return b.getTimestamp - a.getTimestamp;
   });
-  setComments(commentResult);
+  if(!pubkey)setComments(commentResult);
+
   return commentResult;
  }
  function searchOnClick(e: { preventDefault: () => void }) {
@@ -252,7 +271,6 @@ export default function Home() {
   );
  }
 }
-
 
 export const ActionButton = ({ text }: any) => {
  return (

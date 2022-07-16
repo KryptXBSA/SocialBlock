@@ -1,16 +1,15 @@
 import { useRef, useState } from 'react'
-export const NewPost = ({ post, username }) => {
-  let postInputRef = useRef("")
-  let tagsInputRef = useRef("")
+export const NewPost = ({ post, username }:any) => {
+  let postInputRef:any = useRef("")
 
   const [tagsValue, setTagsValue] = useState('')
-  function newPost(e) {
+  function newPost(e: { preventDefault: () => void }) {
     e.preventDefault()
     let content = postInputRef.current.value
     let topic = tagsValue
     post(topic, content)
   }
-  function onTagsChange(e) {
+  function onTagsChange(e: { target: { value: any } }) {
     let str = e.target.value
     str = str.replace(/\s+/g, '-');
     if (str.slice(-2) === '--') {
@@ -22,7 +21,7 @@ export const NewPost = ({ post, username }) => {
     <div>
       <div className="flex  flex-row">
 
-        <textarea ref={postInputRef} id="message" rows="2" class="block p-2.5 w-full text-sm rounded-lg dark:bg-gray-800 " placeholder={`Hey ${username ? username : ''} How’s it going?`} />
+        <textarea className="block p-2.5 w-full text-sm rounded-lg dark:bg-gray-800 " placeholder={`Hey ${username ? username : ''} How’s it going?`} />
         {/* <button className="btn rounded-l-none ">
           New Post
         </button> */}

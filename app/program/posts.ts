@@ -100,7 +100,7 @@ export const unlike = async ({ wallet, program, postPubkey }: any) => {
 };
 
 export const comment = async ({ wallet, program, postPubkey }: any) => {
-    await program.methods
+  let c=  await program.methods
         .comment()
         .accounts({
             post: postPubkey,
@@ -108,5 +108,6 @@ export const comment = async ({ wallet, program, postPubkey }: any) => {
         })
         .signers([])
         .rpc();
+    
     return "commented";
 };
