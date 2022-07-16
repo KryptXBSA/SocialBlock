@@ -15,65 +15,83 @@ import { getAllComments0 } from "./comment";
 
 import { newComment } from "../program/comments";
 
-import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../contexts/programContextProvider";
-import { useState } from "react";
+import { FC, useState } from "react";
 
-export function DisplayPosts({ posts, setShowSignupPopup, wallet }: any): any {
+import { useNotifier } from "react-headless-notifier";
+interface Props {
+ posts: any;
+ setShowSignupPopup: React.Dispatch<React.SetStateAction<boolean>>;
+ wallet: any;
+ username: string;
+}
+export function DisplayPosts({
+ posts,
+ setShowSignupPopup,
+ wallet,
+ username,
+}: Props) {
  const { userProgram, program, commentProgram, state, changeState } =
   UseProgramContext();
- const [username, setUsername] = useState(state?.user?.username?.name);
+
  const { notify } = useNotifier();
- if (!posts) return <div></div>;
 
- let test = setRender();
- return test;
- function setRender() {
-  return posts.map(
-   (
-    post: { getLikes: any; key: React.Key | null | undefined; publicKey: any },
-    index: number,
-    { length }: any
-   ) => {
-    let wallett = wallet ? wallet.publicKey.toBase58() : undefined;
+ if (!posts)
+  return (
+   <>
+    <div></div>
+   </>
+  );
 
-    async function newComment(
-     commentContent: any,
-     postPubkey: any,
-     commentProgram: any
-    ) {
-     newComment0(
-      commentContent,
-      postPubkey,
-      commentProgram,
-      setShowSignupPopup,
-      notify,
-      username,
-      program,
-      wallet
-     );
-    }
-    return (
-     <>
-      <Post
-       getAllComments={getAllComments0}
-       commentProgram={commentProgram}
-       newComment={newComment}
-       walletPubkey={wallett}
-       postLikes={post.getLikes}
-       unlikePost={unlikePost}
-       likePost={likePost}
-       key={post.key}
-       pubKey={post.key}
-       postPublicKey={post.publicKey}
-       data={post}
-      />
-      {index + 1 !== length && <div className="divider"></div>}
-     </>
+ return posts.map(
+  (
+   post: {
+    getLikes: string;
+    key: React.Key | null | undefined;
+    publicKey: string;
+   },
+   index: number,
+   { length }: any
+  ) => {
+   let wallett = wallet ? wallet.publicKey.toBase58() : undefined;
+
+   async function newComment(commentContent: any, postPubkey: any) {
+    return await newComment0(
+     commentContent,
+     postPubkey,
+     commentProgram,
+     setShowSignupPopup,
+     notify,
+     username,
+     program,
+     wallet
     );
    }
-  );
- }
+   async function getAllComments(postPubkey: any) {
+    return await getAllComments0(postPubkey, commentProgram);
+   }
+   async function likePost0(postPubkey: any) {
+    return await likePost(postPubkey, program, notify, wallet);
+   }
+   return (
+    <>
+     <Post
+      getAllComments={getAllComments}
+      newComment={newComment}
+      walletPubkey={wallett}
+      postLikes={post.getLikes}
+      unlikePost={unlikePost}
+      likePost={likePost0}
+      key={post.key}
+      pubKey={post.key}
+      postPublicKey={post.publicKey}
+      data={post}
+     />
+     {index + 1 !== length && <div className="divider"></div>}
+    </>
+   );
+  }
+ );
 }
 export async function newComment0(
  commentContent: any,

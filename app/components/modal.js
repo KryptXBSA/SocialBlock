@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react'
 
-function SignupModal({ signup, show, showSignupPopup }) {
+export function SignupModal({ signup, show, showSignupPopup }) {
     let usernameInputRef = useRef('')
 
     const [Hidden, setHidden] = useState('')
@@ -57,5 +57,3 @@ function SignupModal({ signup, show, showSignupPopup }) {
         </>
     )
 }
-
-export default SignupModal

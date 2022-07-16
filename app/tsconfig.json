@@ -26,5 +26,5 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
-, "pages/search.jsx"  ]
+, "pages/search.jsx", "components/posts.tsx"  ]
 }

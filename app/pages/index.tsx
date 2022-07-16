@@ -2,6 +2,7 @@
 
 import { Sidebar } from "../components/sidebar";
 import Layout from "../sections/Layout";
+import { SignupModal } from "../components/modal";
 import { NewPost } from "../components/new-post";
 import {
  SuccessAlert,
@@ -35,6 +36,7 @@ export default function Home() {
  const wallet = useAnchorWallet();
  const { userProgram, program, commentProgram, state, changeState } =
   UseProgramContext();
+
  const [posts, setPosts]: any = useState([]);
  const [username, setUsername] = useState(state?.user?.username?.name);
  const [showSignupPopup, setShowSignupPopup] = useState(false);
@@ -61,6 +63,7 @@ export default function Home() {
  // airdrop not working
 
  useEffect(() => {
+ 
   if (posts.length == 0) {
    if (program) fetchPosts();
   }
@@ -116,7 +119,6 @@ export default function Home() {
   return user;
  }
 
-
  async function testPost(topic: any, content: any) {
   if (!username) setShowSignupPopup(true);
   let postResult;
@@ -133,7 +135,40 @@ export default function Home() {
    return postResult.tx;
   }
  }
- 
+ async function signup(username: any) {
+  let balance = await getWalletBalance(connection, wallet);
+  if (balance == 0) {
+   notify(<DangerAlertWallet text={undefined} dismiss={undefined} />);
+  } else {
+   try {
+    if (!wallet) {
+     notify(
+      <DangerAlert text="Please connect to a wallet." dismiss={undefined} />
+     );
+    } else {
+     let usernamee = await createUsername({
+      userProgram,
+      pubKey: wallet.publicKey,
+      username,
+     });
+     setUsername0(wallet.publicKey);
+     return usernamee;
+    }
+   } catch (e) {
+    console.log(e);
+   }
+  }
+ }
+ function showSignupPopup0() {
+  return (
+   <SignupModal
+    showSignupPopup={setShowSignupPopup}
+    signup={signup}
+    show={undefined}
+   />
+  );
+ }
+
  return (
   <Layout>
    <main className="">
@@ -146,7 +181,12 @@ export default function Home() {
      <div className=" mr-14 ml-56 flex grow  flex-col">
       <NewPost username={username} post={testPost} />
       <div className="divider"></div>
-      {posts.length !== 0 && <DisplayPosts wallet={wallet} posts={posts} setShowSignupPopup={setShowSignupPopup} /> }
+      {posts.length !== 0  && (
+       <DisplayPosts
+        wallet={wallet}
+        posts={posts}
+        setShowSignupPopup={setShowSignupPopup} username={username}       />
+      )}
      </div>
     </div>
    </main>

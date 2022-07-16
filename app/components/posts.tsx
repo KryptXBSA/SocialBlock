@@ -1,47 +1,12 @@
 import Link from "next/link";
 import { Divider } from "../utils/divider"
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Key } from 'react';
 import { postComment } from "../mockup/post-mockup";
 import moment from "moment";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
-export const Commentt = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubkey, newComment, postPublicKey, commentProgram, getAllComments }) => {
+import { PublicKey } from '@solana/web3.js';
 
-    // { content, likes, shares, comments, pubKey, ownerPubkey, name, date, tags, }
-    // const [commentsVisible, setCommentsVisible] = useState(false)
-    // const [postComments, setPostComments] = useState('')
-    // async function fetchComments(pubkey) {
-    //     setCommentsVisible(!commentsVisible)
-    //     let comments0 = await getAllComments(postPublicKey)
-    //     // comments0 = comments0.filter(c => c.postPublicKey == postPublicKey)
-    //     if (data.getComments > 0) {
-    //         let postComments0 = comments0.map(comment => {
-    //             // let dateFormated = moment(post.date).fromNow()
-    //             return (<><Comment key={comment.publicKey} postPubKey={comment.postPublicKey}
-    //                 content={comment.content} pubKey={comment.key}
-    //                 ownerPubkey={comment.authorDisplay} name={comment.username} date={comment.createdAgo} />
-    //             </>
-    //             )
-    //         })
-    //         setPostComments(postComments0)
-    //     }
-    // }
-    // async function newComment0(comment, postPubKey) {
-    //     const getDate = (timestamp) => {
-    //         const utxDate = parseInt(timestamp);
-    //         const date = new Date(utxDate * 1000);
-    //         return date;
-    //     };
-    //     console.log(postComments);
-    //     let result = await newComment(comment, postPubKey)
-    //     let newcommentt = <><Comment key={result.publickey} postPubKey={result.postPubkey.toBase58()}
-    //         content={result.content} pubKey={result.publickey}
-    //         ownerPubkey={result.author.toBase58()} name={result.username} date={getDate(result.timestamp).toLocaleDateString()} className="flex flex-row" /></>
-    //     setPostComments([newcommentt].concat(postComments))
-    //     console.log([newcommentt].concat(postComments));
-    // }
-
-    // let didLike = checkPostLikes(walletPubkey,postLikes)
-    // let dateFormated = moment(date).fromNow()
+export const Commentt = ({data}:any) => {
     return (
         <div className="pl-5 break-all  border-gray-700 grow  ">
             <div className="flex  justify-start    flex-col" >
@@ -52,7 +17,6 @@ export const Commentt = ({ data, pubKey, likePost, unlikePost, postLikes, wallet
                             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg> */}
                         <span className=" text-2xl " >{data.username}</span> <span>&nbsp;•&nbsp;</span>
-
                         <span className="text-1xl" >  {data.createdAgo}</span>
                         <span className="ml-auto">
 
@@ -83,17 +47,17 @@ export const Commentt = ({ data, pubKey, likePost, unlikePost, postLikes, wallet
         </div>
     )
 }
-export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubkey, newComment, postPublicKey, commentProgram, getAllComments }) => {
+export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubkey, newComment, postPublicKey ,getAllComments }:any) => {
 
     // { content, likes, shares, comments, pubKey, ownerPubkey, name, date, tags, }
     const [commentsVisible, setCommentsVisible] = useState(false)
-    const [postComments, setPostComments] = useState('')
-    async function fetchComments(pubkey) {
+    const [postComments, setPostComments]:any = useState('')
+    async function fetchComments() {
         setCommentsVisible(!commentsVisible)
         let comments0 = await getAllComments(postPublicKey)
         // comments0 = comments0.filter(c => c.postPublicKey == postPublicKey)
         if (data.getComments > 0) {
-            let postComments0 = comments0.map(comment => {
+            let postComments0 = comments0.map((comment: { publicKey: Key | null | undefined; postPublicKey: any; content: any; key: any; authorDisplay: any; username: any; createdAgo: any; }) => {
                 // let dateFormated = moment(post.date).fromNow()
                 return (<><Comment key={comment.publicKey} postPubKey={comment.postPublicKey}
                     content={comment.content} pubKey={comment.key}
@@ -104,8 +68,8 @@ export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubk
             setPostComments(postComments0)
         }
     }
-    async function newComment0(comment, postPubKey) {
-        const getDate = (timestamp) => {
+    async function newComment0(comment: any, postPubKey: any) {
+        const getDate = (timestamp: string) => {
             const utxDate = parseInt(timestamp);
             const date = new Date(utxDate * 1000);
             return date;
@@ -146,8 +110,8 @@ export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubk
                         </span>
                     </div>
                     <div className="justify-self-end  ml-auto">
-                        <div class="tooltip" data-tip="Coming Soon">
-                            <MoreButton />
+                        <div className="tooltip" data-tip="Coming Soon">
+                            <MoreButton text={undefined} />
                         </div>
                     </div>
                 </div>
@@ -156,8 +120,8 @@ export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubk
                 {/* <span className="flex mt-3 text-violet-500">{data.topic}</span> */}
                 <div className="flex   justify-around items-stretch flex-row">
                     <LikeButton walletPubkey={walletPubkey} postLikes={postLikes} postPubkey={pubKey} unlikePost={unlikePost} likePost={likePost} text={data.getLikesCount} />
-                    <CommentButton setCommentsVisible={() => fetchComments(pubKey)} text={data.comments} />
-                    <div class="tooltip" data-tip="Coming Soon">
+                    <CommentButton setCommentsVisible={() => fetchComments()} text={data.comments} />
+                    <div className="tooltip" data-tip="Coming Soon">
                         <ShareButton text={data.getShares} />
                     </div>
                 </div>
@@ -170,10 +134,10 @@ export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubk
         </div>
     )
 }
-export const NewComment = ({ name, date, newComment, postPubKey }) => {
-    let commentInputRef = useRef()
+export const NewComment = ({ newComment, postPubKey }:any) => {
+    let commentInputRef:any = useRef()
 
-    async function newComment0(e) {
+    async function newComment0(e: { preventDefault: () => void; }) {
         e.preventDefault();
         let comment = commentInputRef.current.value
         let result = await newComment(comment, postPubKey)
@@ -191,7 +155,7 @@ export const NewComment = ({ name, date, newComment, postPubKey }) => {
     )
 }
 
-export const Comment = ({ name, date, content, ownerPubkey }) => {
+export const Comment = ({ name, date, content, ownerPubkey }:any) => {
     return (
         <div >
             <div className="divider"></div>
@@ -216,13 +180,13 @@ export const Comment = ({ name, date, content, ownerPubkey }) => {
 
     )
 }
-export const LikeButton = ({ text, likePost, unlikePost, postPubkey, postLikes }) => {
+export const LikeButton = ({ text, likePost, unlikePost, postPubkey, postLikes }:any) => {
     const wallet = useAnchorWallet();
     const [didLike, setDidLike] = useState(false)
 
     const [likedPost, setLikedPost] = useState(false)
-    function checkPostLikes(walletPubkey, postLikes) {
-        postLikes.forEach(p => {
+    function checkPostLikes(walletPubkey: string | null, postLikes: any[]) {
+        postLikes.forEach((p: { toBase58: () => any; }) => {
             if (walletPubkey === p.toBase58()) {
                 setDidLike(true);
                 setLikedPost(true)
@@ -266,15 +230,15 @@ export const LikeButton = ({ text, likePost, unlikePost, postPubkey, postLikes }
             : <>{notLikedIcon}<span className="font-semibold text-slate-300">{likeCount}</span></>);
     }
     return (
-        <button onClick={likePost0} class="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+        <button onClick={likePost0} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
             {didLikePost()}
         </button>
     )
 }
 
-export const ShareButton = ({ text }) => {
+export const ShareButton = ({ text }:any) => {
     return (
-        <button class="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+        <button className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
@@ -282,9 +246,9 @@ export const ShareButton = ({ text }) => {
         </button>
     )
 }
-export const CommentButton = ({ text, setCommentsVisible }) => {
+export const CommentButton = ({ text, setCommentsVisible }:any) => {
     return (
-        <button onClick={setCommentsVisible} class="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+        <button onClick={setCommentsVisible} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
             </svg>
@@ -292,7 +256,7 @@ export const CommentButton = ({ text, setCommentsVisible }) => {
         </button>
     )
 }
-export const MoreButton = ({ text }) => {
+export const MoreButton = ({ text }:any) => {
     return (
         <div className=" m-0">
             {/* <button class=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
