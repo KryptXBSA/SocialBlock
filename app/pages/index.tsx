@@ -5,44 +5,38 @@ import Layout from "../sections/Layout";
 import { SignupModal } from "../components/modal";
 import { NewPost } from "../components/new-post";
 import {
- SuccessAlert,
- InfoAlert,
  DangerAlert,
  SpecialAlert,
  WarningAlert,
  DangerAlertWallet,
 } from "../components/alert";
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNotifier } from "react-headless-notifier";
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
-import { sendPost, like, unlike, comment } from "../program/posts";
+import { sendPost } from "../program/posts";
 import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import * as anchor from "@project-serum/anchor";
 import { UseProgramContext } from "../contexts/programContextProvider";
-import { UseAlertContext } from "../contexts/alertsContextProvider";
 import { DisplayPosts } from "../program-methods/post";
 const endpoint = "https://explorer-api.devnet.solana.com";
 
 import { fetchPosts as fetchPosts0 } from "../utils/fetch-posts";
 import { getWalletBalance } from "../utils/get-wallet-balance";
+import { signup } from "../program-methods/signup";
 
 const connection = new anchor.web3.Connection(endpoint);
 
-import { Connection, PublicKey, LAMPORTS_PER_SOL } from "@solana/web3.js";
 export default function Home() {
  const { notify } = useNotifier();
 
- const { alertState, changeAlertState, closeAlert } = UseAlertContext();
  const wallet = useAnchorWallet();
- const { userProgram, program, commentProgram, state, changeState } =
-  UseProgramContext();
+ const { userProgram, program, state, changeState } = UseProgramContext();
 
  const [posts, setPosts]: any = useState([]);
  const [username, setUsername] = useState(state?.user?.username?.name);
  const [showSignupPopup, setShowSignupPopup] = useState(false);
  const [fetchedPosts, setFetchedPosts] = useState(false);
  const [searchedForUsername, setSearchedForUsername] = useState(false);
- const [didWelcomeNotify, setDidWelcomeNotify] = useState(false);
 
  async function fetchPosts() {
   if (!fetchedPosts) {
@@ -63,7 +57,6 @@ export default function Home() {
  // airdrop not working
 
  useEffect(() => {
- 
   if (posts.length == 0) {
    if (program) fetchPosts();
   }
@@ -95,18 +88,22 @@ export default function Home() {
  async function setUsername0(pubKey: any) {
   let userStatsPDA = await findUsernamePDA({ userProgram, pubKey });
   let { user } = await getUsername({ userProgram, userStatsPDA });
-  let username = user?.username?.name;
+  let username0 = user?.username?.name;
   let balance = await getWalletBalance(connection, wallet);
   if (user.foundUser === false) {
    if (balance > 0) {
     setShowSignupPopup(true);
    }
   }
-  if (username) {
+  if (username0) {
    changeState({ data: user, action: "username" });
-   setUsername(username);
+   setUsername(username0);
   }
-  if (!user.foundUser) {
+  console.log(username);
+  console.log(username);
+  console.log(username);
+  
+  if (!username&&!user.foundUser) {
    if (balance > 0) {
     notify(
      <WarningAlert
@@ -135,35 +132,25 @@ export default function Home() {
    return postResult.tx;
   }
  }
- async function signup(username: any) {
-  let balance = await getWalletBalance(connection, wallet);
-  if (balance == 0) {
-   notify(<DangerAlertWallet text={undefined} dismiss={undefined} />);
-  } else {
-   try {
-    if (!wallet) {
-     notify(
-      <DangerAlert text="Please connect to a wallet." dismiss={undefined} />
-     );
-    } else {
-     let usernamee = await createUsername({
-      userProgram,
-      pubKey: wallet.publicKey,
-      username,
-     });
-     setUsername0(wallet.publicKey);
-     return usernamee;
-    }
-   } catch (e) {
-    console.log(e);
-   }
-  }
+ async function signup0(username: any) {
+  let result = await signup(
+   username,
+   notify,
+   connection,
+   wallet,
+   userProgram,
+   createUsername,
+   setUsername0
+  );
+  setUsername(result.user.username)
+   changeState({ data: result.user.username, action: "username" });
+  return result;
  }
  function showSignupPopup0() {
   return (
    <SignupModal
     showSignupPopup={setShowSignupPopup}
-    signup={signup}
+    signup={signup0}
     show={undefined}
    />
   );
@@ -181,11 +168,13 @@ export default function Home() {
      <div className=" mr-14 ml-56 flex grow  flex-col">
       <NewPost username={username} post={testPost} />
       <div className="divider"></div>
-      {posts.length !== 0  && (
+      {posts.length !== 0 && (
        <DisplayPosts
         wallet={wallet}
         posts={posts}
-        setShowSignupPopup={setShowSignupPopup} username={username}       />
+        setShowSignupPopup={setShowSignupPopup}
+        username={username}
+       />
       )}
      </div>
     </div>

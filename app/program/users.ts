@@ -5,41 +5,45 @@ import { PublicKey } from "@solana/web3.js";
 
 
 export const findUsernamePDA = async ({ userProgram, pubKey }: any) => {
- const [userStatsPDA, _] = await PublicKey.findProgramAddress(
-  [anchor.utils.bytes.utf8.encode("user-stats"), pubKey.toBuffer()],
-  userProgram.programId
- );
+    const [userStatsPDA, _] = await PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode("user-stats"), pubKey.toBuffer()],
+        userProgram.programId
+    );
 
- return userStatsPDA;
+    return userStatsPDA;
 };
 export const createUsername = async ({
- userProgram,
- pubKey,
- username,
+    userProgram,
+    pubKey,
+    username,
 }: any) => {
-    
- const [userStatsPDA, _] = await PublicKey.findProgramAddress(
-  [anchor.utils.bytes.utf8.encode("user-stats"), pubKey.toBuffer()],
-  userProgram.programId
- );
 
- const UserTx = await userProgram.methods
-  .createUserStats(username)
-  .accounts({
-   user: pubKey,
-   userStats: userStatsPDA,
-  })
-  .rpc();
-  
- return userStatsPDA;
+    const [userStatsPDA, _] = await PublicKey.findProgramAddress(
+        [anchor.utils.bytes.utf8.encode("user-stats"), pubKey.toBuffer()],
+        userProgram.programId
+    );
+
+    const UserTx = await userProgram.methods
+        .createUserStats(username)
+        .accounts({
+            user: pubKey,
+            userStats: userStatsPDA,
+        })
+        .rpc();
+        return { user: { username, foundUser: true } }
+    let usernamee = await getUsername({ userProgram, userStatsPDA })
+    console.log(usernamee);
+
+    return usernamee
 };
+
 export const getUsername = async ({ userProgram, userStatsPDA }: any) => {
- let username = null;
- try {
-  username = await userProgram.account.userStats.fetch(userStatsPDA);
- } catch (e) {}
- if (!username) {
-  return { user: { username, foundUser: false } };
- }
- return { user: { username, foundUser: true } };
+    let username = null;
+    try {
+        username = await userProgram.account.userStats.fetch(userStatsPDA);
+    } catch (e) { }
+    if (!username) {
+        return { user: { username, foundUser: false } };
+    }
+    return { user: { username, foundUser: true } };
 };
