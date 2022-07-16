@@ -150,7 +150,7 @@ export async function likePost(
   try {
    return await like({ wallet, program, postPubkey });
   } catch (e) {
-   console.log(e);
+   
   }
  }
 }
@@ -166,11 +166,11 @@ export async function unlikePost(
    <DangerAlert text="Please connect to a wallet." dismiss={undefined} />
   );
  } else {
-  console.log(wallet);
+  
   try {
    return await unlike({ wallet, program, postPubkey });
   } catch (e) {
-   console.log(e);
+   
   }
  }
 }

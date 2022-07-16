@@ -57,7 +57,7 @@ export default function Home() {
     setContent()
     if (posts.length == 0) {
       if (getWallet) {
-        console.log('yoooo');
+        
         fetchPosts()
       }
     }
@@ -87,7 +87,7 @@ export default function Home() {
       },
     });
     let filter = [authorFilter(postPubkey)]
-    // console.log(await commentProgram.account.comment.all());
+    // 
     let commentResult = await getAllComments({ program: commentProgram, filter: filter })
     return commentResult;
   }
@@ -122,9 +122,9 @@ export default function Home() {
     })
   }
   function setContent(tab) {
-    console.log(tab);
+    
     tab = tab ? tab : 'users'
-    console.log(tab);
+    
     tab = tab ? tab : 'users'
     let content = ''
     if (tab === "topics") {
@@ -145,7 +145,7 @@ export default function Home() {
       )
     }
     setTabContent(content);
-    console.log(tabContent);
+    
   }
   function searchOnClick(e) {
     e.preventDefault()

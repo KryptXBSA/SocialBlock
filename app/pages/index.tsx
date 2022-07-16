@@ -40,7 +40,7 @@ export default function Home() {
 
  async function fetchPosts() {
   if (!fetchedPosts) {
-   fetchPosts0({ program, notify, fetchedPosts, setPosts, setFetchedPosts });
+   fetchPosts0({ program, notify,setPosts, setFetchedPosts });
   }
   setFetchedPosts(true);
  }
@@ -48,7 +48,7 @@ export default function Home() {
  async function getWBalance(wallet: any) {
   // airdropToWallet()
   let balance = await getWalletBalance(connection, wallet);
-  console.log(balance);
+  
   if (balance == 0) {
    notify(<DangerAlertWallet text={"Insufficent Funds"} dismiss={undefined} />);
   }
@@ -99,9 +99,9 @@ export default function Home() {
    changeState({ data: user, action: "username" });
    setUsername(username0);
   }
-  console.log(username);
-  console.log(username);
-  console.log(username);
+  
+  
+  
   
   if (!username&&!user.foundUser) {
    if (balance > 0) {
@@ -116,7 +116,7 @@ export default function Home() {
   return user;
  }
 
- async function testPost(topic: any, content: any) {
+ async function newPost(topic: any, content: any) {
   if (!username) setShowSignupPopup(true);
   let postResult;
   if (username) {
@@ -140,7 +140,6 @@ export default function Home() {
    wallet,
    userProgram,
    createUsername,
-   setUsername0
   );
   setUsername(result.user.username)
    changeState({ data: result.user.username, action: "username" });
@@ -166,7 +165,7 @@ export default function Home() {
       <Sidebar active="0" router={undefined} hasSpace={undefined} />
      </div>
      <div className=" mr-14 ml-56 flex grow  flex-col">
-      <NewPost username={username} post={testPost} />
+      <NewPost username={username} post={newPost} />
       <div className="divider"></div>
       {posts.length !== 0 && (
        <DisplayPosts
@@ -183,81 +182,3 @@ export default function Home() {
  );
 }
 
-export const Tabs = () => {
- return (
-  <div className="tabs justify-center">
-   <a className="tab w-32 tab-lg tab-bordered">Posts</a>
-   <a className="tab w-32 tab-lg tab-bordered tab-active">Comments</a>
-   <a className="tab w-32 tab-lg tab-bordered">Bookmarks</a>
-  </div>
- );
-};
-
-export const ActionButton = ({ text }: any) => {
- return (
-  <button className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
-   <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor">
-    <path
-     stroke-linecap="round"
-     stroke-linejoin="round"
-     stroke-width="2"
-     d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-    />
-   </svg>
-   <span className="font-semibold text-slate-300">{text}</span>
-  </button>
- );
-};
-export const Search = () => {
- return (
-  <div className="flex  flex-row">
-   <textarea
-    cols={4}
-    placeholder="Search…"
-    className="input rounded-r-none grow "
-   />
-   <button className="btn rounded-l-none btn-square">
-    <svg
-     xmlns="http://www.w3.org/2000/svg"
-     className="h-6 w-6"
-     fill="none"
-     viewBox="0 0 24 24"
-     stroke="currentColor">
-     <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-     />
-    </svg>
-   </button>
-  </div>
- );
-};
-export const SearchButton = ({ text }: any) => {
- return (
-  <div className=" m-1">
-   <button className="btn btn-lg bg-transparent border-opacity-0 gap-2 ">
-    <svg
-     xmlns="http://www.w3.org/2000/svg"
-     className="h-6 w-6"
-     fill="none"
-     viewBox="0 0 24 24"
-     stroke="currentColor">
-     <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
-      d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-     />
-    </svg>
-    {text}
-   </button>
-  </div>
- );
-};

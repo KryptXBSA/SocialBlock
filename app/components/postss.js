@@ -97,8 +97,8 @@ export const Comment = ({ name, date }) => {
     )
 }
 export const LikeButton = ({ text, likePost, postPubkey, didLike }) => {
-    console.log(didLike);
-    console.log(didLike);
+    
+    
     const [likedPost, setLikedPost] = useState(didLike)
     const [likeCount, setLikeCount] = useState(text)
     async function likePost0() {

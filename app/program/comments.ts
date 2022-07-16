@@ -28,8 +28,8 @@ export const newComment = async ({
     //     newComment = await commentProgram.account.comment.fetch(
     //         newCommentAccount.publicKey
     //     );
-    //     console.log("Delayed for 15 seconds.");
-    //     console.log(newComment);
+    //     
+    //     
 
 
     //     // return newComment;
@@ -43,16 +43,16 @@ export const newComment = async ({
         username,
     };
     return newCommentAccount0
-    // console.log('new');
-    // console.log(newCommentAccount);
-    // console.log(newCommentAccount0);
-    // console.log('new');
+    // 
+    // 
+    // 
+    // 
     
     // return new Comment(newCommentAccount, newCommentAccount0)
 };
 export const getAllComments = async ({ program, filter = [] }: any) => {
 
-    console.log(filter);
+    
 
     const postsRaw = await program.account.comment.all(filter);
     const posts = postsRaw.map((t: any) => new Comment(t.publicKey, t.account));

@@ -1,3 +1,5 @@
+/** @format */
+
 import { getWalletBalance } from "../utils/get-wallet-balance";
 import {
  DangerAlert,
@@ -5,8 +7,19 @@ import {
  WarningAlert,
  DangerAlertWallet,
 } from "../components/alert";
-export async function signup(username: any,notify:any,connection:any,wallet:any,userProgram: any,createUsername: (arg0: { userProgram: any; pubKey: any; username: string; }) => any,setUsername0: (arg0: any) => void) {
 
+export async function signup(
+ username: any,
+ notify: any,
+ connection: any,
+ wallet: any,
+ userProgram: any,
+ createUsername: (arg0: {
+  userProgram: any;
+  pubKey: any;
+  username: string;
+ }) => any
+) {
  let balance = await getWalletBalance(connection, wallet);
  if (balance == 0) {
   notify(<DangerAlertWallet text={undefined} dismiss={undefined} />);
@@ -27,7 +40,7 @@ export async function signup(username: any,notify:any,connection:any,wallet:any,
     return usernamee;
    }
   } catch (e) {
-   console.log(e);
+   
   }
  }
 }

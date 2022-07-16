@@ -1,7 +1,7 @@
 import { getAllPosts } from '../program/posts.ts';
 import { SuccessAlert, InfoAlert, DangerAlert, SpecialAlert, WarningAlert } from "../components/alert";
 
-export async function fetchPosts({ notify, program, fetchedPosts, setPosts, setFetchedPosts }) {
+export async function fetchPosts({ notify, program,  setPosts, setFetchedPosts }) {
     // notify(
     //     <SuccessAlert
     //         text="Fetching Posts..."
@@ -12,7 +12,7 @@ export async function fetchPosts({ notify, program, fetchedPosts, setPosts, setF
         try {
             posts = await getAllPosts({ program: program, filter: [] });
         } catch (e) {
-            console.log(e);
+            
             notify(
                 <DangerAlert
                     text="An Error Occured while fetching posts..."

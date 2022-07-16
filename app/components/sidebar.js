@@ -37,7 +37,7 @@ export const Sidebar = ({ active, router, hasSpace }) => {
       <div class="tooltip" data-tip="Coming Soon">
       <Button icon={marketPlaceIcon} index='4' active={active} href="#" text="Marketplace" /></div>
       <WalletMultiButton className=' ml-1 hover:bg-violet-600 py-3 btn1 px-5 inline-flex items-center  w-48  ' />
-      {/* <button className="" onClick={() => console.log(publicKey.toBase58())} >logg</button> */}
+      {/* {/* <button className="" onClick={() =>  */}
     </div>
   )
 }

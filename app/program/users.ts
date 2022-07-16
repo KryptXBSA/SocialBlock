@@ -32,7 +32,7 @@ export const createUsername = async ({
         .rpc();
         return { user: { username, foundUser: true } }
     let usernamee = await getUsername({ userProgram, userStatsPDA })
-    console.log(usernamee);
+    
 
     return usernamee
 };

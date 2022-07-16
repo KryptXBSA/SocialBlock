@@ -33,15 +33,15 @@ export function Alert({ alerts }) {
     const { alertState, changeAlertState } = UseAlertContext();
     const [alertList, setAlertList] = useState(alertState.alerts)
     function renderAlerts() {
-        console.log('renderAlerts');
+        
         return alertList.map(a => {
             return (<Alertt forr={a.for} closing={a.closing} key={a.id} id={a.id} type={a.type} text={a.text} icon={a.icon} />)
         })
     }
     useEffect(() => {
         // setAlertList(alertState.alerts)
-        console.log('list');
-        console.log(alertState.alerts);
+        
+        
     }, [alertState.alerts])
 
     return (

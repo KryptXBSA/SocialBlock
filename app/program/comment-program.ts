@@ -37,7 +37,7 @@ export const useCommentProgram = ({ connection, wallet }: ProgramProps) => {
       preflightCommitment: "recent",
       commitment: "processed",
     });
-    console.log("provider", provider);
+    
     const program = new anchor.Program(idl as any, programID, provider);
 
     setCommentProgram(program);

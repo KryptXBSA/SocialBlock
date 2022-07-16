@@ -1,7 +1,7 @@
 import { createContext, useContext, useReducer, useState, useMemo } from 'react'
 
 function reducer(state, newAlert) {
-  console.log('why??????????');
+  
   let currentAlerts = state.alerts
   // let push = true
   // // var duplicateIndex = currentAlerts.map(function (x) { return x.id; }).indexOf(newAlert.id);

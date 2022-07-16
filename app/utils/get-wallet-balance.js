@@ -4,7 +4,7 @@ export async function getWalletBalance(connection, wallet) {
     try {
         balance = await connection.getBalance(wallet.publicKey)
     } catch (e) {
-        console.log(e);
+        
     }
     return balance / LAMPORTS_PER_SOL
 }

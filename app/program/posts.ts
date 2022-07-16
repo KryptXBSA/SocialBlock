@@ -11,7 +11,7 @@ type GetPostProps = {
 };
 export const getAllPosts = async ({ program, filter = [] }: GetPostProps) => {
     const postsRaw = await program.account.post.all(filter as any);
-    console.log(postsRaw);
+    
 
     const posts = postsRaw.map((t: any) => new Post(t.publicKey, t.account));
     return posts;
@@ -50,7 +50,7 @@ export const sendPost = async ({
     content,
     username,
 }: SendPostProps) => {
-    console.log(await program.account.post.all());
+    
 
     const post = anchor.web3.Keypair.generate();
 

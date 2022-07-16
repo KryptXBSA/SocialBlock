@@ -74,20 +74,20 @@ export const Post = ({ data, pubKey, likePost, unlikePost, postLikes, walletPubk
             const date = new Date(utxDate * 1000);
             return date;
         };
-        console.log(postComments);
+        
         let result = undefined
         try {
             result = await newComment(comment, postPubKey)
         } catch (e) {
-            console.log(e);
+            
         }
-        console.log(result);
+        
         if (result) {
             let newcommentt = <><Comment key={result.publickey} postPubKey={result.postPubkey.toBase58()}
                 content={result.content} pubKey={result.publickey}
                 ownerPubkey={result.author.toBase58()} name={result.username} date={getDate(result.timestamp).toLocaleDateString()} className="flex flex-row" /></>
             setPostComments([newcommentt].concat(postComments))
-            console.log([newcommentt].concat(postComments));
+            
         }
     }
 

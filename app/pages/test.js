@@ -29,7 +29,7 @@ export default function Home() {
 
   function displayPosts() {
     return posts.map((post, index, { length }) => {
-      console.log(post);
+      
       return (<><Post key={post.pubKey} commentsNum={post.commentsNum} tag={post.tags} likes={post.likes} shares={post.shares}
         content={post.content} pubKey={post.pubKey}
         ownerPubkey={post.ownerPubkey} name={post.name} date={post.date} className="flex flex-row" />
