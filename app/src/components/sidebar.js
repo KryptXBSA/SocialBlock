@@ -23,7 +23,7 @@ export const Sidebar = ({ active, router, hasSpace }) => {
 
   return (
 
-    <div className="flex fixed  flex-col">
+    <div className="flex bg-slate-900 sm:ml-40 lg:ml-44 flex-col">
       {/* {hasSpace && (<div className=' w-44 invisible ' >
         <Search />
         <Tabs changeTab={changeTab} activeTab='1' />

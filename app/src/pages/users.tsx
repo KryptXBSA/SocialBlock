@@ -56,7 +56,7 @@ export default function Home() {
   if (program && router?.query?.pubkey && !alreadyFetched) {
    setSearchContent(router?.query?.pubkey);
    getPosts(router?.query?.pubkey);
-   getAllComments0(router?.query?.pubkey);
+   getAllComments0(router?.query?.pubkey, true);
    setAlreadyFetched(true);
   }
   setContent();
@@ -112,27 +112,29 @@ export default function Home() {
   tab = tab ? tab : activeTab;
   let content: any = "";
   if (tab === "2") {
-   content = <>{renderComments()}</>;
+   content = <>ddd{renderComments()}</>;
   } else if (tab === "0") {
    content = <> {renderPosts()}</>;
   }
   setTabContent(content);
  }
 
- async function getAllComments0(pubkey?: any) {
+ async function getAllComments0(pubkey?: any, initial?: boolean) {
   let searchValue = searchInputRef?.current?.value;
   // queryValue better variable name :/
 
   let value = searchValue ? searchValue : pubkey;
   if (router?.query?.pubKey) {
-    value = router?.query?.pubKey
+   value = router?.query?.pubKey;
   }
+  console.log("pubkey");
+  console.log(pubkey);
   console.log(value);
-  
+
   // value = value ? value : router.query?.pubkey;
   const authorFilter = (authorBase58PublicKey: any) => ({
    memcmp: {
-    offset: 40, // Discriminator.
+    offset: !initial ? 40 : 8, // Discriminator.
     bytes: authorBase58PublicKey,
    },
   });
@@ -145,7 +147,6 @@ export default function Home() {
     filter: filter,
    });
    console.log(commentResult);
-   
   } catch (e) {
    // notify(
    //           <SpecialAlert
@@ -160,7 +161,7 @@ export default function Home() {
   ) {
    return b.getTimestamp - a.getTimestamp;
   });
-  if(!pubkey)setComments(commentResult);
+  if (initial) setComments(commentResult);
 
   return commentResult;
  }
@@ -204,8 +205,11 @@ export default function Home() {
 
  function renderComments() {
   return comments.map((post: any, index, { length }) => {
+    console.log('whyyyyyyyyy');
+    console.log(post);
+    
    return (
-    <>
+    <>aaa
      <Commentt key={post.key} data={post} className="flex flex-row" />
      {index + 1 !== length && <div className="divider"></div>}
     </>
