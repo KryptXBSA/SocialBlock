@@ -1,14 +1,14 @@
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { DispatchWithoutAction, useEffect, useState } from "react";
 
-export const BookmarkButton = () => {
+export const BookmarkButton = ({bookmarked}:{bookmarked:boolean}) => {
  return (
   <div className=" m-0">
    {/* <button class=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
    <div className="self-start place-content-start  btn btn-circle bg-transparent border-0 p-3 ">
     <svg
      xmlns="http://www.w3.org/2000/svg"
-     className="h-6 w-6"
+     className={`h-6 ${bookmarked?'fill-red-900':''} w-6`}
      fill="none"
      viewBox="0 0 24 24"
      stroke="currentColor"

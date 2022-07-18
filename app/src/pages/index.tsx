@@ -23,7 +23,7 @@ for (let index = 0; index < 3; index++) {
 export default function Home() {
 
  function displayPosts() {
-  return posts.map((p) => <Post content={"hi"} username={"aland"} date={"1 day ago"} publickeyString={"H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8"}  block={'solana-summer'} />);
+  return posts.map((p) => <Post shared={'no'} content={"hi"} username={"aland"} date={"1 day ago"} publickeyString={"H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8"}  block={'solana-summer'} />);
  }
 
  return (
@@ -36,7 +36,7 @@ export default function Home() {
     <main className="  bg-slate-900  w-1/3 flex justify-center flex-row">
      <div
       style={{ width: 733 }}
-      className="flex items-center flex-col space-y-2">
+      className="flex mt-4 items-center flex-col space-y-2">
       <NewPost />
       {displayPosts()}
      </div>
