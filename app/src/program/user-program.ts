@@ -22,7 +22,7 @@ export interface Wallet {
 
 type ProgramProps = {
   connection: Connection;
-  wallet: Wallet;
+  wallet: any;
 };
 
 export const useUserProgram = ({ connection, wallet }: ProgramProps) => {

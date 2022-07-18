@@ -5,15 +5,21 @@ import { PublicKey } from "@solana/web3.js";
 const Transaction = anchor.web3.Transaction;
 import { Comment, AccountData } from "./comment";
 
+interface CommentProps {
+    commentProgram:anchor.Program<anchor.Idl>
+    postPubkey:PublicKey
+    walletPubkey:PublicKey
+    username:string
+    content:string
+}
 export const newComment = async ({
     commentProgram,
     postPubkey,
     walletPubkey,
     username,
     content,
-}: any) => {
+}: CommentProps) => {
     const newCommentAccount = anchor.web3.Keypair.generate();
-try {
      let result=  await commentProgram.methods
         .newComment(postPubkey, username, content)
         .accounts({
@@ -24,11 +30,7 @@ try {
         .rpc();
 
 
-} catch (error) {
-    
-    console.log(error);
-    
-}
+
      
     const newCommentAccount0: AccountData = {
         author: walletPubkey,

@@ -1,10 +1,28 @@
+/** @format */
+
 import Link from "next/link";
 import { useState } from "react";
-import { BookmarkButton } from "./buttons";
-import { ShareButton, CommentButton, NewComment } from "./buttons";
-import { Comment } from "./comment";
+import { BookmarkButton, LikeButton } from "./buttons";
+import { ShareButton, CommentButton } from "./buttons";
+import { Comment, NewComment } from "./comment";
 
-export function Post({ content, username, date, publickeyString }: any) {
+interface Props {
+ content: string;
+ username: string;
+ date: string;
+ publickeyString: string;
+ block: string;
+}
+
+import { UseProgramContext } from "../../contexts/programContextProvider";
+export function Post({
+ content,
+ username,
+ date,
+ publickeyString,
+ block,
+}: Props) {
+ const programContext = UseProgramContext();
  const [commentsVisible, setCommentsVisible] = useState(false);
  const [postComments, setPostComments]: any = useState("");
  function displayComments() {
@@ -13,34 +31,10 @@ export function Post({ content, username, date, publickeyString }: any) {
    <>
     <Comment
      key={"comment.publicKey"}
-     postPubKey={"comment.postPublicKey"}
      content={"comment.content"}
-     pubKey={"comment.key"}
-     ownerPubkey={"comment.authorDisplay"}
-     name={"comment.username"}
-     date={"comment.createdAgo"}
-    /><Comment
-     key={"comment.publicKey"}
-     postPubKey={"comment.postPublicKey"}
-     content={"comment.content"}
-     pubKey={"comment.key"}
-     ownerPubkey={"comment.authorDisplay"}
-     name={"comment.username"}
-     date={"comment.createdAgo"}
-    /><Comment
-     key={"comment.publicKey"}
-     postPubKey={"comment.postPublicKey"}
-     content={"comment.content"}
-     pubKey={"comment.key"}
-     ownerPubkey={"comment.authorDisplay"}
-     name={"comment.username"}
-     date={"comment.createdAgo"}
-    /><Comment
-     key={"comment.publicKey"}
-     postPubKey={"comment.postPublicKey"}
-     content={"comment.content"}
-     pubKey={"comment.key"}
-     ownerPubkey={"comment.authorDisplay"}
+     //  postPubKey={"comment.postPublicKey"}
+     //  pubKey={"comment.key"}
+     authorPubkeyString={"comment.authorDisplay"}
      name={"comment.username"}
      date={"comment.createdAgo"}
     />
@@ -60,37 +54,42 @@ export function Post({ content, username, date, publickeyString }: any) {
         alt="Rounded avatar"
        />
       </div>
-      <span className=" text-2xl ">{username}dddd</span>{" "}
+      <span className=" text-2xl ">{username}</span>
       <span>&nbsp;•&nbsp;</span>
-      <span className="text-base">{date}2 days ago</span>
+      <span className="text-base">{date}</span>
       <span className="text-base ml-2 cursor-pointer   text-sky-600">
-       {date} <span className=" tracking-widest">#</span>Solana-Summer
+       <span className=" tracking-widest">#</span>
+       {block}
       </span>
      </div>
      <div className="justify-self-end  ml-auto">
       <div className="tooltip" data-tip="Coming Soon">
-       <BookmarkButton text={undefined} />
+       <BookmarkButton />
       </div>
      </div>
     </div>
 
     <Link href={`/users?pubkey=${publickeyString}`}>
      <p
-      style={{ marginTop: -19, marginLeft: 50 }}
-      className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
-      {publickeyString}ggggggggggg
+      style={{ marginTop: 32, marginLeft: 49 }}
+      className=" absolute cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
+      {publickeyString}
      </p>
     </Link>
-    <p className=" w-fit p- break-words">
-     {content}hhiiiiiihiiiiiihiiiiiihiiiiiihiiiiiihiiiiiihiiiiii
-     hiiiiiihiiiiiihiiiiiihiiiiiihiiiiiihiiiiiihiiiiiihi
-    </p>
+    <p className=" w-fit p- break-words">{content}</p>
     {/* <span className="flex mt-3 text-violet-500">{data.topic}</span> */}
     <div className="flex   justify-around items-stretch flex-row">
-     <ShareButton />
-     <CommentButton setCommentsVisible={() => displayComments()} text={""} />
+     <LikeButton
+      walletPubkey={programContext?.getWallet?.publicKey!}
+      postLikes={[programContext?.getWallet?.publicKey!]}
+      postPubkey={programContext?.getWallet?.publicKey!}
+      unlikePost={'unlikePost'}
+      likePost={'likePost'}
+      text={'data.getLikesCount'}
+     />
+     <CommentButton setCommentsVisible={() => displayComments()} />
      <div className="tooltip" data-tip="Coming Soon">
-      <ShareButton text={""} />
+      <ShareButton />
      </div>
     </div>
     {commentsVisible && (
@@ -98,8 +97,10 @@ export function Post({ content, username, date, publickeyString }: any) {
       {postComments}
       {!postComments && <div className="divider"></div>}
       <NewComment
-       newComment={() => console.log("new Comment")}
-       postPubKey={"postPublicKey"}
+       commentProgram={programContext?.commentProgram!}
+       postPubkey={programContext?.getWallet?.publicKey!}
+       walletPubkey={programContext?.getWallet?.publicKey!}
+       username={"aland"}
       />
      </>
     )}
