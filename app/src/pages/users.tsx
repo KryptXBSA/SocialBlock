@@ -256,13 +256,12 @@ export default function Home() {
     {/* Hero Section  */}
     {/* <Search /> */}
     {/* <Tabs changeTab={changeTab} activeTab={activeTab} /> */}
-    <main className="flex-grow  px-4 sm:px-6">
+    <main className="flex  px-4 sm:px-6">
      {/* top isit !!!!!! Headlines */}
      {/* CTA */}
      <div className="flex   justify-start flex-row">
       {/* <ProfileSidebar active='0' hasSpace={false} router={router} /> */}
-      <Sidebar active="2" router={router} hasSpace={undefined} />
-      <div className=" md:ml-64 mr-10 ml-52 flex grow  flex-col">
+      <div className=" flex grow  flex-col">
        <Search searchInputRef={searchInputRef} clickSearch={searchOnClick} />
 
        {/* <Search /> */}

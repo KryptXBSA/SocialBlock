@@ -12,7 +12,9 @@ const Layout = ({ children }: { children: ReactNode }) => {
    </Head>
 
    <div className="relative justify-center flex flex-row ">
-    <Sidebar active={undefined} router={undefined} hasSpace={undefined} />
+    <div className="mr-52">
+     <Sidebar active={undefined} router={undefined} hasSpace={undefined} />
+    </div>
     {children}
     <Trending />
    </div>
@@ -24,9 +26,9 @@ export default Layout;
 function Trending() {
  return (
   <>
-   <div className="pl-4 bg-slate-900">
+   <div className="pr-40 ml-12 bg-slate-900">
     trending
-    <div className="max-w-sm  bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
+    <div className="max-w-sm  fixed bg-white rounded-lg border border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700">
      <a href="#">
       <img
        className="rounded-t-lg"

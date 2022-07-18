@@ -85,7 +85,7 @@ export function Post({
       postPubkey={programContext?.getWallet?.publicKey!}
       unlikePost={'unlikePost'}
       likePost={'likePost'}
-      text={'data.getLikesCount'}
+      text={''}
      />
      <CommentButton setCommentsVisible={() => displayComments()} />
      <div className="tooltip" data-tip="Coming Soon">

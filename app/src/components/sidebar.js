@@ -23,21 +23,28 @@ export const Sidebar = ({ active, router, hasSpace }) => {
 
   return (
 
-    <div className="flex bg-slate-900 sm:ml-40 lg:ml-44 flex-col">
+    <div className="flex bg-slate-900 flex-col">
       {/* {hasSpace && (<div className=' w-44 invisible ' >
         <Search />
         <Tabs changeTab={changeTab} activeTab='1' />
       </div>)} */}
+      <div className='flex flex-col left-0 fixed'>
+        <Button icon={homeIcon} index='0' active={active} href="/" text="Home" />
 
-      <Button icon={homeIcon} index='0' active={active} href="/" text="Home" />
-      {/* <Button icon={searchIcon} index='1' active={active} href="/search" text="Search" /> */}
-      <Button icon={profileIcon} index='2' active={active} href="/users" text="Users" />
-      <div class="tooltip" data-tip="Coming Soon">
-        <Button icon={marketPlaceIcon} index='3' active={active} href="#" text="Game" /></div>
-      <div class="tooltip" data-tip="Coming Soon">
-      <Button icon={marketPlaceIcon} index='4' active={active} href="#" text="Marketplace" /></div>
-      <WalletMultiButton className=' ml-1 hover:bg-violet-600 py-3 btn1 px-5 inline-flex items-center  w-48  ' />
-      {/* {/* <button className="" onClick={() =>  */}
+        <div class="tooltip" data-tip="Coming Soon">
+          <Button icon={marketPlaceIcon} index='3' active={active} href="#" text="Profile" /></div>
+
+        <Button icon={profileIcon} index='2' active={active} href="/users" text="Users" />
+
+
+        <div class="tooltip" data-tip="Coming Soon">
+          <Button icon={marketPlaceIcon} index='3' active={active} href="#" text="Blocks" /></div>
+
+        <div class="tooltip" data-tip="Coming Soon">
+          <Button icon={marketPlaceIcon} index='4' active={active} href="#" text="Marketplace" /></div>
+
+        <WalletMultiButton className=' ml-1 hover:bg-violet-600 py-3 btn1 px-5 inline-flex items-center  w-48  ' />
+      </div>
     </div>
   )
 }
