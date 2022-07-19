@@ -23,7 +23,7 @@ for (let index = 0; index < 3; index++) {
 export default function Home() {
 
  function displayPosts() {
-  return posts.map((p) => <Post shared={'no'} content={"hi"} username={"aland"} date={"1 day ago"} publickeyString={"H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8"}  block={'solana-summer'} />);
+  return posts.map((p) => <Post tip={18000000}  content={"hi"} username={"aland"} date={"1 day ago"} publickeyString={"H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8"}  block={'solana-summer'} />);
  }
 
  return (

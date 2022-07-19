@@ -1,14 +1,16 @@
+/** @format */
+
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { DispatchWithoutAction, useEffect, useState } from "react";
 
-export const BookmarkButton = ({bookmarked}:{bookmarked:boolean}) => {
+export const BookmarkButton = ({ bookmarked }: { bookmarked: boolean }) => {
  return (
   <div className=" m-0">
    {/* <button class=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
    <div className="self-start place-content-start  btn btn-circle bg-transparent border-0 p-3 ">
     <svg
      xmlns="http://www.w3.org/2000/svg"
-     className={`h-6 ${bookmarked?'fill-red-900':''} w-6`}
+     className={`h-6 ${bookmarked ? "fill-red-900" : ""} w-6`}
      fill="none"
      viewBox="0 0 24 24"
      stroke="currentColor"
@@ -24,61 +26,149 @@ export const BookmarkButton = ({bookmarked}:{bookmarked:boolean}) => {
  );
 };
 
+export const TipButton = ({
+ text,
+ likePost,
+ unlikePost,
+ postPubkey,
+ postLikes,
+ setShowTipModal
+}: any) => {
+ const wallet = useAnchorWallet();
+ const [didLike, setDidLike] = useState(false);
 
-export const LikeButton = ({ text, likePost, unlikePost, postPubkey, postLikes }:any) => {
-    const wallet = useAnchorWallet();
-    const [didLike, setDidLike] = useState(false)
+ const [likedPost, setLikedPost] = useState(false);
+ function checkPostLikes(walletPubkey: string | null, postLikes: any[]) {
+  postLikes.forEach((p: { toBase58: () => any }) => {
+   if (walletPubkey === "p.toBase58()") {
+    setDidLike(true);
+    setLikedPost(true);
+   } else {
+    setDidLike(false);
+    setLikedPost(false);
+   }
+  });
+ }
 
-    const [likedPost, setLikedPost] = useState(false)
-    function checkPostLikes(walletPubkey: string | null, postLikes: any[]) {
-        postLikes.forEach((p: { toBase58: () => any; }) => {
-            if (walletPubkey === 'p.toBase58()') {
-                setDidLike(true);
-                setLikedPost(true)
-            } else {
-                setDidLike(false)
-                setLikedPost(false)
-            }
-        });
-    }
+ useEffect(() => {
+  let wallet0 = wallet
+   ? wallet.publicKey.toBase58()
+   : localStorage.getItem("waallet");
+  checkPostLikes(wallet0, ["postLikes"]);
+ }, [wallet]);
+ return (
+  <>
+   <div
+    className="tooltip  bg-transparent items-center flex flex-row "
+    data-tip="Tip">
+    <button
+     onClick={() => setShowTipModal(true)}
+     className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+     <img className="  h-7 w-7 rounded-full  " src="/icons/sol-icon.png" />
+    </button>
+   </div>
+  </>
+ );
+};
+export const LikeButton = ({
+ text,
+ likePost,
+ unlikePost,
+ postPubkey,
+ postLikes,
+}: any) => {
+ const wallet = useAnchorWallet();
+ const [didLike, setDidLike] = useState(false);
 
-    useEffect(() => {
-        let wallet0 = wallet ? wallet.publicKey.toBase58() : localStorage.getItem('waallet')
-        checkPostLikes(wallet0, ['postLikes'])
-    }, [wallet])
+ const [likedPost, setLikedPost] = useState(false);
+ function checkPostLikes(walletPubkey: string | null, postLikes: any[]) {
+  postLikes.forEach((p: { toBase58: () => any }) => {
+   if (walletPubkey === "p.toBase58()") {
+    setDidLike(true);
+    setLikedPost(true);
+   } else {
+    setDidLike(false);
+    setLikedPost(false);
+   }
+  });
+ }
 
-    const [likeCount, setLikeCount] = useState(text)
-    async function likePost0() {
-        let response = ''
-        if (likedPost) response = await unlikePost(postPubkey);
-        else response = await likePost(postPubkey);
-        if (response === "liked") {
-            setLikedPost(true)
-            setLikeCount(likeCount + 1)
-        } else if (response === 'unliked') {
-            setLikedPost(false)
-            setLikeCount(likeCount - 1)
-        }
-    }
+ useEffect(() => {
+  let wallet0 = wallet
+   ? wallet.publicKey.toBase58()
+   : localStorage.getItem("waallet");
+  checkPostLikes(wallet0, ["postLikes"]);
+ }, [wallet]);
 
-    const [notLikedIcon, setNotLikedIcon] = useState(<svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-    </svg>)
+ const [likeCount, setLikeCount] = useState(text);
+ async function likePost0() {
+  let response = "";
+  if (likedPost) response = await unlikePost(postPubkey);
+  else response = await likePost(postPubkey);
+  if (response === "liked") {
+   setLikedPost(true);
+   setLikeCount(likeCount + 1);
+  } else if (response === "unliked") {
+   setLikedPost(false);
+   setLikeCount(likeCount - 1);
+  }
+ }
 
-    const [likedIcon, setLikedIcon] = useState(<svg xmlns="http://www.w3.org/2000/svg" className="h-5 fill-red-600 w-5" viewBox="0 0 20 20" fill="currentColor">
-        <path fillRule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clipRule="evenodd" />
-    </svg>)
+ const [notLikedIcon, setNotLikedIcon] = useState(
+  <svg
+   xmlns="http://www.w3.org/2000/svg"
+   className="h-6 w-6"
+   fill="none"
+   viewBox="0 0 24 24"
+   stroke="currentColor"
+   strokeWidth={2}>
+   <path
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+   />
+  </svg>
+ );
 
-    function didLikePost() {
-        return (likedPost ? <>{likedIcon}<span className="font-semibold text-slate-300">{likeCount}</span></>
-            : <>{notLikedIcon}<span className="font-semibold text-slate-300">{likeCount}</span></>);
-    }
-    return (
-        <button onClick={likePost0} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
-            {didLikePost()}
-        </button>
-    )
-}
+ const [likedIcon, setLikedIcon] = useState(
+  <svg
+   xmlns="http://www.w3.org/2000/svg"
+   className="h-5 fill-red-600 w-5"
+   viewBox="0 0 20 20"
+   fill="currentColor">
+   <path
+    fillRule="evenodd"
+    d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+    clipRule="evenodd"
+   />
+  </svg>
+ );
+
+ function didLikePost() {
+  return likedPost ? (
+   <>
+    {likedIcon}
+    <span className="font-semibold text-slate-300">{likeCount}</span>
+   </>
+  ) : (
+   <>
+    {notLikedIcon}
+    <span className="font-semibold text-slate-300">{likeCount}</span>
+   </>
+  );
+ }
+ return (
+  <div
+   className="tooltip  bg-transparent items-center flex flex-row "
+   data-tip="Tip">
+   <button
+    onClick={likePost0}
+    className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+    {didLikePost()}
+   </button>
+  </div>
+ );
+};
 
 export const ShareButton = () => {
  return (
@@ -100,7 +190,11 @@ export const ShareButton = () => {
   </button>
  );
 };
-export const CommentButton = ({ setCommentsVisible }: {setCommentsVisible:DispatchWithoutAction}) => {
+export const CommentButton = ({
+ setCommentsVisible,
+}: {
+ setCommentsVisible: DispatchWithoutAction;
+}) => {
  return (
   <button
    onClick={setCommentsVisible}
@@ -122,4 +216,3 @@ export const CommentButton = ({ setCommentsVisible }: {setCommentsVisible:Dispat
   </button>
  );
 };
-

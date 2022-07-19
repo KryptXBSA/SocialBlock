@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { BookmarkButton, LikeButton } from "./buttons";
+import { BookmarkButton, LikeButton, TipButton } from "./buttons";
 import { ShareButton, CommentButton } from "./buttons";
 import { Comment, NewComment } from "./comment";
 
+import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { TipModal } from "./tip-modal";
 
@@ -15,7 +16,7 @@ interface Props {
  date: string;
  publickeyString: string;
  block: string;
- shared: string;
+ tip: number;
 }
 
 export function Post({
@@ -24,7 +25,7 @@ export function Post({
  date,
  publickeyString,
  block,
- shared,
+ tip,
 }: Props) {
  const programContext = UseProgramContext();
  const [commentsVisible, setCommentsVisible] = useState(false);
@@ -58,14 +59,15 @@ export function Post({
       <div className="flex justify-start   items-center flex-row">
        <Link href={`/users?pubkey=${publickeyString}`}>
         <div className="flex cursor-pointer items-center">
-        <div className="pb- pr-2">
-         <img
-          className="w-10 h-10  rounded-full"
-          src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-          alt="Rounded avatar"
-         />
+         <div className="pb- pr-2">
+          <img
+           className="w-10 h-10  rounded-full"
+           src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+           alt="Rounded avatar"
+          />
+         </div>
+         <span className=" text-2xl ">{username}</span>
         </div>
-        <span className=" text-2xl ">{username}</span></div>
        </Link>
        <span>&nbsp;•&nbsp;</span>
        <span className="text-base">{date}</span>
@@ -74,15 +76,16 @@ export function Post({
         {block}
        </span>
       </div>
-       <Link href={`/users?pubkey=${publickeyString}`}>
-      <p
-       style={{ marginTop: -9, marginLeft: 49 }}
-       className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
-       {publickeyString}
-      </p>
-       </Link>
+      <Link href={`/users?pubkey=${publickeyString}`}>
+       <p
+        style={{ marginTop: -9, marginLeft: 49 }}
+        className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
+        {publickeyString}
+       </p>
+      </Link>
      </div>
     </div>
+    {/* shared post */}
     {/* {shared !== "ndo" && (
      <>
       <Link href={`/users?pubkey=${publickeyString}`}>
@@ -100,7 +103,6 @@ export function Post({
      </>
     )} */}
     <p className=" w-fit p- break-words">{content}</p>
-    {/* <span className="flex mt-3 text-violet-500">{data.topic}</span> */}
     <div className="flex   justify-around items-stretch flex-row">
      <LikeButton
       walletPubkey={programContext?.getWallet?.publicKey!}
@@ -114,24 +116,22 @@ export function Post({
      {/* <div className="tooltip" data-tip="Coming Soon"> */}
      {/* <ShareButton /> */}
      {/* </div> */}
+     <TipButton setShowTipModal={setShowTipModal} />
     </div>
-    <div className="flex  mb-2  items-center">
-     <div
-      className="tooltip flex items-center"
-      data-tip="Sol Received From tips">
-      <img className=" mx-1 h-7 w-7 rounded-full  " src="/icons/sol-icon.png" />{" "}
-      <span className="">0</span>
+
+    {tip > 0 && (
+     <div className="flex  mb-2  items-center">
+      <div
+       className="tooltip flex items-center"
+       data-tip="Sol Received From tips">
+       <img
+        className=" mx-1 h-7 w-7 rounded-full  "
+        src="/icons/sol-icon.png"
+       />{" "}
+       <span className="">{tip / LAMPORTS_PER_SOL}</span>
+      </div>
      </div>
-     <div
-      onClick={() => setShowTipModal(true)}
-      className="justify-self-end items-center hover:bg-slate-800 p-2 rounded-lg transition-colors  cursor-pointer flex flex-row  ml-auto">
-      <span className="font-semibold mr-1">Tip</span>
-      <img
-       className="  h-7 w-7 rounded-full  "
-       src="/icons/sol-icon.png"
-      />{" "}
-     </div>
-    </div>
+    )}
     {commentsVisible && (
      <>
       {postComments}
