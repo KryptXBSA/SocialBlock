@@ -27,7 +27,9 @@ export function Post({
  block,
  tip,
 }: Props) {
- const programContext = UseProgramContext();
+//  @ts-ignore
+    const { state, program, commentProgram, getWallet, userProgram, changeState } =
+  UseProgramContext();
  const [commentsVisible, setCommentsVisible] = useState(false);
  const [postComments, setPostComments]: any = useState("");
  const [showTipModal, setShowTipModal] = useState(false);
@@ -105,9 +107,9 @@ export function Post({
     <p className=" w-fit p- break-words">{content}</p>
     <div className="flex   justify-around items-stretch flex-row">
      <LikeButton
-      walletPubkey={programContext?.getWallet?.publicKey!}
-      postLikes={[programContext?.getWallet?.publicKey!]}
-      postPubkey={programContext?.getWallet?.publicKey!}
+      walletPubkey={getWallet?.publicKey!}
+      postLikes={[getWallet?.publicKey!]}
+      postPubkey={getWallet?.publicKey!}
       unlikePost={"unlikePost"}
       likePost={"likePost"}
       text={""}
@@ -137,9 +139,9 @@ export function Post({
       {postComments}
       {!postComments && <div className="divider"></div>}
       <NewComment
-       commentProgram={programContext?.commentProgram!}
-       postPubkey={programContext?.getWallet?.publicKey!}
-       walletPubkey={programContext?.getWallet?.publicKey!}
+       commentProgram={commentProgram!}
+       postPubkey={getWallet?.publicKey!}
+       walletPubkey={getWallet?.publicKey!}
        username={"aland"}
       />
      </>

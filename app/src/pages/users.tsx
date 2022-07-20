@@ -19,10 +19,12 @@ import {
  SpecialAlert,
  WarningAlert,
 } from "../components/alert";
+import Link from "next/link";
 
 export default function Home() {
  const { notify } = useNotifier();
- const { state, program, commentProgram, getWallet, userProgram, changeState } =
+ //  @ts-ignore
+ const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
  const [username, setUsername] = useState(state.username);
  const router = useRouter();
@@ -53,37 +55,33 @@ export default function Home() {
   if (getWallet?.publicKey && !username) {
    getUsername0(getWallet?.publicKey);
   }
-  if (program && router?.query?.pubkey && !alreadyFetched) {
+  if (postProgram && router?.query?.pubkey && !alreadyFetched) {
    setSearchContent(router?.query?.pubkey);
    getPosts(router?.query?.pubkey);
    getAllComments0(router?.query?.pubkey, true);
    setAlreadyFetched(true);
   }
   setContent();
- }, [router, program, getWallet, comments, username, posts, activeTab]);
+ }, [router, postProgram, getWallet, comments, username, posts, activeTab]);
  function changeTab(tab: SetStateAction<string>) {
   setActiveTab(tab);
  }
  async function likePost(postPubkey: any) {
   if (!getWallet?.publicKey) {
-   notify(
-    <DangerAlert text="Please connect to a wallet." dismiss={undefined} />
-   );
+   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
    // setShowSignupPopup(true)
   } else {
    try {
-    return await like({ wallet: getWallet, program, postPubkey });
+    return await like({ wallet: getWallet, program: postProgram, postPubkey });
    } catch (e) {}
   }
  }
  async function unlikePost(postPubkey: any) {
   if (!getWallet?.publicKey) {
-   notify(
-    <DangerAlert text="Please connect to a wallet." dismiss={undefined} />
-   );
+   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
    // setShowSignupPopup(true)
   } else {
-   return await unlike({ wallet: getWallet, program, postPubkey });
+   return await unlike({ wallet: getWallet, program: postProgram, postPubkey });
   }
  }
  async function newComment0(commentContent: any, postPubkey: any) {
@@ -94,15 +92,10 @@ export default function Home() {
    username: username,
    content: commentContent,
   });
-  notify(
-   <InfoAlert
-    text="Please also confirm the next transaction."
-    dismiss={undefined}
-   />
-  );
+  notify(<InfoAlert text="Please also confirm the next transaction." dismiss={undefined} />);
   let commenta = await comment({
    wallet: getWallet,
-   program: program,
+   program: postProgram,
    postPubkey: postPubkey,
   });
   return commentResult;
@@ -186,9 +179,9 @@ export default function Home() {
   });
   let filter = [authorFilter(value)];
   let posts: any[] | ((prevState: never[]) => never[]) = [];
-  if (program) {
+  if (postProgram) {
    try {
-    posts = await getAllPosts({ program: program, filter: filter });
+    posts = await getAllPosts({ program: postProgram, filter: filter });
    } catch (e) {
     // notify(
     //           <SpecialAlert
@@ -197,6 +190,7 @@ export default function Home() {
     //         );
    }
   }
+  console.log(posts);
   posts = posts.sort(function (a, b) {
    return b.getTimestamp - a.getTimestamp;
   });
@@ -205,11 +199,12 @@ export default function Home() {
 
  function renderComments() {
   return comments.map((post: any, index, { length }) => {
-    console.log('whyyyyyyyyy');
-    console.log(post);
-    
+   console.log("whyyyyyyyyy");
+   console.log(post);
+
    return (
-    <>aaa
+    <>
+     aaa
      <Commentt key={post.key} data={post} className="flex flex-row" />
      {index + 1 !== length && <div className="divider"></div>}
     </>
@@ -218,14 +213,8 @@ export default function Home() {
  }
  function renderPosts() {
   return posts.map(
-   (
-    post: { getLikes: any; key: any; publicKey: any },
-    index: number,
-    { length }: any
-   ) => {
-    let wallet = getWallet
-     ? getWallet.publicKey.toBase58()
-     : localStorage.getItem("wallet");
+   (post: { getLikes: any; key: any; publicKey: any }, index: number, { length }: any) => {
+    let wallet = getWallet ? getWallet.publicKey.toBase58() : localStorage.getItem("wallet");
     return (
      <>
       <Post
@@ -263,7 +252,7 @@ export default function Home() {
       {/* <ProfileSidebar active='0' hasSpace={false} router={router} /> */}
       <div className=" flex grow  flex-col">
        <Search searchInputRef={searchInputRef} clickSearch={searchOnClick} />
-
+       <Profile />
        {/* <Search /> */}
        <Tabs changeTab={changeTab} activeTab={activeTab} />
        {posts.length !== 0 && tabContent}
@@ -274,7 +263,50 @@ export default function Home() {
   );
  }
 }
-
+function Profile() {
+ return (
+  <>
+   <div className="mt-6 pb-2 ">
+    <div className="flex  justify-start items-center flex-row">
+     <div className="flex justify-start   items-center w-full  flex-row">
+      <Link href={`/users?pubkey=${"publickeyString"}`}>
+       <div className="flex cursor-pointer items-center">
+        <div className="pb- pr-2">
+         <img
+          className="w-14 h-14  rounded-full"
+          src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+          alt="Rounded avatar"
+         />
+        </div>
+        <span className=" text-3xl ">aland</span>
+       </div>
+      </Link>
+      <span>&nbsp;•&nbsp;</span>
+      <span className="text-base">Joined May 2022</span>
+      <button className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
+        <div className="flex flex-row items- justify-center">
+       {/* <svg
+        style={{marginTop:3}}
+        className="w-5 h-5  fill-slate-100 mr-2"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 512 512">
+        <path d="M511.1 63.1v287.1c0 35.25-28.75 63.1-64 63.1h-144l-124.9 93.68c-7.875 5.75-19.12 .0497-19.12-9.7v-83.98h-96c-35.25 0-64-28.75-64-63.1V63.1c0-35.25 28.75-63.1 64-63.1h384C483.2 0 511.1 28.75 511.1 63.1z" />
+       </svg>{" "} */}
+       <span>Message</span></div>
+      </button>
+     </div>
+    </div>
+    <Link href={`/users?pubkey=${"publickeyString"}`}>
+     <p
+      style={{ marginLeft: 65, marginTop: -19 }}
+      className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
+      {"publickeyString"}
+     </p>
+    </Link>
+   </div>
+  </>
+ );
+}
 export const ActionButton = ({ text }: any) => {
  return (
   <div className=" m-1">
@@ -339,12 +371,7 @@ export const Tabs = ({ activeTab, changeTab }: any) => {
     <Tab text="Shares" index="3" activeTab={activeTab} changeTab={changeTab} />
    </div>
    <div className="tooltip" data-tip="Coming Soon">
-    <Tab
-     text="Bookmarks"
-     index="4"
-     activeTab={activeTab}
-     changeTab={changeTab}
-    />
+    <Tab text="Bookmarks" index="4" activeTab={activeTab} changeTab={changeTab} />
    </div>
   </div>
  );
