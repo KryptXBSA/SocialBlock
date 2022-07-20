@@ -209,8 +209,8 @@ function User({ username, lastMessage, index, selectedMessage, setSelectedMessag
    }`}>
    <img className="w-10 h-10  rounded-full" src={img} alt="Rounded avatar" />
    <div className="flex flex-col flex-grow ml-3">
-    <div className="text-sm font-medium">{username}</div>
-    <div className="text-xs truncate w-40">{lastMessage}</div>
+    <div className="text-base font-semibold">{username}</div>
+    <div className="text-sm truncate w-40">{lastMessage}</div>
    </div>
    <div className="flex-shrink-0 ml-2 self-end mb-1">
     <span className="flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs rounded-full">
