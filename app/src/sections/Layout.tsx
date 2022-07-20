@@ -10,14 +10,16 @@ const Layout = ({ children }: { children: ReactNode }) => {
    <Head>
     <link rel="icon" href="/favicon.ico" />
    </Head>
-   
-   <div className="relative justify-center flex flex-row ">
-    <div className="mr-52">
+   {/* <div className="mr-52"> */}
      <Sidebar active={undefined} router={undefined} hasSpace={undefined} />
-    </div>
+    {/* </div> */}
+   <div className="relative justify-center flex flex-row ">
+    
+    <div className=" invisible">
+    <Trending /></div>
     {children}
     <Trending />
-   </div>
+    </div>
   </>
  );
 };

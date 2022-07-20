@@ -20,6 +20,7 @@ import {
  WarningAlert,
 } from "../components/alert";
 import Link from "next/link";
+import { MessageModal } from "../components/user/message-modal";
 
 export default function Home() {
  const { notify } = useNotifier();
@@ -27,6 +28,7 @@ export default function Home() {
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
  const [username, setUsername] = useState(state.username);
+ const [showMessageModal, setShowMessageModal] = useState(false)
  const router = useRouter();
 
  const [posts, setPosts]: any = useState([]);
@@ -242,6 +244,7 @@ export default function Home() {
  } else {
   return (
    <Layout>
+   {showMessageModal && (<MessageModal setShowModal={setShowMessageModal} />)}
     {/* Hero Section  */}
     {/* <Search /> */}
     {/* <Tabs changeTab={changeTab} activeTab={activeTab} /> */}
@@ -252,18 +255,19 @@ export default function Home() {
       {/* <ProfileSidebar active='0' hasSpace={false} router={router} /> */}
       <div className=" flex grow  flex-col">
        <Search searchInputRef={searchInputRef} clickSearch={searchOnClick} />
-       <Profile />
+       <Profile setShowMessageModal={setShowMessageModal} />
        {/* <Search /> */}
        <Tabs changeTab={changeTab} activeTab={activeTab} />
        {posts.length !== 0 && tabContent}
       </div>
      </div>
     </main>
+    <div className="mb-96 pb-96"></div>
    </Layout>
   );
  }
 }
-function Profile() {
+function Profile({setShowMessageModal}:any) {
  return (
   <>
    <div className="mt-6 pb-2 ">
@@ -283,7 +287,7 @@ function Profile() {
       </Link>
       <span>&nbsp;•&nbsp;</span>
       <span className="text-base">Joined May 2022</span>
-      <button className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
+      <button onClick={()=>setShowMessageModal(true)} className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
         <div className="flex flex-row items- justify-center">
        {/* <svg
         style={{marginTop:3}}
