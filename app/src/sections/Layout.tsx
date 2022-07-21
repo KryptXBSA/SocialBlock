@@ -4,22 +4,22 @@ import Head from "next/head";
 import { ReactNode } from "react";
 
 import { Sidebar } from "../components/sidebar";
-const Layout = ({ children }: { children: ReactNode }) => {
+const Layout = ({ children, active }: { children: ReactNode; active: number }) => {
  return (
   <>
    <Head>
     <link rel="icon" href="/favicon.ico" />
    </Head>
    {/* <div className="mr-52"> */}
-     <Sidebar active={undefined} router={undefined} hasSpace={undefined} />
-    {/* </div> */}
+   <Sidebar active={active}  />
+   {/* </div> */}
    <div className="relative justify-center flex flex-row ">
-    
     <div className=" invisible">
-    <Trending /></div>
+     <Trending />
+    </div>
     {children}
     <Trending />
-    </div>
+   </div>
   </>
  );
 };
@@ -45,8 +45,8 @@ function Trending() {
        </h5>
       </a>
       <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
-       Here are the biggest enterprise technology acquisitions of 2021 so far,
-       in reverse chronological order.
+       Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse
+       chronological order.
       </p>
       <a
        href="#"

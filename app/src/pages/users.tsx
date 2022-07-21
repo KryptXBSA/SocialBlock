@@ -243,7 +243,7 @@ export default function Home() {
   return null;
  } else {
   return (
-   <Layout>
+   <Layout active={2}>
    {showMessageModal && (<MessageModal setShowModal={setShowMessageModal} />)}
     {/* Hero Section  */}
     {/* <Search /> */}

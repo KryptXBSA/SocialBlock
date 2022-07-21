@@ -68,20 +68,22 @@ let homeIcon = (
   />
  </svg>
 );
-export const Sidebar = ({ active, router }: any) => {
- useEffect(() => {}, [router]);
+export const Sidebar = ({ active }: {active:number}) => {
  const { disconnect } = useWallet();
+ console.log(active);
+ 
+ 
  return (
   <div className="flex z-20  flex-col">
    <div className="flex w-52 z-20  h-full bg-slate-800 flex-col left-0 fixed">
     <div className="h-20 w-52 border-b-2  border-gray-700  z-10 top-0 bg-slate-800 inline-flex items-center">
      <span className="font-bold ml-10 text-lg"> LOGO</span>
     </div>
-    <Button icon={homeIcon} index="0" active={active} href="/" text="Home" />
-    <Button icon={profileIcon} index="2" active={active} href="/inbox" text="Inbox" />
-    <Button icon={profileIcon} index="2" active={active} href="/users" text="Users" />
+    <Button icon={homeIcon} index={0} active={active} href="/" text="Home" />
+    <Button icon={profileIcon} index={1} active={active} href="/inbox" text="Inbox" />
+    <Button icon={profileIcon} index={2} active={active} href="/users" text="Users" />
 
-    <Button icon={marketPlaceIcon} index="3" active={active} href="#" text="Blocks" />
+    <Button icon={marketPlaceIcon} index={3} active={active} href="#" text="Blocks" />
 
     <WalletMultiButton className=" ml-1 hover:bg-violet-600 py-3 btn1 px-5 inline-flex items-center  w-48  " />
     <div className=" mb-8 ml-6 mt-auto">
@@ -109,13 +111,13 @@ export const Sidebar = ({ active, router }: any) => {
 };
 
 export const Button = ({ href, text, index, active, icon }: any) => {
- const [clss, setClss] = useState("bg-transparent ");
+ const [clss, setClss] = useState("bg-transparent dark:hover:bg-slate-700");
  useEffect(() => {
   let show = index === active;
   if (show) {
-   setClss("   ");
+   setClss(" bg-blue-700 hover:bg-blue-600 ");
   } else {
-   setClss(" dark:bg-transparent ");
+   setClss(" dark:bg-transparent dark:hover:bg-slate-700 ");
   }
  }, [active]);
 
@@ -124,7 +126,7 @@ export const Button = ({ href, text, index, active, icon }: any) => {
    <button
     className={
      clss +
-     "px-5 mx-1 rounded-md py-3 inline-flex items-center  bg-transparent w-48 flex-row  dark:hover:bg-slate-700 transition duration-300 bg-indigo-500 text-white  tracking-wider font-semibold text-sm sm:text-xl whitespace-nowrap"
+     " px-5 mx-1 rounded-md py-3 inline-flex items-center  bg-transparent w-48 flex-row   transition duration-300  text-white  tracking-wider font-semibold text-sm sm:text-xl whitespace-nowrap"
     }>
     <div className="mr-3">{icon}</div>
     {text}

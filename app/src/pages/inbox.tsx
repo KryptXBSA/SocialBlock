@@ -20,7 +20,7 @@ export default function InboxPage() {
     <title>Social Block</title>
     <link rel="icon" href="/favicon.ico" />
    </Head>
-   <Layout>
+   <Layout active={1}>
     <main className="  bg-slate-900   flex justify-center flex-row">
      <Inbox />
      {/* <div style={{ width: 733 }} className="flex mt-4 items-center flex-col space-y-2"></div> */}
