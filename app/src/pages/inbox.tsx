@@ -1,7 +1,15 @@
 /** @format */
 
 import Head from "next/head";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {
+ Dispatch,
+ LegacyRef,
+ MutableRefObject,
+ SetStateAction,
+ useEffect,
+ useRef,
+ useState,
+} from "react";
 
 import Layout from "../sections/Layout";
 
@@ -21,34 +29,69 @@ export default function InboxPage() {
   </>
  );
 }
-
+let messages0 = [
+  {
+   message: "h asdasdads sadasdads asddi",
+   date: "2 days ago",
+   self: false,
+   publickeyString: "a1",
+  },
+  {
+   message: "h asdasdads sadasdads asddi",
+   date: "2 days ago",
+   self: true,
+   publickeyString: "a2",
+  },
+  { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
+ ]; let users = [
+  {
+   username: "aldddddand",
+   img: "https://i.imgur.com/6tq2RU8.jpeg",
+   publickeyString: "a1",
+  },
+  {
+   username: "fd",
+   img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+   publickeyString: "a2",
+  },
+  {
+   username: "ddaadsdsda",
+   img: "https://i.imgur.com/m7adBVb.jpeg",
+   publickeyString: "a3",
+  },
+ ];
 function Inbox() {
+ let messageInputRef: any = useRef("");
+ function sendMessage(e: { preventDefault: () => void }) {
+  e.preventDefault();
+  let message = messageInputRef.current.value;
+  setMessages(messages.concat([{ message, date: "Just now", self: true, publickeyString: "a3" }]));
+ }
+
+ const [selectedUser, setSelectedUser] = useState(0);
+ 
+ const [messages, setMessages] = useState(messages0);
  return (
   <div className="flex flex-row h-screen antialiased ">
    <div className="flex flex-row w-96 flex-shrink-0 p-4">
     <div className="flex flex-col w-full h-full pl-4 pr-4 py-4 -mr-4">
      <MessageHeader />
-     <MessageList />
+     <UserList setSelectedUser={setSelectedUser} users={users} />
     </div>
    </div>
    <div className="flex flex-col h-full w-full  px-4 py-6">
-    <MessageHeader1 username="aland" />
+    <MessageHeader1
+     username={users[selectedUser].username}
+     publickeyString={users[selectedUser].publickeyString!}
+    />
     {/* messages */}
     <div className="h-full overflow-hidden py-4">
      <div className="h-full overflow-y-auto">
       <div className="grid grid-cols-12 gap-y-2">
-       <Message
-        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-        message="hi"
-        self={false}
-       />{" "}
-       <Message
-        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-        message="hi"
-        self={true}
-       />
+       <Messages messages={messages} users={users} />
        <div className="invisible">
         <Message
+         date="1"
          img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
          message="hi"
          self={true}
@@ -59,66 +102,148 @@ function Inbox() {
     </div>
     {/* messages */}
 
-    <div className="flex flex-row items-center">
-     <div className="flex flex-row items-center w-full rounded-3xl h-12 px-2">
-      <div className="w-full">
-       <textarea
-        className=" bg-transparent  w-full rounded-lg text-sm h-10 flex items-center"
-        placeholder="Type your message...."
-       />
-      </div>
+    <form onSubmit={sendMessage} className="flex flex-row items-center">
+     <div className="flex  flex-row items-center w-full rounded-3xl h- px-2">
+      <textarea
+       rows={3}
+       ref={messageInputRef}
+       className="  bg-transparent focus:outline-none border-blue-500 border-2 p-1 w-full rounded-lg text-sm  flex items-center"
+       placeholder="Type your message...."
+      />
      </div>
-     <div className="">
-      <button className="flex items-center justify-center h-10 w-10 rounded-full  transition-colors duration-300 hover:bg-gray-800 ">
-       <svg
-        className="w-5 h-5 transform rotate-90 -mr-px"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        xmlns="http://www.w3.org/2000/svg">
-        <path
-         stroke-linecap="round"
-         stroke-linejoin="round"
-         stroke-width="2"
-         d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
-       </svg>
-      </button>
-     </div>
-    </div>
+     <button
+      type="submit"
+      className="flex items-center justify-center h-10 w-10 rounded-full  transition-colors duration-300 hover:bg-gray-800 ">
+      <svg
+       className="w-5 h-5 transform rotate-90 -mr-px"
+       fill="none"
+       stroke="currentColor"
+       viewBox="0 0 24 24"
+       xmlns="http://www.w3.org/2000/svg">
+       <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+      </svg>
+     </button>
+    </form>
    </div>
   </div>
+ );
+}
+interface Messages {
+ messages: {
+  self: boolean;
+  message: string;
+  date: string;
+  publickeyString: string;
+ }[];
+ users: {
+  username: string;
+  img: string;
+  publickeyString: string;
+ }[];
+}
+function Messages({ messages, users }: Messages) {
+ return (
+   <>
+   {messages.map((m) => (
+    <Message
+     date={m.date}
+     img={
+      users.find(
+       (e: { publickeyString: string | undefined }) => e.publickeyString === m.publickeyString
+      )!.img
+     }
+     message={m.message}
+     self={m.self}
+    />
+   ))}</>
  );
 }
 interface Message {
  self: boolean;
  message: string;
  img: string;
+ date: string;
+ publickeyString?: string;
 }
-function Message({ self, message, img }: Message) {
+function Message({ self, message, img, date }: Message) {
  return (
   <div className={`${!self ? "col-start-1 col-end-8 p-3" : "col-start-6 col-end-13"}  rounded-lg`}>
    <div className={`flex ${!self ? "flex-row" : "flex-row-reverse"} items-center`}>
-    <img className="w-10 h-10  rounded-full" src={!self ? img : ""} alt="Rounded avatar" />
-    <div
-     className={`relative ${
-      !self ? "ml-3" : "mr-3"
-     } text-sm bg-slate-800 py-2 px-4 shadow rounded-xl`}>
-     <div className="text-base">{message}</div>
+    <img className="w-10 h-10  rounded-full" src={self ? "/img.png" : img} />
+    <div className="flex flex-col">
+     <span className=" invisible self-end text-xs text-gray-400">{date}</span>
+     <div
+      className={`relative ${
+       !self ? "ml-3" : "mr-3"
+      } text-base bg-slate-800 py-2 px-4 shadow rounded-xl`}>
+      {message}
+     </div>
+     <span className={` ${self ? "self-end mr-4" : "ml-4"} text-xs text-gray-400`}>{date}</span>
     </div>
    </div>
   </div>
  );
 }
-function MessageHeader1({ username }: { username: string }) {
+interface User {
+ index: number;
+ selectedMessage: number;
+ username: string;
+ lastMessage: string;
+ setSelectedMessage: (user: number) => void;
+ img: string;
+}
+function User({ username, lastMessage, index, selectedMessage, setSelectedMessage, img }: User) {
+ const [selected, setSelected] = useState(index === selectedMessage);
+ useEffect(() => {
+  setSelected(index === selectedMessage);
+ }, [selectedMessage]);
+
+ return (
+  <div
+   onClick={() => setSelectedMessage(index)}
+   className={` transition-colors duration-300 cursor-pointer  rounded-lg my-1 flex flex-row items-center p-4 ${
+    selected
+     ? "bg-gradient-to-r from-blue-600 to-transparent border-l-2 border-sky-600 hover:border-sky-500 hover:from-blue-500"
+     : "hover:bg-slate-800"
+   }`}>
+   <img className="w-10 h-10  rounded-full" src={img} alt="Rounded avatar" />
+   <div className="flex flex-col flex-grow ml-3">
+    <div className="text-base font-semibold">{username}</div>
+    <div className="text-sm truncate w-40">{lastMessage}</div>
+   </div>
+   <div className="flex-shrink-0 ml-2 self-end mb-1">
+    <span className="flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs rounded-full">
+     5
+    </span>
+   </div>
+  </div>
+ );
+}
+function MessageHeader1({
+ username,
+ publickeyString,
+}: {
+ username: string;
+ publickeyString: string;
+}) {
  return (
   <div className="flex flex-row items-center py-4 px-6 rounded-2xl shadow">
    <img
     className="w-10 h-10  rounded-full"
     src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-    alt="Rounded avatar"
    />
    <div className="flex flex-col ml-2">
-    <div className="font-semibold text-lg">{username}</div>
+    <div className="font-semibold text-lg">{username}</div>{" "}
+    <p
+     style={{ marginTop: -8 }}
+     className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
+     {publickeyString}
+     {/* hhhhhhhhh */}
+    </p>
    </div>
   </div>
  );
@@ -151,71 +276,33 @@ function MessageHeader() {
   </div>
  );
 }
-interface User {
- index: number;
- selectedMessage: number;
- username: string;
- lastMessage: string;
- setSelectedMessage: Dispatch<SetStateAction<number>>;
- img: string;
-}
-function MessageList() {
- const [selectedMessage, setSelectedMessage] = useState(0);
 
+function UserList({
+ users,
+ setSelectedUser,
+}: {
+ users: { username: string; img: string }[];
+ setSelectedUser: Dispatch<SetStateAction<number>>;
+}) {
+ const [selectedMessage, setSelectedMessage] = useState(0);
+ function setUser(user: number) {
+  setSelectedMessage(user);
+  setSelectedUser(user);
+ }
  return (
   <div className="mt-2">
    <div className="flex flex-col -mx-4">
-    <User
-     lastMessage="asfaqsfasf asfasfasfd asfas "
-     username="aland"
-     img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-     selectedMessage={selectedMessage}
-     setSelectedMessage={setSelectedMessage}
-     index={0}
-    />
-    <User
-     lastMessage="asfaqsfasf asfasfasfd asfas "
-     username="aland"
-     img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-     selectedMessage={selectedMessage}
-     setSelectedMessage={setSelectedMessage}
-     index={1}
-    />
-    <User
-     lastMessage="asfaqsfasf asfasfasfd asfas "
-     username="aland"
-     img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-     selectedMessage={selectedMessage}
-     setSelectedMessage={setSelectedMessage}
-     index={2}
-    />
-   </div>
-  </div>
- );
-}
-function User({ username, lastMessage, index, selectedMessage, setSelectedMessage, img }: User) {
- const [selected, setSelected] = useState(index === selectedMessage);
- useEffect(() => {
-  setSelected(index === selectedMessage);
- }, [selectedMessage]);
-
- return (
-  <div
-   onClick={() => setSelectedMessage(index)}
-   className={` transition-colors duration-300 cursor-pointer  rounded-lg my-1 flex flex-row items-center p-4 ${
-    selected
-     ? "bg-gradient-to-r from-blue-600 to-transparent border-l-2 border-sky-600 hover:border-sky-500 hover:from-blue-500"
-     : "hover:bg-slate-800"
-   }`}>
-   <img className="w-10 h-10  rounded-full" src={img} alt="Rounded avatar" />
-   <div className="flex flex-col flex-grow ml-3">
-    <div className="text-base font-semibold">{username}</div>
-    <div className="text-sm truncate w-40">{lastMessage}</div>
-   </div>
-   <div className="flex-shrink-0 ml-2 self-end mb-1">
-    <span className="flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs rounded-full">
-     5
-    </span>
+    {users.map((user, index) => (
+     <User
+      lastMessage="asfaqsfasf asfasfasfd asfas "
+      username={user.username}
+      img={user.img}
+      // img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+      selectedMessage={selectedMessage}
+      setSelectedMessage={setUser}
+      index={index}
+     />
+    ))}
    </div>
   </div>
  );
