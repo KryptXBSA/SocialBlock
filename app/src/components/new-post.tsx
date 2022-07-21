@@ -1,44 +1,81 @@
 /** @format */
 
 import { useRef, useState } from "react";
-export const NewPost = ({ post, username }: any) => {
- let postInputRef: any = useRef("");
- let tagsInputRef: any = useRef("");
+import { UseProgramContext } from "../contexts/programContextProvider";
+import {
+ SuccessAlert,
+ InfoAlert,
+ DangerAlert,
+ SpecialAlert,
+ WarningAlert,
+} from "../components/alert";
+import { useNotifier } from "react-headless-notifier";
+export const NewPost = ({ post }: any) => {
+ //  @ts-ignore
+ const { getWallet } = UseProgramContext();
+ let contentInputRef: any = useRef("");
+ let blockInputRef: any = useRef("");
 
- const [tagsValue, setTagsValue] = useState("");
+ const [blockValue, setBlockValue] = useState("");
+
+ const { notify } = useNotifier();
  function newPost(e: { preventDefault: () => void }) {
   e.preventDefault();
-  let content = postInputRef.current.value;
-  let topic = tagsValue;
-  post(topic, content);
+  if (!getWallet?.publicKey) {
+   console.log("noo");
+   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
+   // setShowSignupPopup(true)
+  } else {
+   let content = contentInputRef.current.value;
+   let block = blockValue;
+   post({ block, content });
+   try {
+    // return await like({ wallet: getWallet, program: postProgram, postPubkey });
+   } catch (e) {}
+  }
  }
- function onTagsChange(e: { target: { value: any } }) {
+
+ function onblockChange(e: { target: { value: any } }) {
   let str = e.target.value;
   str = str.replace(/\s+/g, "-");
   if (str.slice(-2) === "--") {
-   str = tagsValue;
+   str = blockValue;
   }
-  setTagsValue(str);
+  setBlockValue(str);
  }
  return (
   <>
    <div className="w-full">
     <div className="flex w-full flex-row">
      <textarea
+      ref={contentInputRef}
       className="block p-2.5 w-full text-sm rounded-lg dark:bg-gray-800 "
-      placeholder={``}
      />
-     {/* <button className="btn rounded-l-none ">
-      New Post
-    </button> */}
     </div>
     <div className="   form-control">
      <form onSubmit={newPost}>
       <div className="flex items-center align-middle flex-row">
-        <svg xmlns="http://www.w3.org/2000/svg" className=" ml-3  absolute h-6 self-center w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-      <path strokeLinecap="round" strokeLinejoin="round" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14" />
-    </svg> 
-        <input onChange={onTagsChange} value={tagsValue} ref={tagsInputRef} type="text" placeholder="Block" className=" max-h-10 px-11 input w-44  rounded-3xl  " /> 
+       <svg
+        xmlns="http://www.w3.org/2000/svg"
+        className=" ml-3  absolute h-6 self-center w-6"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}>
+        <path
+         strokeLinecap="round"
+         strokeLinejoin="round"
+         d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"
+        />
+       </svg>
+       <input
+        onChange={onblockChange}
+        value={blockValue}
+        ref={blockInputRef}
+        type="text"
+        placeholder="Block"
+        className=" max-h-10 px-11 input w-44  rounded-3xl  "
+       />
        <button
         onClick={newPost}
         className="p-3 mt-2 px-4 transition duration-300  font-semibold btn1 tracking-normal text-lg  dark:bg-slate-800 ml-auto rounded-2xl ">

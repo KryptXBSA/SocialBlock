@@ -9,7 +9,6 @@ import { Comment, NewComment } from "./comment";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { TipModal } from "./tip-modal";
-
 interface Props {
  content: string;
  username: string;

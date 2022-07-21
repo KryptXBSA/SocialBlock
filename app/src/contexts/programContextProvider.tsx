@@ -37,17 +37,19 @@ function reducer(state: InitialState, user: Actions) {
  }
 }
 export interface ProgramContextInterface {
+ username: string;
+ publickeyString: string;
  userProgram: anchor.Program<anchor.Idl> | undefined;
  postProgram: anchor.Program<anchor.Idl> | undefined;
  commentProgram: anchor.Program<anchor.Idl> | undefined;
  state: InitialState;
  changeState: any;
- getWallet: AnchorWallet|undefined;
+ getWallet: AnchorWallet | undefined;
 }
-const ProgramContext = createContext<ProgramContextInterface | undefined>(
- undefined
-);
+const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
 export function ProgramWrapper({ children }: any) {
+ let username = "aland";
+ let publickeyString = "H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8";
  const [state, changeState] = useReducer(reducer, initialState);
  const wallet = useAnchorWallet();
  const { userProgram } = useUserProgram({ connection, wallet });
@@ -56,6 +58,8 @@ export function ProgramWrapper({ children }: any) {
  return (
   <ProgramContext.Provider
    value={{
+    username,
+    publickeyString,
     userProgram,
     postProgram,
     commentProgram,

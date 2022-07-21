@@ -31,7 +31,7 @@ function MyApp({ Component, pageProps }) {
               config={{
                 max: null, // Max number of notiication simultaneously, `null` will result in no maximum
                 duration: 5000, // Duration by notification in milliseconds
-                position: 'bottomLeft', // Default position for all the notification if it's not specify when using `notify()`, valid positions are 'top', 'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'bottom'.
+                position: 'bottomRight', // Default position for all the notification if it's not specify when using `notify()`, valid positions are 'top', 'topRight', 'topLeft', 'bottomRight', 'bottomLeft', 'bottom'.
               }}
             >
               <AlertWrapper>

@@ -110,7 +110,7 @@ function Alertt({ forr, type, text, id, closing = false }) {
         </div>)
 }
 export function InfoAlert({ text, dismiss }) {
-    return (<div id="alert-border-1" className="w-96  flex p-4 mb-4 rounded-lg animate__animated animate__fadeInLeft bg-blue-100 border-t-4 border-blue-500 dark:bg-blue-200" role="alert">
+    return (<div id="alert-border-1" className="w-96  flex p-4 mb-4 rounded-lg animate__animated animate__fadeInRight bg-blue-100 border-t-4 border-blue-500 dark:bg-blue-200" role="alert">
         <svg class="flex-shrink-0 w-5 h-5 text-blue-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
         <div class="ml-3 text-sm font-semibold text-blue-700">
             {text}
@@ -123,7 +123,7 @@ export function InfoAlert({ text, dismiss }) {
     )
 }
 export function SuccessAlert({ text, dismiss }) {
-    return (<div id="alert-border-3" class="w-96 flex animate__animated animate__fadeInLeft p-4 mb-4 rounded-lg bg-green-100 border-t-4 border-green-500 dark:bg-green-200" role="alert">
+    return (<div id="alert-border-3" class="w-96 flex animate__animated animate__fadeInRight p-4 mb-4 rounded-lg bg-green-100 border-t-4 border-green-500 dark:bg-green-200" role="alert">
         <svg class="flex-shrink-0 w-5 h-5 text-green-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
         <div class="ml-3 text-sm font-semibold text-green-700">
             {text}<a href="#" class="font-semibold underline hover:text-green-800">example link</a>. Give it a click if you like.
@@ -136,7 +136,7 @@ export function SuccessAlert({ text, dismiss }) {
 }
 export function DangerAlertWallet({ text, dismiss }) {
     return (
-        <div id="alert-border-2" class="w-96 rounded-lg animate__animated animate__fadeInLeft flex p-4 mb-4 bg-red-100 border-t-4 border-red-500 dark:bg-red-200" role="alert">
+        <div id="alert-border-2" class="w-96 rounded-lg animate__animated animate__fadeInRight flex p-4 mb-4 bg-red-100 border-t-4 border-red-500 dark:bg-red-200" role="alert">
             <svg class="flex-shrink-0 w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
             <div class="ml-3 text-sm font-semibold text-red-700">
                 Insufficient Devnet Balance, Actions require lamports(SOL), You can get some SOL here:<br/><a target='blank' href='http://solfaucet.com' >solfaucet.com</a>
@@ -150,7 +150,7 @@ export function DangerAlertWallet({ text, dismiss }) {
 
 } export function DangerAlert({ text, dismiss }) {
     return (
-        <div id="alert-border-2" class="w-96 rounded-lg animate__animated animate__fadeInLeft flex p-4 mb-4 bg-red-100 border-t-4 border-red-500 dark:bg-red-200" role="alert">
+        <div id="alert-border-2" class="w-96 rounded-lg animate__animated animate__fadeInRight flex p-4 mb-4 bg-red-100 border-t-4 border-red-500 dark:bg-red-200" role="alert">
             <svg class="flex-shrink-0 w-5 h-5 text-red-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
             <div class="ml-3 text-sm font-semibold text-red-700">
                 {text}
@@ -165,7 +165,7 @@ export function DangerAlertWallet({ text, dismiss }) {
 }
 export function WarningAlert({ text, dismiss }) {
     return (
-        <div id="alert-border-4" class="w-96 rounded-lg animate__animated animate__fadeInLeft flex p-4 mb-4 bg-yellow-100 border-t-4 border-yellow-500 dark:bg-yellow-200" role="alert">
+        <div id="alert-border-4" class="w-96 rounded-lg animate__animated animate__fadeInRight flex p-4 mb-4 bg-yellow-100 border-t-4 border-yellow-500 dark:bg-yellow-200" role="alert">
             <svg class="flex-shrink-0 w-5 h-5 text-yellow-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
             <div class="ml-3 text-sm font-semibold  text-yellow-700">
                 {text}
@@ -180,7 +180,7 @@ export function WarningAlert({ text, dismiss }) {
 }
 export function SpecialAlert({ text, dismiss }) {
     return (
-        <div id="alert-border-4" class=" w-96 border-t-4 border-blue-500  rounded-lg animate__animated animate__fadeInLeft flex p-4 mb-4 bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-500" role="alert">
+        <div id="alert-border-4" class=" w-96 border-t-4 border-blue-500  rounded-lg animate__animated animate__fadeInRight flex p-4 mb-4 bg-gradient-to-r from-pink-300 via-purple-300 to-indigo-500" role="alert">
             <svg class="flex-shrink-0 w-5 h-5 text-yellow-700" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
             <div class="ml-3 text-sm font-semibold  text-violet-900">
                 {text}

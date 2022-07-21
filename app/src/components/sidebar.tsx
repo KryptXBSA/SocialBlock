@@ -70,7 +70,6 @@ let homeIcon = (
 );
 export const Sidebar = ({ active }: {active:number}) => {
  const { disconnect } = useWallet();
- console.log(active);
  
  
  return (
