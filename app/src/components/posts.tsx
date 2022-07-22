@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, Key } from 'react';
-import { postComment } from "../mockup/post-mockup";
 import moment from "moment";
 import { useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey } from '@solana/web3.js';
