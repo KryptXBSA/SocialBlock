@@ -106,12 +106,10 @@ export function Post({
     <p className=" w-fit p- break-words">{content}</p>
     <div className="flex   justify-around items-stretch flex-row">
      <LikeButton
-      walletPubkey={getWallet?.publicKey!}
-      postLikes={[getWallet?.publicKey!]}
+      likes={[getWallet?.publicKey!]}
       postPubkey={getWallet?.publicKey!}
       unlikePost={"unlikePost"}
       likePost={"likePost"}
-      text={""}
      />
      <CommentButton setCommentsVisible={() => displayComments()} />
      {/* <div className="tooltip" data-tip="Coming Soon"> */}

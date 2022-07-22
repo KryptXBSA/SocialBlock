@@ -2,6 +2,12 @@
 
 import { useAnchorWallet } from "@solana/wallet-adapter-react";
 import { DispatchWithoutAction, useEffect, useState } from "react";
+import * as anchor from "@project-serum/anchor";
+
+import { UseProgramContext } from "../../contexts/programContextProvider";
+import { like, unlike } from "../../program/posts";
+import { CheckWallet } from "../../utils/walletError";
+import { useNotifier } from "react-headless-notifier";
 
 export const BookmarkButton = ({ bookmarked }: { bookmarked: boolean }) => {
  return (
@@ -32,7 +38,7 @@ export const TipButton = ({
  unlikePost,
  postPubkey,
  postLikes,
- setShowTipModal
+ setShowTipModal,
 }: any) => {
  const wallet = useAnchorWallet();
  const [didLike, setDidLike] = useState(false);
@@ -51,16 +57,12 @@ export const TipButton = ({
  }
 
  useEffect(() => {
-  let wallet0 = wallet
-   ? wallet.publicKey.toBase58()
-   : localStorage.getItem("waallet");
+  let wallet0 = wallet ? wallet.publicKey.toBase58() : localStorage.getItem("waallet");
   checkPostLikes(wallet0, ["postLikes"]);
  }, [wallet]);
  return (
   <>
-   <div
-    className="tooltip  bg-transparent items-center flex flex-row "
-    data-tip="Tip">
+   <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Tip">
     <button
      onClick={() => setShowTipModal(true)}
      className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
@@ -70,47 +72,53 @@ export const TipButton = ({
   </>
  );
 };
-export const LikeButton = ({
- text,
- likePost,
- unlikePost,
- postPubkey,
- postLikes,
-}: any) => {
- const wallet = useAnchorWallet();
- const [didLike, setDidLike] = useState(false);
 
- const [likedPost, setLikedPost] = useState(false);
- function checkPostLikes(walletPubkey: string | null, postLikes: any[]) {
+interface LikeButtonProps {
+ likes: anchor.web3.PublicKey[];
+ likePost: any;
+ unlikePost: any;
+ postPubkey: anchor.web3.PublicKey;
+}
+export const LikeButton = ({ likes, postPubkey }: LikeButtonProps) => {
+ const { notify } = useNotifier();
+ //  @ts-ignore
+ const { postProgram, getWallet } = UseProgramContext();
+ const [didLike, setDidLike] = useState(false);
+ function checkPostLikes(walletPubkey: string | null, postLikes: anchor.web3.PublicKey[]) {
   postLikes.forEach((p: { toBase58: () => any }) => {
-   if (walletPubkey === "p.toBase58()") {
+   if (walletPubkey === p.toBase58()) {
     setDidLike(true);
-    setLikedPost(true);
    } else {
     setDidLike(false);
-    setLikedPost(false);
    }
   });
  }
 
  useEffect(() => {
-  let wallet0 = wallet
-   ? wallet.publicKey.toBase58()
-   : localStorage.getItem("waallet");
-  checkPostLikes(wallet0, ["postLikes"]);
- }, [wallet]);
+  if (getWallet) {
+   let wallet0 = getWallet.publicKey.toBase58();
+   checkPostLikes(wallet0, likes);
+  }
+ }, [getWallet]);
 
- const [likeCount, setLikeCount] = useState(text);
+ const [likeCount, setLikeCount] = useState(likes.length);
  async function likePost0() {
-  let response = "";
-  if (likedPost) response = await unlikePost(postPubkey);
-  else response = await likePost(postPubkey);
-  if (response === "liked") {
-   setLikedPost(true);
-   setLikeCount(likeCount + 1);
-  } else if (response === "unliked") {
-   setLikedPost(false);
-   setLikeCount(likeCount - 1);
+  let walletError = await CheckWallet(getWallet, notify);
+  if (walletError.error) {
+  } else {
+   let response = "";
+   if (didLike) {
+    response = await unlike({ wallet: getWallet, program: postProgram, postPubkey });
+   } else {
+    response = await like({ wallet: getWallet, program: postProgram, postPubkey });
+   }
+   if (response === "liked") {
+    setDidLike(true);
+    setLikeCount(likeCount + 1);
+   } else if (response === "unliked") {
+    setDidLike(false);
+    setLikeCount(likeCount - 1);
+   }
   }
  }
 
@@ -145,7 +153,7 @@ export const LikeButton = ({
  );
 
  function didLikePost() {
-  return likedPost ? (
+  return didLike ? (
    <>
     {likedIcon}
     <span className="font-semibold text-slate-300">{likeCount}</span>
@@ -158,12 +166,8 @@ export const LikeButton = ({
   );
  }
  return (
-  <div
-   className="tooltip  bg-transparent items-center flex flex-row "
-   data-tip="Tip">
-   <button
-    onClick={likePost0}
-    className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+  <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Tip">
+   <button onClick={likePost0} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
     {didLikePost()}
    </button>
   </div>

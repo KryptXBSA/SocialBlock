@@ -24,7 +24,6 @@ export const NewPost = ({ post }: any) => {
   e.preventDefault();
   let walletError = await CheckWallet(getWallet, notify);
   if (walletError.error) {
-   console.log(walletError);
   } else {
    let content = contentInputRef.current.value;
    let block = blockValue;
