@@ -10,6 +10,7 @@ import {
  WarningAlert,
 } from "../components/alert";
 import { useNotifier } from "react-headless-notifier";
+import { CheckWallet } from "../utils/walletError";
 export const NewPost = ({ post }: any) => {
  //  @ts-ignore
  const { getWallet } = UseProgramContext();
@@ -19,12 +20,11 @@ export const NewPost = ({ post }: any) => {
  const [blockValue, setBlockValue] = useState("");
 
  const { notify } = useNotifier();
- function newPost(e: { preventDefault: () => void }) {
+ async function newPost(e: { preventDefault: () => void }) {
   e.preventDefault();
-  if (!getWallet?.publicKey) {
-   console.log("noo");
-   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
-   // setShowSignupPopup(true)
+  let walletError = await CheckWallet(getWallet, notify);
+  if (walletError.error) {
+   console.log(walletError);
   } else {
    let content = contentInputRef.current.value;
    let block = blockValue;

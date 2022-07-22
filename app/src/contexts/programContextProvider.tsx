@@ -1,6 +1,6 @@
 /** @format */
 
-import { createContext, useContext, useReducer, useState } from "react";
+import { createContext, useContext, useEffect, useReducer, useState } from "react";
 import { useUserProgram } from "../program/user-program";
 import { useProgram } from "../program/useProgram";
 import { useCommentProgram } from "../program/comment-program";
@@ -8,7 +8,7 @@ import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { AnchorWallet, useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import * as anchor from "@project-serum/anchor";
 const endpoint = "https://explorer-api.devnet.solana.com";
-const connection = new anchor.web3.Connection(endpoint);
+export const connection = new anchor.web3.Connection(endpoint);
 
 let initialState = {
  user: { username: "", foundUser: false },
@@ -55,6 +55,7 @@ export function ProgramWrapper({ children }: any) {
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
  const { commentProgram } = useCommentProgram({ connection, wallet });
+ 
  return (
   <ProgramContext.Provider
    value={{

@@ -75,7 +75,7 @@ export const Sidebar = ({ active }: {active:number}) => {
  return (
   <div className="flex z-20  flex-col">
    <div className="flex w-52 z-20  h-full bg-slate-800 flex-col left-0 fixed">
-    <div className="h-20 w-52 border-b-2  border-gray-700  z-10 top-0 bg-slate-800 inline-flex items-center">
+    <div className="h-20 w-52 border-b-2 mb-2 border-gray-700  z-10 top-0 bg-slate-800 inline-flex items-center">
      <span className="font-bold ml-10 text-lg"> LOGO</span>
     </div>
     <Button icon={homeIcon} index={0} active={active} href="/" text="Home" />
@@ -114,7 +114,7 @@ export const Button = ({ href, text, index, active, icon }: any) => {
  useEffect(() => {
   let show = index === active;
   if (show) {
-   setClss(" bg-blue-700 hover:bg-blue-600 ");
+   setClss(" bg-sky-600 hover:bg-sky-500 ");
   } else {
    setClss(" dark:bg-transparent dark:hover:bg-slate-700 ");
   }
