@@ -1,6 +1,5 @@
 /** @format */
 
-import { ProfileSidebar } from "../components/profile-sidebar";
 import Layout from "../sections/Layout";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction } from "react";
@@ -41,8 +40,9 @@ export default function Home() {
  async function getUsername0(pubKey: any) {
   let userStatsPDA = await findUsernamePDA({ userProgram, pubKey });
   let result = await getUsername({ userProgram, userStatsPDA });
+  
 
-  if (result) {
+  if (result.user.foundUser) {
    let username = result.user.username.name;
    changeState(username);
    setUsername(username);

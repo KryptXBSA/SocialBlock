@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Divider } from "../utils/divider"
 import { useState, useEffect, useRef, Key } from 'react';
 import { postComment } from "../mockup/post-mockup";
 import moment from "moment";
