@@ -21,16 +21,19 @@ export default function Home() {
  const programContext = UseProgramContext()!;
 
  const [posts, setPosts] = useState<PostType[]>([]);
+ const [fetchedPosts, setFetchedPosts] = useState(false);
  useEffect(() => {
   if (programContext.postProgram) {
-    fetchPosts()
+   if (!fetchedPosts) {
+    fetchPosts();
+    setFetchedPosts(true);
+   }
   }
  }, [programContext]);
 
  async function fetchPosts() {
-  let posts:any = await getAllPosts({ program: programContext.postProgram! });
-  console.log(posts);
-  setPosts(posts)
+  let posts: any = await getAllPosts({ program: programContext.postProgram! });
+  setPosts(posts);
   return posts;
  }
 
@@ -38,11 +41,12 @@ export default function Home() {
   return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
    <Post
+    key={p.publicKey}
     tip={18000000}
     content={p.content}
     username={programContext.username}
     date={p.date}
-    likes={p.getLikes}
+    likes={p.likes}
     publickeyString={p.authorDisplay}
     block={p.block}
     postPubkey={p.publicKey}
