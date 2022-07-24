@@ -6,6 +6,7 @@ import { NewPost } from "../components/new-post";
 import { Post } from "../components/post/post";
 import Layout from "../sections/Layout";
 
+import moment from "moment";
 import { ProgramContextInterface, UseProgramContext } from "../contexts/programContextProvider";
 import { getAllPosts } from "../program/posts";
 
@@ -32,22 +33,27 @@ export default function Home() {
  }, [programContext]);
 
  async function fetchPosts() {
-  let posts: any = await getAllPosts({ program: programContext.postProgram! });
-  setPosts(posts);
-  return posts;
+  try {
+   let posts: any = await getAllPosts({ program: programContext.postProgram! });
+   setPosts(posts);
+   return posts;
+  } catch (e) {
+   console.log("posts fetch error", e);
+  }
  }
 
  function displayPosts() {
-  
+  console.log(posts);
+
   return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
    <Post
-   commentCount={p.comments}
+    commentCount={p.comments}
     key={p.publicKey}
     tip={18000000}
     content={p.content}
     username={programContext.username}
-    date={p.date}
+    date={p.timestamp}
     likes={p.likes}
     publickeyString={p.authorDisplay}
     block={p.block}
