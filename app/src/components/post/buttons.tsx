@@ -85,7 +85,7 @@ export const LikeButton = ({ likes, postPubkey }: LikeButtonProps) => {
  const { postProgram, getWallet } = UseProgramContext();
  const [didLike, setDidLike] = useState(false);
  function checkPostLikes(walletPubkey: string | null, postLikes: anchor.web3.PublicKey[]) {
-  postLikes.forEach((p: { toBase58: () => any }) => {
+  likes.forEach((p: { toBase58: () => any }) => {
    if (walletPubkey === p.toBase58()) {
     setDidLike(true);
    } else {

@@ -5,29 +5,25 @@ import { useState } from "react";
 import { BookmarkButton, LikeButton, TipButton } from "./buttons";
 import { ShareButton, CommentButton } from "./buttons";
 import { Comment, NewComment } from "./comment";
+import * as anchor from "@project-serum/anchor";
 
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { TipModal } from "./tip-modal";
 interface Props {
+ likes: anchor.web3.PublicKey[];
  content: string;
  username: string;
  date: string;
  publickeyString: string;
  block: string;
  tip: number;
+ postPubkey: anchor.web3.PublicKey;
 }
 
-export function Post({
- content,
- username,
- date,
- publickeyString,
- block,
- tip,
-}: Props) {
-//  @ts-ignore
-    const { state, program, commentProgram, getWallet, userProgram, changeState } =
+export function Post({likes, content, username, date, publickeyString, block, tip,postPubkey }: Props) {
+ //  @ts-ignore
+ const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
  const [commentsVisible, setCommentsVisible] = useState(false);
  const [postComments, setPostComments]: any = useState("");
@@ -50,9 +46,7 @@ export function Post({
  }
  return (
   <div className="pl-5 break-all w-full border-gray-700 grow  ">
-   {showTipModal && (
-    <TipModal username={username} setShowTipModal={setShowTipModal} />
-   )}
+   {showTipModal && <TipModal username={username} setShowTipModal={setShowTipModal} />}
    <div className="flex  justify-start   border-b-2 border-gray-700  flex-col">
     {/* margin y nabe yakam dana ^^^^^^^^^^^^^ */}
     <div className="flex justify-start items-center flex-row">
@@ -106,8 +100,8 @@ export function Post({
     <p className=" w-fit p- break-words">{content}</p>
     <div className="flex   justify-around items-stretch flex-row">
      <LikeButton
-      likes={[getWallet?.publicKey!]}
-      postPubkey={getWallet?.publicKey!}
+      likes={likes}
+      postPubkey={postPubkey}
       unlikePost={"unlikePost"}
       likePost={"likePost"}
      />
@@ -120,13 +114,8 @@ export function Post({
 
     {tip > 0 && (
      <div className="flex  mb-2  items-center">
-      <div
-       className="tooltip flex items-center"
-       data-tip="Sol Received From tips">
-       <img
-        className=" mx-1 h-7 w-7 rounded-full  "
-        src="/icons/sol-icon.png"
-       />{" "}
+      <div className="tooltip flex items-center" data-tip="Sol Received From tips">
+       <img className=" mx-1 h-7 w-7 rounded-full  " src="/icons/sol-icon.png" />{" "}
        <span className="">{tip / LAMPORTS_PER_SOL}</span>
       </div>
      </div>

@@ -46,7 +46,7 @@ export interface ProgramContextInterface {
  changeState: any;
  getWallet: AnchorWallet | undefined;
 }
-const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
+export const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
 export function ProgramWrapper({ children }: any) {
  let username = "aland";
  let publickeyString = "H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8";

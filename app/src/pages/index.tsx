@@ -1,63 +1,64 @@
 /** @format */
 
 import Head from "next/head";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NewPost } from "../components/new-post";
 import { Post } from "../components/post/post";
 import Layout from "../sections/Layout";
 
-import { UseProgramContext } from "../contexts/programContextProvider";
+import { ProgramContextInterface, UseProgramContext } from "../contexts/programContextProvider";
+import { getAllPosts } from "../program/posts";
+
+interface PostType {
+ username: string;
+ publickeyString: string;
+ content: string;
+ block: string;
+ date: string;
+}
 
 export default function Home() {
- //   @ts-ignore
- const { username, publickeyString } = UseProgramContext();
- let posts0 = [
-  { username, publickeyString, content: "hi", block: "solana-summber", date: "1 day ago" },
-  { username, publickeyString, content: "hijhijhij", block: "ksjdasdjkdjs", date: "3 days ago" },
-  {
-   username,
-   publickeyString,
-   content: "jhdsajhd ajdkwsh",
-   block: "csajkhsjkh asdkjhn",
-   date: "1 min ago",
-  },
-  {
-   username,
-   publickeyString,
-   content: "jhdsajhd ajdkwsh",
-   block: "csajkhsjkh asdkjhn",
-   date: "1 min ago",
-  },
-  { username, publickeyString, content: "hijhijhij", block: "ksjdasdjkdjs", date: "3 days ago" },
-  {
-   username,
-   publickeyString,
-   content: "jhdsajhd ajdkwsh",
-   block: "csajkhsjkh asdkjhn",
-   date: "1 min ago",
-  },
-  { username, publickeyString, content: "hijhijhij", block: "ksjdasdjkdjs", date: "3 days ago" },
-  { username, publickeyString, content: "hi", block: "solana-summber", date: "1 day ago" },
- ];
-//  for (let index = 0; index < 3; index++) {
-//   posts0 = posts0.concat(posts0);
-//  }
- const [posts, setPosts] = useState(posts0);
+ const programContext = UseProgramContext()!;
+
+ const [posts, setPosts] = useState<PostType[]>([]);
+ useEffect(() => {
+  if (programContext.postProgram) {
+    fetchPosts()
+  }
+ }, [programContext]);
+
+ async function fetchPosts() {
+  let posts:any = await getAllPosts({ program: programContext.postProgram! });
+  console.log(posts);
+  setPosts(posts)
+  return posts;
+ }
+
  function displayPosts() {
-  return posts.map((p) => (
+  return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
    <Post
     tip={18000000}
     content={p.content}
-    username={username}
+    username={programContext.username}
     date={p.date}
-    publickeyString={p.publickeyString}
+    likes={p.getLikes}
+    publickeyString={p.authorDisplay}
     block={p.block}
+    postPubkey={p.publicKey}
    />
   ));
  }
  function post({ content, block }: { content: string; block: string }) {
-  setPosts(posts.concat({ content, block, username, date: "1 day ago", publickeyString }));
+  setPosts(
+   posts.concat({
+    content,
+    block,
+    username: programContext.username,
+    date: "1 day ago",
+    publickeyString: programContext.publickeyString,
+   })
+  );
  }
  return (
   <>
