@@ -84,7 +84,8 @@ export const LikeButton = ({ likes, postPubkey }: LikeButtonProps) => {
  //  @ts-ignore
  const { postProgram, getWallet } = UseProgramContext();
  const [didLike, setDidLike] = useState(false);
- function checkPostLikes(walletPubkey: string | null,likes: anchor.web3.PublicKey[]) {
+ function checkPostLikes(walletPubkey: string | null, likes: anchor.web3.PublicKey[]) {
+    
   likes.forEach((p: { toBase58: () => any }) => {
    if (walletPubkey === p.toBase58()) {
     setDidLike(true);
@@ -95,10 +96,8 @@ export const LikeButton = ({ likes, postPubkey }: LikeButtonProps) => {
  }
 
  useEffect(() => {
-  if (getWallet) {
-   let wallet0 = getWallet.publicKey.toBase58();
-   checkPostLikes(wallet0, likes);
-  }
+   let walletPubkey = getWallet?.publicKey.toBase58();
+   checkPostLikes(walletPubkey, likes);
  }, [getWallet]);
 
  const [likeCount, setLikeCount] = useState(likes.length);
@@ -196,8 +195,10 @@ export const ShareButton = () => {
 };
 export const CommentButton = ({
  setCommentsVisible,
+ commentCount,
 }: {
  setCommentsVisible: DispatchWithoutAction;
+ commentCount: number;
 }) => {
  return (
   <button
@@ -216,7 +217,7 @@ export const CommentButton = ({
      d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
     />
    </svg>
-   <span className="font-semibold text-slate-300"></span>
+   <span className="font-semibold text-slate-300">{commentCount}</span>
   </button>
  );
 };

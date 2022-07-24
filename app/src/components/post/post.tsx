@@ -10,6 +10,7 @@ import * as anchor from "@project-serum/anchor";
 import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { TipModal } from "./tip-modal";
+import { useEffect } from "react";
 interface Props {
  likes: anchor.web3.PublicKey[];
  content: string;
@@ -19,9 +20,10 @@ interface Props {
  block: string;
  tip: number;
  postPubkey: anchor.web3.PublicKey;
+ commentCount:number
 }
 
-export function Post({likes, content, username, date, publickeyString, block, tip,postPubkey }: Props) {
+export function Post({likes, content, username, date, publickeyString, block, tip,postPubkey,commentCount }: Props) {
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
@@ -44,6 +46,9 @@ export function Post({likes, content, username, date, publickeyString, block, ti
    </>
   );
  }
+ useEffect(() => {
+ }, [getWallet])
+ 
  return (
   <div className="pl-5 break-all w-full border-gray-700 grow  ">
    {showTipModal && <TipModal username={username} setShowTipModal={setShowTipModal} />}
@@ -105,7 +110,7 @@ export function Post({likes, content, username, date, publickeyString, block, ti
       unlikePost={"unlikePost"}
       likePost={"likePost"}
      />
-     <CommentButton setCommentsVisible={() => displayComments()} />
+     <CommentButton commentCount={commentCount} setCommentsVisible={() => displayComments()} />
      {/* <div className="tooltip" data-tip="Coming Soon"> */}
      {/* <ShareButton /> */}
      {/* </div> */}
@@ -125,10 +130,7 @@ export function Post({likes, content, username, date, publickeyString, block, ti
       {postComments}
       {!postComments && <div className="divider"></div>}
       <NewComment
-       commentProgram={commentProgram!}
-       postPubkey={getWallet?.publicKey!}
-       walletPubkey={getWallet?.publicKey!}
-       username={"aland"}
+       postPubkey={postPubkey}
       />
      </>
     )}

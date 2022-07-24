@@ -44,34 +44,39 @@ export const Comment = ({ name, date, content, authorPubkeyString }: Props) => {
  );
 };
 interface NewCommentProps {
- commentProgram: anchor.Program<anchor.Idl>;
  postPubkey: PublicKey;
- walletPubkey: PublicKey;
- username: string;
 }
 import { newComment } from "../../program/comments";
+import { NewComment as NewComment0 } from "../../program/posts";
+import { CheckWallet } from "../../utils/walletError";
+import { UseProgramContext } from "../../contexts/programContextProvider";
+import { useNotifier } from "react-headless-notifier";
 
-export const NewComment = ({
- postPubkey,
- commentProgram,
- walletPubkey,
- username,
-}: NewCommentProps) => {
+export const NewComment = ({ postPubkey }: NewCommentProps) => {
  let commentInputRef: any = useRef();
 
+ const { notify } = useNotifier();
+ let programContext = UseProgramContext()!;
+ 
  async function newComment0(e: { preventDefault: () => void }) {
   e.preventDefault();
-  let comment = commentInputRef.current.value;
-  try {
-   let result = await newComment({
-    commentProgram,
-    postPubkey,
-    walletPubkey,
-    username,
-    content: comment,
-   });
-  } catch (e) {
-   console.log("comment Erorr");
+  let walletError = await CheckWallet(programContext.getWallet, notify);
+  if (walletError.error) {
+  } else {
+   let comment = commentInputRef.current.value;
+   try {
+    let result = await NewComment0({
+     commentBody: comment,
+     program: programContext.postProgram!,
+     postPubkey,
+     wallet: programContext.getWallet,
+     authorPubkey: programContext.getWallet?.publicKey!,
+    });
+   } catch (e) {
+    console.log(e);
+    
+    console.log("comment Erorr");
+   }
   }
  }
 

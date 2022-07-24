@@ -38,9 +38,11 @@ export default function Home() {
  }
 
  function displayPosts() {
+  
   return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
    <Post
+   commentCount={p.comments}
     key={p.publicKey}
     tip={18000000}
     content={p.content}
@@ -75,6 +77,7 @@ export default function Home() {
      <div style={{ width: 733 }} className="flex mt-4 items-center flex-col space-y-2">
       <NewPost post={post} username={"aland"} />
       {displayPosts()}
+      {posts.length === 0 && <div className="py-72"></div>}
      </div>
     </main>
    </Layout>

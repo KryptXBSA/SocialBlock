@@ -11,7 +11,7 @@ type GetPostProps = {
 };
 export const getAllPosts = async ({ program, filter = [] }: GetPostProps) => {
     const postsRaw = await program.account.post.all(filter as any);
-    
+
 
     const posts = postsRaw.map((t: any) => new Post(t.publicKey, t.account));
     return posts;
@@ -50,7 +50,7 @@ export const sendPost = async ({
     content,
     username,
 }: SendPostProps) => {
-    
+
 
     const post = anchor.web3.Keypair.generate();
 
@@ -99,15 +99,17 @@ export const unlike = async ({ wallet, program, postPubkey }: any) => {
     return "unliked";
 };
 
-export const comment = async ({ wallet, program, postPubkey }: any) => {
-  let c=  await program.methods
+interface CommentType { commentBody: string, authorPubkey: anchor.web3.PublicKey, wallet: any, program: anchor.Program<anchor.Idl>, postPubkey: anchor.web3.PublicKey }
+export const NewComment = async ({ wallet, program, postPubkey, commentBody, authorPubkey }: CommentType) => {
+    let c = await program.methods
         .comment()
+        // .comment(commentBody,authorPubkey)
         .accounts({
             post: postPubkey,
             owner: wallet.publicKey,
         })
         .signers([])
         .rpc();
-    
+
     return "commented";
 };
