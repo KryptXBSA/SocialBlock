@@ -35,8 +35,8 @@ export function SignupModal({ signup, setShowSignupModal }:{signup:any,setShowSi
     return (
         <>
             <div className={Hidden} >
-                {/* <label for="my-modal-3" class="btn modal-button">open modal</label>
-                <input type="checkbox" id="my-modal-3" class="modal-toggle" /> */}
+                {/* <label for="my-modal-3" className="btn modal-button">open modal</label>
+                <input type="checkbox" id="my-modal-3" className="modal-toggle" /> */}
                 <div className={modalClass}>
                     <div className="modal-box  relative">
                         <label onClick={closeModal} htmlFor="my-modal-3" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>

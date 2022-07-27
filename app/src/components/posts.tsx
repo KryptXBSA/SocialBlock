@@ -21,7 +21,7 @@ export const Commentt = ({data}:any) => {
                         </span>
                     </div>
                     {/* <div className="justify-self-end  ml-auto">
-                        <div class="tooltip" data-tip="Coming Soon">
+                        <div className="tooltip" data-tip="Coming Soon">
                             <MoreButton />
                         </div>
                     </div> */}
@@ -33,7 +33,7 @@ export const Commentt = ({data}:any) => {
                 <div className="flex   justify-around items-stretch flex-row">
                     {/* <LikeButton walletPubkey={walletPubkey} postLikes={postLikes} postPubkey={pubKey} unlikePost={unlikePost} likePost={likePost} text={data.getLikesCount} />
                     <CommentButton setCommentsVisible={() => fetchComments(pubKey)} text={data.comments} />
-                    <div class="tooltip" data-tip="Coming Soon">
+                    <div className="tooltip" data-tip="Coming Soon">
                         <ShareButton text={data.getShares} />
                     </div> */}
                 </div>
@@ -261,7 +261,7 @@ export const CommentButton = ({ text, setCommentsVisible }:any) => {
 export const MoreButton = ({ text }:any) => {
     return (
         <div className=" m-0">
-            {/* <button class=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
+            {/* <button className=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
             <div className="self-start place-content-start  btn btn-circle bg-transparent border-0 p-3 ">
 
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

@@ -2,12 +2,12 @@
 
 import Layout from "../sections/Layout";
 import { useRouter } from "next/router";
-import { useEffect, useState, useRef, SetStateAction } from "react";
+import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
 import { Sidebar } from "../components/sidebar";
 import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { getAllPosts, sendPost, like, unlike } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
-import { Post, Commentt } from "../components/posts";
+import { Post } from "../components/post/post";
 import { getAllComments, newComment } from "../program/comments";
 
 import { useNotifier } from "react-headless-notifier";
@@ -22,146 +22,32 @@ import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
 
 export default function Home() {
+ const [selected, setSelected] = useState(1);
  const { notify } = useNotifier();
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
- const [username, setUsername] = useState(state.username);
- const [showMessageModal, setShowMessageModal] = useState(false)
+ const [showMessageModal, setShowMessageModal] = useState(false);
  const router = useRouter();
-
  const [posts, setPosts]: any = useState([]);
- const [comments, setComments] = useState([]);
  const [activeTab, setActiveTab] = useState("0");
 
  let searchInputRef: any = useRef("");
- const [searchContent, setSearchContent]: any = useState("");
 
- async function getUsername0(pubKey: any) {
-  let userStatsPDA = await findUsernamePDA({ userProgram, pubKey });
-  let result = await getUsername({ userProgram, userStatsPDA });
-  
-
-  if (result.user.foundUser) {
-   let username = result.user.username.name;
-   changeState(username);
-   setUsername(username);
-   return username;
-  }
-
-  // setUsername(null)
-  return "Not registered";
- }
  const [alreadyFetched, setAlreadyFetched] = useState(false);
  useEffect(() => {
-  if (getWallet?.publicKey && !username) {
-  //  getUsername0(getWallet?.publicKey);
+  if (getWallet?.publicKey) {
   }
   if (postProgram && router?.query?.pubkey && !alreadyFetched) {
-   setSearchContent(router?.query?.pubkey);
    getPosts(router?.query?.pubkey);
-   getAllComments0(router?.query?.pubkey, true);
    setAlreadyFetched(true);
   }
-  setContent();
- }, [router, postProgram, getWallet, comments, username, posts, activeTab]);
- function changeTab(tab: SetStateAction<string>) {
-  setActiveTab(tab);
- }
- async function likePost(postPubkey: any) {
-  if (!getWallet?.publicKey) {
-   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
-   // setShowSignupPopup(true)
-  } else {
-   try {
-    return await like({ wallet: getWallet, program: postProgram, postPubkey });
-   } catch (e) {}
-  }
- }
- async function unlikePost(postPubkey: any) {
-  if (!getWallet?.publicKey) {
-   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
-   // setShowSignupPopup(true)
-  } else {
-   return await unlike({ wallet: getWallet, program: postProgram, postPubkey });
-  }
- }
- async function newComment0(commentContent: any, postPubkey: any) {
-  let commentResult = await newComment({
-   commentProgram,
-   postPubkey: postPubkey,
-   walletPubkey: getWallet.publicKey,
-   username: username,
-   content: commentContent,
-  });
- 
-  return commentResult;
- }
- const [tabContent, setTabContent] = useState("");
- function setContent(tab?: string | undefined) {
-  tab = tab ? tab : activeTab;
-  let content: any = "";
-  if (tab === "2") {
-   content = <>ddd{renderComments()}</>;
-  } else if (tab === "0") {
-   content = <> {renderPosts()}</>;
-  }
-  setTabContent(content);
- }
-
- async function getAllComments0(pubkey?: any, initial?: boolean) {
-  let searchValue = searchInputRef?.current?.value;
-  // queryValue better variable name :/
-
-  let value = searchValue ? searchValue : pubkey;
-  if (router?.query?.pubKey) {
-   value = router?.query?.pubKey;
-  }
-  console.log("pubkey");
-  console.log(pubkey);
-  console.log(value);
-
-  // value = value ? value : router.query?.pubkey;
-  const authorFilter = (authorBase58PublicKey: any) => ({
-   memcmp: {
-    offset: !initial ? 40 : 8, // Discriminator.
-    bytes: authorBase58PublicKey,
-   },
-  });
-  let filter = [authorFilter(value)];
-  //
-  let commentResult = [];
-  try {
-   commentResult = await getAllComments({
-    program: commentProgram,
-    filter: filter,
-   });
-   console.log(commentResult);
-  } catch (e) {
-   // notify(
-   //           <SpecialAlert
-   //             text={`Welcome Back ${username}`}
-   //           />
-   //         );
-  }
-
-  commentResult = commentResult.sort(function (
-   a: { getTimestamp: number },
-   b: { getTimestamp: number }
-  ) {
-   return b.getTimestamp - a.getTimestamp;
-  });
-  if (initial) setComments(commentResult);
-
-  return commentResult;
- }
+ }, [router, postProgram, getWallet, posts, activeTab]);
  function searchOnClick(e: { preventDefault: () => void }) {
   e.preventDefault();
   // getUser()
   if (searchInputRef.current.value) {
-   getPosts();
-   getAllComments0();
-   setContent();
+   getPosts(searchInputRef.current.value);
   }
  }
 
@@ -194,66 +80,51 @@ export default function Home() {
   setPosts(posts);
  }
 
- function renderComments() {
-  return comments.map((post: any, index, { length }) => {
-   console.log("whyyyyyyyyy");
-   console.log(post);
-
-   return (
-    <>
-     aaa
-     <Commentt key={post.key} data={post} className="flex flex-row" />
-     {index + 1 !== length && <div className="divider"></div>}
-    </>
-   );
-  });
- }
- function renderPosts() {
-  return posts.map(
-   (post: { getLikes: any; key: any; publicKey: any }, index: number, { length }: any) => {
-    let wallet = getWallet ? getWallet.publicKey.toBase58() : localStorage.getItem("wallet");
-    return (
-     <>
-      <Post
-       getAllComments={getAllComments0}
-       commentProgram={commentProgram}
-       newComment={newComment0}
-       walletPubkey={wallet}
-       postLikes={post.getLikes}
-       unlikePost={unlikePost}
-       likePost={likePost}
-       key={post.key}
-       pubKey={post.key}
-       postPublicKey={post.publicKey}
-       data={post}
-       className="flex flex-row"
-      />
-      {index + 1 !== length && <div className="divider"></div>}
-     </>
-    );
-   }
-  );
+ function displayPosts() {
+  return posts.map((p: any) => (
+   // 2 pubkey man haya 1- bo user 2- bo post
+   <Post
+    commentCount={p.comments}
+    key={p.publicKey}
+    tip={18000000}
+    content={p.content}
+    username={p.username}
+    date={p.timestamp}
+    likes={p.likes}
+    publickeyString={p.authorDisplay}
+    block={p.block}
+    postPubkey={p.publicKey}
+   />
+  ));
  }
  if (!router.asPath) {
   return null;
  } else {
   return (
    <Layout active={2}>
-   {showMessageModal && (<MessageModal setShowModal={setShowMessageModal} />)}
-    {/* Hero Section  */}
-    {/* <Search /> */}
-    {/* <Tabs changeTab={changeTab} activeTab={activeTab} /> */}
-    <main className="flex  px-4 sm:px-6">
+    {showMessageModal && <MessageModal setShowModal={setShowMessageModal} />}
+    <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
-     {/* CTA */}
-     <div className="flex   justify-start flex-row">
-      {/* <ProfileSidebar active='0' hasSpace={false} router={router} /> */}
+     <div className="flex w-full  justify-start flex-row">
       <div className=" flex grow  flex-col">
-       <Search searchInputRef={searchInputRef} clickSearch={searchOnClick} />
-       <Profile setShowMessageModal={setShowMessageModal} />
-       {/* <Search /> */}
-       <Tabs changeTab={changeTab} activeTab={activeTab} />
-       {posts.length !== 0 && tabContent}
+       <Search
+        selected={selected}
+        setSelected={setSelected}
+        searchInputRef={searchInputRef}
+        clickSearch={searchOnClick}
+       />
+       <Profile
+        img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+        publickeyString="pubkeyy"
+        username="aland"
+        date="15 May 2022"
+        setShowMessageModal={setShowMessageModal}
+       />
+       <div className="mt-2 w-full">
+        {" "}
+        {displayPosts()}
+        {posts.length === 0 && <div className="py-72"></div>}
+       </div>
       </div>
      </div>
     </main>
@@ -262,36 +133,42 @@ export default function Home() {
   );
  }
 }
-function Profile({setShowMessageModal}:any) {
+interface ProfileProps {
+ setShowMessageModal: Dispatch<SetStateAction<boolean>>;
+ username: string;
+ date: string;
+ img: string;
+ publickeyString: string;
+}
+function Profile({ setShowMessageModal, username, date, img, publickeyString }: ProfileProps) {
  return (
   <>
-   <div className="mt-6 pb-2 ">
+   <div className="mt-6 pb-2 border-b-2 border-gray-700 ">
     <div className="flex  justify-start items-center flex-row">
      <div className="flex justify-start   items-center w-full  flex-row">
       <Link href={`/users?pubkey=${"publickeyString"}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
-         <img
-          className="w-14 h-14  rounded-full"
-          src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-          alt="Rounded avatar"
-         />
+         <img className="w-14 h-14  rounded-full" src={img} alt="Rounded avatar" />
         </div>
-        <span className=" text-3xl ">aland</span>
+        <span className=" text-3xl ">{username}</span>
        </div>
       </Link>
       <span>&nbsp;•&nbsp;</span>
-      <span className="text-base">Joined May 2022</span>
-      <button onClick={()=>setShowMessageModal(true)} className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
-        <div className="flex flex-row items- justify-center">
-       {/* <svg
+      <span className="text-base">Joined {date}</span>
+      <button
+       onClick={() => setShowMessageModal(true)}
+       className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
+       <div className="flex flex-row items- justify-center">
+        {/* <svg
         style={{marginTop:3}}
         className="w-5 h-5  fill-slate-100 mr-2"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 512 512">
         <path d="M511.1 63.1v287.1c0 35.25-28.75 63.1-64 63.1h-144l-124.9 93.68c-7.875 5.75-19.12 .0497-19.12-9.7v-83.98h-96c-35.25 0-64-28.75-64-63.1V63.1c0-35.25 28.75-63.1 64-63.1h384C483.2 0 511.1 28.75 511.1 63.1z" />
        </svg>{" "} */}
-       <span>Message</span></div>
+        <span>Message</span>
+       </div>
       </button>
      </div>
     </div>
@@ -299,7 +176,7 @@ function Profile({setShowMessageModal}:any) {
      <p
       style={{ marginLeft: 65, marginTop: -19 }}
       className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
-      {"publickeyString"}
+      {publickeyString}
      </p>
     </Link>
    </div>
@@ -328,34 +205,87 @@ export const ActionButton = ({ text }: any) => {
   </div>
  );
 };
-export const Search = ({ searchInputRef, clickSearch }: any) => {
+interface SearchProps {
+ searchInputRef: any;
+ clickSearch: any;
+ selected: number;
+ setSelected: Dispatch<SetStateAction<number>>;
+}
+export const Search = ({ searchInputRef, clickSearch, selected, setSelected }: SearchProps) => {
+ const [dropDownOpen, setDropDownOpen] = useState(false);
  return (
-  <form onSubmit={clickSearch}>
-   <div className="flex  flex-row">
-    <input
-     required
-     ref={searchInputRef}
-     type="text"
-     placeholder="Public Key"
-     className=" border-none rounded-lg bg-gray-100 dark:bg-gray-800 rounded-r-none grow "
-    />
-    <button onClick={clickSearch} className="btn rounded-l-none btn-square">
-     <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className="h-6 w-6"
-      fill="none"
-      viewBox="0 0 24 24"
-      stroke="currentColor">
-      <path
-       strokeLinecap="round"
-       strokeLinejoin="round"
-       strokeWidth="2"
-       d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-      />
-     </svg>
-    </button>
+  <>
+   <div className="flex mt-2">
+    <div className=" flex ">
+     <button
+      onClick={() => setDropDownOpen(!dropDownOpen)}
+      id="dropdownDefault"
+      data-dropdown-toggle="dropdown"
+      className="mr-2 text-white bg-blue-700 hover:bg-blue-800  transition-colors duration-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 "
+      type="button">
+      {selected === 1 ? "Username" : "Public Key"}
+      <svg
+       className="ml-2 w-4 h-4"
+       aria-hidden="true"
+       fill="none"
+       stroke="currentColor"
+       viewBox="0 0 24 24"
+       xmlns="http://www.w3.org/2000/svg">
+       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+      </svg>
+     </button>
+     <div
+      id="dropdown"
+      style={{ width: 121, marginTop: 53 }}
+      className={`z-10 ${
+       dropDownOpen ? "" : "hidden"
+      }  absolute bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 `}>
+      <ul className=" text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
+       <li
+        onClick={() => {
+         setSelected(1);
+         setDropDownOpen(!dropDownOpen);
+        }}
+        className="transition-colors duration-300 text-base rounded cursor-pointer py-2.5 px-4 hover:bg-gray-600">
+        Username
+       </li>
+       <li
+        onClick={() => {
+         setSelected(2);
+         setDropDownOpen(!dropDownOpen);
+        }}
+        className="transition-colors duration-300 text-base cursor-pointer py-2.5 px-4 hover:bg-gray-600">
+        Public Key
+       </li>
+      </ul>
+     </div>
+    </div>
+    <form className="flex grow flex-row" onSubmit={clickSearch}>
+     <input
+      required
+      ref={searchInputRef}
+      type="text"
+      placeholder={selected === 1 ? "Username" : "Public Key"}
+      className=" border-none rounded-lg bg-gray-100 dark:bg-gray-800 rounded-r-none grow "
+     />
+     <button onClick={clickSearch} className="btn rounded-l-none btn-square">
+      <svg
+       xmlns="http://www.w3.org/2000/svg"
+       className="h-6 w-6"
+       fill="none"
+       viewBox="0 0 24 24"
+       stroke="currentColor">
+       <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+       />
+      </svg>
+     </button>
+    </form>
    </div>
-  </form>
+  </>
  );
 };
 export const Tabs = ({ activeTab, changeTab }: any) => {

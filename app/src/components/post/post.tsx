@@ -70,7 +70,7 @@ export function Post({
  }, [getWallet]);
 
  return (
-  <div className="pl-5 break-all w-full border-gray-700 grow  ">
+  <div className="pl- break-all w-full border-gray-700 grow  ">
    {showTipModal && <TipModal username={username} setShowTipModal={setShowTipModal} />}
    <div className="flex  justify-start   border-b-2 border-gray-700  flex-col">
     {/* margin y nabe yakam dana ^^^^^^^^^^^^^ */}

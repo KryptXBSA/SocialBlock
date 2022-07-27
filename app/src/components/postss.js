@@ -121,7 +121,7 @@ export const LikeButton = ({ text, likePost, postPubkey, didLike }) => {
             : <>{notLikedIcon}<span className="font-semibold text-slate-300">{likeCount}</span></>);
     }
     return (
-        <button onClick={likePost0} class="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+        <button onClick={likePost0} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
             {didLikePost()}
         </button>
     )
@@ -129,7 +129,7 @@ export const LikeButton = ({ text, likePost, postPubkey, didLike }) => {
 
 export const ShareButton = ({ text }) => {
     return (
-        <button class="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+        <button className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
             </svg>
@@ -139,7 +139,7 @@ export const ShareButton = ({ text }) => {
 }
 export const CommentButton = ({ text, setCommentsVisible }) => {
     return (
-        <button onClick={setCommentsVisible} class="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
+        <button onClick={setCommentsVisible} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z" />
             </svg>
@@ -150,7 +150,7 @@ export const CommentButton = ({ text, setCommentsVisible }) => {
 export const MoreButton = ({ text }) => {
     return (
         <div className=" m-0">
-            {/* <button class=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
+            {/* <button className=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
             <div className="self-start place-content-start  btn btn-circle bg-transparent border-0 p-3 ">
 
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

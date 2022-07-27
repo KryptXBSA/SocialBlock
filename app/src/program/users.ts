@@ -30,21 +30,21 @@ export const createUsername = async ({
             userStats: userStatsPDA,
         })
         .rpc();
-        return { user: { username, foundUser: true } }
+    return { user: { username, foundUser: true } }
     let usernamee = await getUsername({ userProgram, userStatsPDA })
-    
+
 
     return usernamee
 };
 
-export const getUsername = async ({ userProgram,publickey }: any) => {
-   let userStatsPDA = await findUsernamePDA({userProgram,publickey})
+export const getUsername = async ({ userProgram, publickey }: any) => {
+    let userStatsPDA = await findUsernamePDA({ userProgram, publickey })
     let username = null;
     try {
         username = await userProgram.account.userStats.fetch(userStatsPDA);
     } catch (e) { }
     if (!username) {
-        return { user: { username:'', foundUser: false } };
+        return { user: { username: '', foundUser: false } };
     }
-    return { user: { username:username.name, foundUser: true } };
+    return { user: { userData: username, username: username.name, foundUser: true } };
 };

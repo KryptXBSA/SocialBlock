@@ -12,7 +12,7 @@ import { useNotifier } from "react-headless-notifier";
 export const BookmarkButton = ({ bookmarked }: { bookmarked: boolean }) => {
  return (
   <div className=" m-0">
-   {/* <button class=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
+   {/* <button className=" btn btn-sm bg-transparent border-opacity-0 gap-0  flex "> */}
    <div className="self-start place-content-start  btn btn-circle bg-transparent border-0 p-3 ">
     <svg
      xmlns="http://www.w3.org/2000/svg"
