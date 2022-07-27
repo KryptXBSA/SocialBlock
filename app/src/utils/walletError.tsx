@@ -7,17 +7,19 @@ import {
  WarningAlert,
  DangerAlertWallet,
 } from "../components/alert";
+import { UseProgramContext } from "../contexts/programContextProvider";
 import { connection } from "../contexts/programContextProvider";
 import { getWalletBalance } from "./get-wallet-balance";
 export async function CheckWallet(getWallet: any, notify: any) {
+ let ProgramContext = UseProgramContext();
  if (!getWallet?.publicKey) {
   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
   return { error: true, msg: "no wallet" };
  }
- //   else {
- //   return { error: false };
- //  }
-
+ if (!ProgramContext?.state.user.foundUser) {
+  notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
+  return { error: true, msg: "no username" };
+ }
  let balance = await getWalletBalance(connection, getWallet);
  
  if (balance == 0) {

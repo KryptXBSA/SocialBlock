@@ -37,7 +37,7 @@ export const topicFilter = (topic: string) => ({
 
 type SendPostProps = {
     program: anchor.Program<anchor.Idl>;
-    topic: string;
+    block: string;
     content: string;
     username: string;
     wallet: any;
@@ -46,7 +46,7 @@ type SendPostProps = {
 export const sendPost = async ({
     wallet,
     program,
-    topic,
+    block,
     content,
     username,
 }: SendPostProps) => {
@@ -55,7 +55,7 @@ export const sendPost = async ({
     const post = anchor.web3.Keypair.generate();
 
     let tx = await program.methods
-        .sendPost(topic, content, username)
+        .sendPost(block, content, username)
         .accounts({
             author: wallet.publicKey.toBase58(),
             post: post.publicKey.toBase58(),
@@ -66,7 +66,7 @@ export const sendPost = async ({
     const newPostAccount: AccountData = {
         author: wallet.publicKey,
         timestamp: new anchor.BN(new Date().getTime()),
-        topic,
+        block,
         content,
         username,
         likes: [],
@@ -99,8 +99,8 @@ export const unlike = async ({ wallet, program, postPubkey }: any) => {
     return "unliked";
 };
 
-interface CommentType { commentBody: string, authorPubkey: anchor.web3.PublicKey, wallet: any, program: anchor.Program<anchor.Idl>, postPubkey: anchor.web3.PublicKey }
-export const NewComment = async ({ wallet, program, postPubkey, commentBody, authorPubkey }: CommentType) => {
+interface CommentType { username?: string, commentBody: string, authorPubkey: anchor.web3.PublicKey, wallet: any, program: anchor.Program<anchor.Idl>, postPubkey: anchor.web3.PublicKey }
+export const NewComment = async ({ wallet, program, postPubkey, commentBody, authorPubkey, username }: CommentType) => {
     let c = await program.methods
         .comment()
         // .comment(commentBody,authorPubkey)

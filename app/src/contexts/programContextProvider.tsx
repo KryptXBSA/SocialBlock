@@ -1,6 +1,14 @@
 /** @format */
 
-import { createContext, useContext, useEffect, useReducer, useState } from "react";
+import {
+ createContext,
+ Dispatch,
+ SetStateAction,
+ useContext,
+ useEffect,
+ useReducer,
+ useState,
+} from "react";
 import { useUserProgram } from "../program/user-program";
 import { useProgram } from "../program/useProgram";
 import { useCommentProgram } from "../program/comment-program";
@@ -37,31 +45,45 @@ function reducer(state: InitialState, user: Actions) {
  }
 }
 export interface ProgramContextInterface {
- username: string;
- publickeyString: string;
+ showSignupModal: boolean;
+ setShowSignupModal: Dispatch<SetStateAction<boolean>>;
  userProgram: anchor.Program<anchor.Idl> | undefined;
  postProgram: anchor.Program<anchor.Idl> | undefined;
  commentProgram: anchor.Program<anchor.Idl> | undefined;
  state: InitialState;
+ disconnect: () => void;
  changeState: any;
  getWallet: AnchorWallet | undefined;
 }
 export const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
 export function ProgramWrapper({ children }: any) {
- let username = "aland";
- let publickeyString = "H8X9LMrxbah3U4PjbN21dHip8Nr4puSbntK75DA4xqW8";
  const [state, changeState] = useReducer(reducer, initialState);
+ const [showSignupModal, setShowSignupModal] = useState(false);
  const wallet = useAnchorWallet();
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
  const { commentProgram } = useCommentProgram({ connection, wallet });
- 
+
+ useEffect(() => {
+  if (userProgram && wallet?.publicKey && !state.user.foundUser) {
+   setUsername();
+  }
+ }, [userProgram, wallet]);
+ async function setUsername() {
+  let { user } = await getUsername({ userProgram, publickey: wallet!.publicKey });
+  changeState({ data: user, action: "username" });
+ }
+ function disconnect() {
+  changeState({ data: { username: "", foundUser: false }, action: "username" });
+ }
+
  return (
   <ProgramContext.Provider
    value={{
-    username,
-    publickeyString,
     userProgram,
+    showSignupModal,
+    setShowSignupModal,
+    disconnect,
     postProgram,
     commentProgram,
     state,

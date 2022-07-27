@@ -11,25 +11,33 @@ import {
 } from "../components/alert";
 import { useNotifier } from "react-headless-notifier";
 import { CheckWallet } from "../utils/walletError";
-export const NewPost = ({ post }: any) => {
- //  @ts-ignore
- const { getWallet } = UseProgramContext();
+import { sendPost } from "../program/posts";
+
+export const NewPost = () => {
+ const programContext = UseProgramContext()!;
+ const { notify } = useNotifier();
  let contentInputRef: any = useRef("");
  let blockInputRef: any = useRef("");
 
  const [blockValue, setBlockValue] = useState("");
 
- const { notify } = useNotifier();
  async function newPost(e: { preventDefault: () => void }) {
   e.preventDefault();
-  let walletError = await CheckWallet(getWallet, notify);
+  let walletError = await CheckWallet(programContext.getWallet, notify);
   if (walletError.error) {
   } else {
    let content = contentInputRef.current.value;
    let block = blockValue;
-   post({ block, content });
    try {
-    // return await like({ wallet: getWallet, program: postProgram, postPubkey });
+    let postResult = await sendPost({
+     wallet: programContext.getWallet,
+     program: programContext.postProgram!,
+     block,
+     content,
+     username: programContext.state.user.username,
+    });
+    console.log(postResult);
+    
    } catch (e) {}
   }
  }
@@ -78,7 +86,7 @@ export const NewPost = ({ post }: any) => {
        <button
         onClick={newPost}
         className="p-3 mt-2 px-4 transition duration-300  font-semibold btn1 tracking-normal text-lg  dark:bg-slate-800 ml-auto rounded-2xl ">
-        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg> */}
+        {/* <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg> */}
         New Post
        </button>
       </div>

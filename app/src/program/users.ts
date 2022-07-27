@@ -4,9 +4,9 @@ import * as anchor from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
 
 
-export const findUsernamePDA = async ({ userProgram, pubKey }: any) => {
+export const findUsernamePDA = async ({ userProgram, publickey }: any) => {
     const [userStatsPDA, _] = await PublicKey.findProgramAddress(
-        [anchor.utils.bytes.utf8.encode("user-stats"), pubKey.toBuffer()],
+        [anchor.utils.bytes.utf8.encode("user-stats"), publickey.toBuffer()],
         userProgram.programId
     );
 
@@ -37,13 +37,14 @@ export const createUsername = async ({
     return usernamee
 };
 
-export const getUsername = async ({ userProgram, userStatsPDA }: any) => {
+export const getUsername = async ({ userProgram,publickey }: any) => {
+   let userStatsPDA = await findUsernamePDA({userProgram,publickey})
     let username = null;
     try {
         username = await userProgram.account.userStats.fetch(userStatsPDA);
     } catch (e) { }
     if (!username) {
-        return { user: { username, foundUser: false } };
+        return { user: { username:'', foundUser: false } };
     }
-    return { user: { username, foundUser: true } };
+    return { user: { username:username.name, foundUser: true } };
 };

@@ -4,6 +4,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { WalletDisconnectButton, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { UseProgramContext } from "../contexts/programContextProvider";
 
 let marketPlaceIcon = (
  <svg
@@ -44,9 +45,9 @@ let profileIcon = (
   viewBox="0 0 24 24"
   fill="none"
   stroke="currentColor"
-  stroke-width="2"
-  stroke-linecap="round"
-  stroke-linejoin="round"
+  strokeWidth="2"
+  strokeLinecap="round"
+  strokeLinejoin="round"
   className="feather feather-user">
   <script />
   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -68,10 +69,11 @@ let homeIcon = (
   />
  </svg>
 );
-export const Sidebar = ({ active }: {active:number}) => {
+export const Sidebar = ({ active }: { active: number }) => {
  const { disconnect } = useWallet();
- 
- 
+
+ const programContext = UseProgramContext()!;
+
  return (
   <div className="flex z-20  flex-col">
    <div className="flex w-52 z-20  h-full bg-slate-800 flex-col left-0 fixed">
@@ -85,6 +87,7 @@ export const Sidebar = ({ active }: {active:number}) => {
     <Button icon={marketPlaceIcon} index={3} active={active} href="#" text="Blocks" />
 
     <WalletMultiButton className=" ml-1 hover:bg-violet-600 py-3 btn1 px-5 inline-flex items-center  w-48  " />
+      {programContext.state.user.foundUser && (
     <div className=" mb-8 ml-6 mt-auto">
      <div className="flex cursor-pointer items-center">
       <div className="pb- pr-2">
@@ -94,9 +97,12 @@ export const Sidebar = ({ active }: {active:number}) => {
         alt="Rounded avatar"
        />
       </div>
-      <span className=" text-2xl hover:text-slate-400 ">aland</span>
+       <span className=" text-2xl hover:text-slate-400 ">{programContext.state.user.username}</span>
       <svg
-       onClick={disconnect}
+       onClick={() => {
+        programContext.disconnect();
+        disconnect();
+       }}
        xmlns="http://www.w3.org/2000/svg"
        className="w-6 ml-2 h-6 hover:fill-slate-400 fill-slate-300"
        viewBox="0 0 512 512">
@@ -104,6 +110,7 @@ export const Sidebar = ({ active }: {active:number}) => {
       </svg>
      </div>
     </div>
+      )}
    </div>
   </div>
  );

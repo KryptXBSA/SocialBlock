@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction } from "react";
 import { Sidebar } from "../components/sidebar";
 import { createUsername, getUsername, findUsernamePDA } from "../program/users";
-import { getAllPosts, sendPost, like, unlike, comment } from "../program/posts";
+import { getAllPosts, sendPost, like, unlike } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { Post, Commentt } from "../components/posts";
 import { getAllComments, newComment } from "../program/comments";
@@ -55,7 +55,7 @@ export default function Home() {
  const [alreadyFetched, setAlreadyFetched] = useState(false);
  useEffect(() => {
   if (getWallet?.publicKey && !username) {
-   getUsername0(getWallet?.publicKey);
+  //  getUsername0(getWallet?.publicKey);
   }
   if (postProgram && router?.query?.pubkey && !alreadyFetched) {
    setSearchContent(router?.query?.pubkey);
@@ -94,12 +94,7 @@ export default function Home() {
    username: username,
    content: commentContent,
   });
-  notify(<InfoAlert text="Please also confirm the next transaction." dismiss={undefined} />);
-  let commenta = await comment({
-   wallet: getWallet,
-   program: postProgram,
-   postPubkey: postPubkey,
-  });
+ 
   return commentResult;
  }
  const [tabContent, setTabContent] = useState("");
@@ -322,9 +317,9 @@ export const ActionButton = ({ text }: any) => {
      viewBox="0 0 24 24"
      stroke="currentColor">
      <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      stroke-width="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth="2"
       d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
      />
     </svg>
@@ -352,9 +347,9 @@ export const Search = ({ searchInputRef, clickSearch }: any) => {
       viewBox="0 0 24 24"
       stroke="currentColor">
       <path
-       stroke-linecap="round"
-       stroke-linejoin="round"
-       stroke-width="2"
+       strokeLinecap="round"
+       strokeLinejoin="round"
+       strokeWidth="2"
        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
       />
      </svg>

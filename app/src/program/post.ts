@@ -5,7 +5,7 @@ import * as anchor from "@project-serum/anchor";
 export type AccountData = {
     author: anchor.web3.PublicKey;
     timestamp: anchor.BN;
-    topic: string;
+    block: string;
     content: string;
     username: string;
     likes: anchor.web3.PublicKey[];
@@ -15,7 +15,7 @@ export class Post {
     publicKey: anchor.web3.PublicKey;
     author: anchor.web3.PublicKey;
     timestamp: string;
-    topic: string;
+    block: string;
     content: string;
     username: string;
     likes: anchor.web3.PublicKey[];
@@ -25,7 +25,7 @@ export class Post {
         this.publicKey = publicKey;
         this.author = accountData.author;
         this.timestamp = accountData.timestamp.toString();
-        this.topic = accountData.topic;
+        this.block = accountData.block;
         this.content = accountData.content;
         this.username = accountData.username;
         this.likes = accountData.likes;

@@ -43,7 +43,6 @@ export default function Home() {
  }
 
  function displayPosts() {
-  console.log(posts);
 
   return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
@@ -52,7 +51,7 @@ export default function Home() {
     key={p.publicKey}
     tip={18000000}
     content={p.content}
-    username={programContext.username}
+    username={p.username}
     date={p.timestamp}
     likes={p.likes}
     publickeyString={p.authorDisplay}
@@ -61,17 +60,17 @@ export default function Home() {
    />
   ));
  }
- function post({ content, block }: { content: string; block: string }) {
-  setPosts(
-   posts.concat({
-    content,
-    block,
-    username: programContext.username,
-    date: "1 day ago",
-    publickeyString: programContext.publickeyString,
-   })
-  );
- }
+//  function post({ content, block }: { content: string; block: string }) {
+//   setPosts(
+//    posts.concat({
+//     content,
+//     block,
+//     username: programContext.username,
+//     date: "1 day ago",
+//     publickeyString: programContext.publickeyString,
+//    })
+//   );
+//  }
  return (
   <>
    <Head>
@@ -81,7 +80,7 @@ export default function Home() {
    <Layout active={0}>
     <main className="  bg-slate-900  w-1/3 flex justify-center flex-row">
      <div style={{ width: 733 }} className="flex mt-4 items-center flex-col space-y-2">
-      <NewPost post={post} username={"aland"} />
+      <NewPost  />
       {displayPosts()}
       {posts.length === 0 && <div className="py-72"></div>}
      </div>

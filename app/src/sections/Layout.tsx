@@ -1,17 +1,57 @@
 /** @format */
 
+import { program } from "@project-serum/anchor/dist/cjs/spl/token";
 import Head from "next/head";
-import { ReactNode } from "react";
-
+import { ReactNode, useEffect, useState } from "react";
+import { SignupModal } from "../components/modal";
 import { Sidebar } from "../components/sidebar";
+import { UseProgramContext } from "../contexts/programContextProvider";
+import { createUsername } from "../program/users";
+import { CheckWallet } from "../utils/walletError";
+import { useNotifier } from "react-headless-notifier";
+import { SpecialAlert } from "../components/alert";
 const Layout = ({ children, active }: { children: ReactNode; active: number }) => {
+ const { notify } = useNotifier();
+ let ProgramContext = UseProgramContext();
+ async function signup(username: string) {
+  try {
+   let walletError = await CheckWallet(ProgramContext?.getWallet, notify);
+   if (walletError.error) {
+   } else {
+    let user = await createUsername({
+     userProgram: ProgramContext?.userProgram,
+     pubKey: ProgramContext?.getWallet?.publicKey,
+     username,
+    });
+    ProgramContext?.changeState({ data: user, action: "username" });
+    return user;
+   }
+  } catch (e) {
+   console.log(e);
+   console.log("signupError");
+  }
+ }
+ useEffect(() => {
+ if (!ProgramContext?.state.didWelcome&&ProgramContext?.state.user.foundUser) {
+notify(
+          <SpecialAlert
+    text={`Welcome Back ${ProgramContext.state.user.username}`} dismiss={undefined}          />
+        );
+  ProgramContext.changeState({action:'welcome'})
+ }
+ }, [ProgramContext?.state])
+ 
  return (
   <>
    <Head>
     <link rel="icon" href="/favicon.ico" />
    </Head>
+   {ProgramContext?.showSignupModal && (
+    <SignupModal signup={signup} setShowSignupModal={ProgramContext.setShowSignupModal} />
+   )}
+
    {/* <div className="mr-52"> */}
-   <Sidebar active={active}  />
+   <Sidebar active={active} />
    {/* </div> */}
    <div className="relative justify-center flex flex-row ">
     <div className=" invisible">
@@ -59,9 +99,9 @@ function Trending() {
         viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg">
         <path
-         fill-rule="evenodd"
+         fillRule="evenodd"
          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-         clip-rule="evenodd"></path>
+         clipRule="evenodd"></path>
        </svg>
       </a>
      </div>
