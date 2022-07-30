@@ -36,7 +36,7 @@ export default function Home() {
  const [showMessageModal, setShowMessageModal] = useState(false);
  const router = useRouter();
  const [posts, setPosts]: any = useState([]);
- const [userData, setUserData] = useState<UserData[] | undefined>();
+ const [userData, setUserData] = useState<UserData | undefined>();
 
  let searchInputRef: any = useRef("");
 
@@ -60,14 +60,12 @@ export default function Home() {
  }
 
  async function getUser() {
-  setUserData([
-   {
-    username: "aland",
-    img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-    date: "15 March 2022",
-    publickeyString: "pubkey",
-   }, 
-  ]);
+  setUserData({
+   username: "aland",
+   img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+   date: "15 March 2022",
+   publickeyString: "pubkey",
+  });
  }
  async function getPosts(pubkey?: string | string[] | undefined) {
   let searchValue = searchInputRef?.current?.value;
@@ -116,12 +114,12 @@ export default function Home() {
   ));
  }
  console.log(posts.length);
-
+ 
  if (!router.asPath) {
   return null;
  } else {
   return (
-   <Layout active={2}>
+   <Layout active={3}>
     {showMessageModal && <MessageModal setShowModal={setShowMessageModal} />}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
@@ -133,32 +131,19 @@ export default function Home() {
         searchInputRef={searchInputRef}
         clickSearch={searchOnClick}
        />
-
-       {userData &&
-        userData.length > 1 &&
-        userData.map((u: UserData) => (
-         <Profile
-          img={u.img}
-          publickeyString={u.publickeyString}
-          username={u.username}
-          date={u.date}
-          setShowMessageModal={setShowMessageModal}
-         />
-        ))}
-
        {userData && (
         <Profile
-         img={userData[0].img}
-         publickeyString={userData[0].publickeyString}
-         username={userData[0].username}
-         date={userData[0].date}
+         img={userData.img}
+         publickeyString={userData.publickeyString}
+         username={userData.username}
+         date={userData.date}
          setShowMessageModal={setShowMessageModal}
         />
        )}
 
        <div className="mt-2 w-full">
         {displayPosts()}
-        {posts.length < 6 && <div style={{ marginBottom: 999 }} className=""></div>}
+        {posts.length < 6 && <div style={{marginBottom:999}} className=""></div>}
        </div>
       </div>
      </div>

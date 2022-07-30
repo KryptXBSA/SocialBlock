@@ -10,7 +10,15 @@ import { createUsername } from "../program/users";
 import { CheckWallet } from "../utils/walletError";
 import { useNotifier } from "react-headless-notifier";
 import { SpecialAlert } from "../components/alert";
-const Layout = ({ children, active }: { children: ReactNode; active: number }) => {
+const Layout = ({
+ children,
+ active,
+ page = "default",
+}: {
+ children: ReactNode;
+ active?: number;
+ page?: string;
+}) => {
  const { notify } = useNotifier();
  let ProgramContext = UseProgramContext();
  async function signup(username: string) {
@@ -32,15 +40,14 @@ const Layout = ({ children, active }: { children: ReactNode; active: number }) =
   }
  }
  useEffect(() => {
- if (!ProgramContext?.state.didWelcome&&ProgramContext?.state.user.foundUser) {
-notify(
-          <SpecialAlert
-    text={`Welcome Back ${ProgramContext.state.user.username}`} dismiss={undefined}          />
-        );
-  ProgramContext.changeState({action:'welcome'})
- }
- }, [ProgramContext?.state])
- 
+  if (!ProgramContext?.state.didWelcome && ProgramContext?.state.user.foundUser) {
+   notify(
+    <SpecialAlert text={`Welcome Back ${ProgramContext.state.user.username}`} dismiss={undefined} />
+   );
+   ProgramContext.changeState({ action: "welcome" });
+  }
+ }, [ProgramContext?.state]);
+
  return (
   <>
    <Head>
@@ -53,7 +60,7 @@ notify(
    {/* <div className="mr-52"> */}
    <Sidebar active={active} />
    {/* </div> */}
-   <div className="relative justify-center flex flex-row ">
+   <div className={page === "block" ? "" : `relative justify-center flex flex-row `}>
     <div className=" invisible">
      <Trending />
     </div>
