@@ -20,6 +20,7 @@ import {
 } from "../components/alert";
 import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
+import { ProfileModal } from "../components/profile/profile-modal";
 
 interface UserData {
  publickeyString: string;
@@ -33,10 +34,15 @@ export default function Home() {
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
- const [showMessageModal, setShowMessageModal] = useState(false);
+ const [showProfileModal, setShowProfileModal] = useState(false);
  const router = useRouter();
  const [posts, setPosts]: any = useState([]);
- const [userData, setUserData] = useState<UserData | undefined>();
+ const [userData, setUserData] = useState<UserData | undefined>({
+  username: "aland",
+  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+  date: "15 March 2022",
+  publickeyString: "pubkey",
+ });
 
  let searchInputRef: any = useRef("");
 
@@ -114,36 +120,30 @@ export default function Home() {
   ));
  }
  console.log(posts.length);
- 
+
  if (!router.asPath) {
   return null;
  } else {
   return (
    <Layout>
-    {showMessageModal && <MessageModal setShowModal={setShowMessageModal} />}
+    {showProfileModal && <ProfileModal setShowModal={setShowProfileModal} />}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
      <div className="flex w-full  justify-start flex-row">
       <div className=" flex grow  flex-col">
-       <Search
-        selected={selected}
-        setSelected={setSelected}
-        searchInputRef={searchInputRef}
-        clickSearch={searchOnClick}
-       />
        {userData && (
         <Profile
          img={userData.img}
          publickeyString={userData.publickeyString}
          username={userData.username}
          date={userData.date}
-         setShowMessageModal={setShowMessageModal}
+         setShowProfileModal={setShowProfileModal}
         />
        )}
 
        <div className="mt-2 w-full">
         {displayPosts()}
-        {posts.length < 6 && <div style={{marginBottom:999}} className=""></div>}
+        {posts.length < 6 && <div style={{ marginBottom: 999 }} className=""></div>}
        </div>
       </div>
      </div>
@@ -154,42 +154,35 @@ export default function Home() {
  }
 }
 interface ProfileProps {
- setShowMessageModal: Dispatch<SetStateAction<boolean>>;
+ setShowProfileModal: Dispatch<SetStateAction<boolean>>;
  username: string;
  date: string;
  img: string;
  publickeyString: string;
 }
-function Profile({ setShowMessageModal, username, date, img, publickeyString }: ProfileProps) {
+function Profile({ setShowProfileModal, username, date, img, publickeyString }: ProfileProps) {
  return (
   <>
    <div className="mt-6 pb-2 border-b-2 border-gray-700 ">
     <div className="flex  justify-start items-center flex-row">
      <div className="flex justify-start   items-center w-full  flex-row">
-      <Link href={`/users?pubkey=${"publickeyString"}`}>
-       <div className="flex cursor-pointer items-center">
-        <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img} alt="Rounded avatar" />
-        </div>
-        <span className=" text-3xl ">{username}</span>
+      <div className="flex cursor-pointer items-center">
+       <div className="pb- pr-2">
+        <img className="w-14 h-14  rounded-full" src={img} alt="Rounded avatar" />
        </div>
-      </Link>
+       <div className="flex items-center space-x-1">
+        <span className=" text-3xl ">{username}</span>{" "}
+        <svg
+         onClick={() => setShowProfileModal(true)}
+         className="cursor-pointer w-5 h-5 fill-gray-500 "
+         xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 512 512">
+         <path d="M490.3 40.4C512.2 62.27 512.2 97.73 490.3 119.6L460.3 149.7L362.3 51.72L392.4 21.66C414.3-.2135 449.7-.2135 471.6 21.66L490.3 40.4zM172.4 241.7L339.7 74.34L437.7 172.3L270.3 339.6C264.2 345.8 256.7 350.4 248.4 353.2L159.6 382.8C150.1 385.6 141.5 383.4 135 376.1C128.6 370.5 126.4 361 129.2 352.4L158.8 263.6C161.6 255.3 166.2 247.8 172.4 241.7V241.7zM192 63.1C209.7 63.1 224 78.33 224 95.1C224 113.7 209.7 127.1 192 127.1H96C78.33 127.1 64 142.3 64 159.1V416C64 433.7 78.33 448 96 448H352C369.7 448 384 433.7 384 416V319.1C384 302.3 398.3 287.1 416 287.1C433.7 287.1 448 302.3 448 319.1V416C448 469 405 512 352 512H96C42.98 512 0 469 0 416V159.1C0 106.1 42.98 63.1 96 63.1H192z" />
+        </svg>
+       </div>
+      </div>
       <span>&nbsp;•&nbsp;</span>
       <span className="text-base">Joined {date}</span>
-      <button
-       onClick={() => setShowMessageModal(true)}
-       className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
-       <div className="flex flex-row items- justify-center">
-        {/* <svg
-        style={{marginTop:3}}
-        className="w-5 h-5  fill-slate-100 mr-2"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512">
-        <path d="M511.1 63.1v287.1c0 35.25-28.75 63.1-64 63.1h-144l-124.9 93.68c-7.875 5.75-19.12 .0497-19.12-9.7v-83.98h-96c-35.25 0-64-28.75-64-63.1V63.1c0-35.25 28.75-63.1 64-63.1h384C483.2 0 511.1 28.75 511.1 63.1z" />
-       </svg>{" "} */}
-        <span>Message</span>
-       </div>
-      </button>
      </div>
     </div>
     <Link href={`/users?pubkey=${"publickeyString"}`}>

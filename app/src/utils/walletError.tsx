@@ -10,16 +10,16 @@ import {
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { connection } from "../contexts/programContextProvider";
 import { getWalletBalance } from "./get-wallet-balance";
-export async function CheckWallet(getWallet: any, notify: any) {
- let ProgramContext = UseProgramContext();
+export async function CheckWallet(getWallet: any, notify: any,ProgramContext:any) {
  if (!getWallet?.publicKey) {
   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
   return { error: true, msg: "no wallet" };
  }
- if (!ProgramContext?.state.user.foundUser) {
-  notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
-  return { error: true, msg: "no username" };
- }
+ //broken
+//  if (!ProgramContext?.state.user.foundUser) {
+//   notify(<DangerAlert text="Please connect to a wallet." dismiss={undefined} />);
+//   return { error: true, msg: "no username" };
+//  }
  let balance = await getWalletBalance(connection, getWallet);
  
  if (balance == 0) {

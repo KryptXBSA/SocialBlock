@@ -23,7 +23,7 @@ export const NewPost = () => {
 
  async function newPost(e: { preventDefault: () => void }) {
   e.preventDefault();
-  let walletError = await CheckWallet(programContext.getWallet, notify);
+  let walletError = await CheckWallet(programContext.getWallet, notify,programContext);
   if (walletError.error) {
   } else {
    let content = contentInputRef.current.value;

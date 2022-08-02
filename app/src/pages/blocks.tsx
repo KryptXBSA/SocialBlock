@@ -119,7 +119,7 @@ export default function Home() {
   return null;
  } else {
   return (
-   <Layout active={3}>
+   <Layout page="blockk" active={3}>
     {showMessageModal && <MessageModal setShowModal={setShowMessageModal} />}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
@@ -243,7 +243,7 @@ export const Search = ({ searchInputRef, clickSearch, selected, setSelected }: S
       data-dropdown-toggle="dropdown"
       className="mr-2 text-white bg-blue-700 hover:bg-blue-800  transition-colors duration-300 font-medium rounded-lg text-sm  px-3  text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 "
       type="button">
-      {selected === 1 ? "Username" : "Public Key"}
+      {selected === 1 ? "Block" : "Public Key"}
       <svg
        className="ml-2 w-4 h-4"
        aria-hidden="true"
@@ -267,7 +267,7 @@ export const Search = ({ searchInputRef, clickSearch, selected, setSelected }: S
          setDropDownOpen(!dropDownOpen);
         }}
         className="transition-colors duration-300 text-base rounded cursor-pointer py-2.5 px-4 hover:bg-gray-600">
-        Username
+        Block
        </li>
        <li
         onClick={() => {
@@ -285,7 +285,7 @@ export const Search = ({ searchInputRef, clickSearch, selected, setSelected }: S
       required
       ref={searchInputRef}
       type="text"
-      placeholder={selected === 1 ? "Username" : "Public Key"}
+      placeholder={selected === 1 ? "Block" : "Public Key"}
       className=" border-none rounded-lg bg-gray-100 dark:bg-gray-800 rounded-r-none grow "
      />
      <button onClick={clickSearch} className="btn rounded-l-none btn-square">
