@@ -6,12 +6,17 @@ comment = "2BqbRJMk2CPseUTzGJcQHbKrsyR3wVFZT1NEWCCUNv5d"
 user = "7HaWRPy31cXVPVWcWXEpiRiPKBNXrQhaNd4uKsMp7j3C"
 block = "jDisgxcmUiyERDhxEUuHTtpJjHu9NP1oYVwQsHFNcGA"
 message = "FPJbca4BGHZzyWkoANcKcGKhKBWXZsHJKiDFakGDyCX7"
-
+[programs.devnet]
+post = "7TqUKeDRtCKTpsr7TAAvXwQicDcT8y1eVaLzyAfHLHLL"
+comment = "2BqbRJMk2CPseUTzGJcQHbKrsyR3wVFZT1NEWCCUNv5d"
+user = "7HaWRPy31cXVPVWcWXEpiRiPKBNXrQhaNd4uKsMp7j3C"
+block = "jDisgxcmUiyERDhxEUuHTtpJjHu9NP1oYVwQsHFNcGA"
+message = "FPJbca4BGHZzyWkoANcKcGKhKBWXZsHJKiDFakGDyCX7"
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/home/aland/.config/solana/id.json"
 
 [scripts]
