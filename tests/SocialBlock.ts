@@ -1,7 +1,7 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { Post } from "../target/types/post"
-
+import { Comment } from "../target/types/comment";
 describe("SocialBlock", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();

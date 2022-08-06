@@ -2,6 +2,7 @@
 seeds = false
 [programs.localnet]
 post = "7TqUKeDRtCKTpsr7TAAvXwQicDcT8y1eVaLzyAfHLHLL"
+comment = "2BqbRJMk2CPseUTzGJcQHbKrsyR3wVFZT1NEWCCUNv5d"
 
 [registry]
 url = "https://anchor.projectserum.com"
