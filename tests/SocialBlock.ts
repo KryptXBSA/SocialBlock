@@ -1,6 +1,7 @@
 import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { User } from "../target/types/user";
+import { Message } from './../target/types/message';
 import { Block } from './../target/types/block';
 import { Post } from "../target/types/post"
 import { Comment } from "../target/types/comment";
@@ -12,6 +13,7 @@ describe("SocialBlock", () => {
   const newUserAccount = anchor.web3.Keypair.generate();
   const newBlockAccount = anchor.web3.Keypair.generate();
   const newPostAccount = anchor.web3.Keypair.generate();
+  const newMessageAccount = anchor.web3.Keypair.generate();
   it("New User Account", async () => {
 
     const userProgram = anchor.workspace.User as Program<User>;
@@ -27,6 +29,22 @@ describe("SocialBlock", () => {
 
     const newPostAccount0 = await userProgram.account.user.fetch(newUserAccount.publicKey);
     console.log(newPostAccount0);
+  })
+it("New Message Account", async () => {
+
+    const messageProgram = anchor.workspace.Message as Program<Message>;
+    // Making new message
+    const tx = await messageProgram.methods.newMessage(provider.wallet.publicKey,"hi").accounts(
+      {
+        message: newMessageAccount.publicKey,
+        from: provider.wallet.publicKey,
+      },
+    ).signers([newMessageAccount]).rpc()
+
+    // Fetching the message
+
+    const newMessage = await messageProgram.account.message.fetch(newMessageAccount.publicKey);
+    console.log(newMessage);
   })
   it("New Block Account", async () => {
 
