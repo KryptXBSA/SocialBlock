@@ -9,10 +9,11 @@ pub mod user {
     pub fn new_user(ctx: Context<NewUser>, username: String) -> Result<()> {
         let user_account: &mut Account<User> = &mut ctx.accounts.user_account;
         let clock: Clock = Clock::get().unwrap();
-
+        let user: &Signer = &ctx.accounts.user;
         if username.chars().count() > 280 {
             // return Err(ErrorCode::ContentTooLong.into());
         }
+        user_account.user = *user.key;
         user_account.username = username;
         user_account.timestamp = clock.unix_timestamp;
         user_account.bookmarks = Vec::new();
@@ -49,6 +50,13 @@ pub struct NewUser<'info> {
     pub system_program: Program<'info, System>,
 }
 
+#[account]
+pub struct User {
+    pub user: Pubkey,
+    pub timestamp: i64,
+    pub username: String,
+    pub bookmarks: Vec<Pubkey>,
+}
 
 #[derive(Accounts)]
 pub struct ChangeUsername<'info> {
@@ -64,13 +72,7 @@ pub struct AddBookmarks<'info> {
     pub user: Signer<'info>,
 }
 
-#[account]
-pub struct User {
-    pub user: Pubkey,
-    pub timestamp: i64,
-    pub username: String,
-    pub bookmarks: Vec<Pubkey>,
-}
+
 const DISCRIMINATOR_LENGTH: usize = 8;
 const PUBLIC_KEY_LENGTH: usize = 32;
 const TIMESTAMP_LENGTH: usize = 8;
