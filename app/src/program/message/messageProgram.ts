@@ -1,15 +1,14 @@
-import { AnchorWallet } from '@solana/wallet-adapter-react';
 import { useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
-import idl from "./post_idl.json";
+import idl from "./message.json";
+import { Message } from "./message-type";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
 // Getting a wierd error if the program is pubkey is different ill report it.
 
-const SOLANA_TWITTER_PROGRAM = "FwFmSYvW8Rq6F5qFWzvKsmyPMkXTZheZh4iid6grkFSG";
-// const SOLANA_TWITTER_PROGRAM = "926GETHcFsLU3vDWQUEnTpWYRYXktK6gCCfzivjFq4pa";
-const programID = new PublicKey(SOLANA_TWITTER_PROGRAM);
-// const programID ="Ci9kfZvXGk6raNPCb77U5p7xSBfUzucsiAKYFsQ45epF";
+const PROGRAM_PUBLICKEY = "FwFmSYvW8Rq6F5qFWzvKsmyPMkXTZheZh4iid6grkFSG";
+const programID = new PublicKey(PROGRAM_PUBLICKEY);
 
 export interface Wallet {
   signTransaction(
@@ -23,11 +22,11 @@ export interface Wallet {
 
 type ProgramProps = {
   connection: Connection;
-  wallet: AnchorWallet|undefined;
+  wallet: AnchorWallet | undefined;
 };
 
 export const useProgram = ({ connection, wallet }: ProgramProps) => {
-  const [program, setProgram] = useState<anchor.Program<anchor.Idl>>();
+  const [program, setProgram] = useState<anchor.Program<Message>>();
 
   useEffect(() => {
     updateProgram();
@@ -49,6 +48,6 @@ export const useProgram = ({ connection, wallet }: ProgramProps) => {
   };
 
   return {
-    postProgram:program,
+    postProgram: program,
   };
 };

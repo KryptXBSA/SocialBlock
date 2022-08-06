@@ -14,7 +14,6 @@ describe("SocialBlock", () => {
   const newBlockAccount = anchor.web3.Keypair.generate();
   const newPostAccount = anchor.web3.Keypair.generate();
   const newMessageAccount = anchor.web3.Keypair.generate();
-  let newUser;
   it("New User Account", async () => {
 
     const userProgram = anchor.workspace.User as Program<User>;
@@ -28,14 +27,14 @@ describe("SocialBlock", () => {
 
     // Fetching the user
 
-    newUser = await userProgram.account.user.fetch(newUserAccount.publicKey);
-    console.log(newUser);
+    const newPostAccount0 = await userProgram.account.user.fetch(newUserAccount.publicKey);
+    console.log(newPostAccount0);
   })
-  it("New Message Account", async () => {
+it("New Message Account", async () => {
 
     const messageProgram = anchor.workspace.Message as Program<Message>;
     // Making new message
-    const tx = await messageProgram.methods.newMessage(provider.wallet.publicKey, "hi").accounts(
+    const tx = await messageProgram.methods.newMessage(provider.wallet.publicKey,"hi").accounts(
       {
         message: newMessageAccount.publicKey,
         from: provider.wallet.publicKey,
@@ -66,7 +65,7 @@ describe("SocialBlock", () => {
   it("New Post", async () => {
     const postProgram = anchor.workspace.Post as Program<Post>;
     // Making new post
-    const tx = await postProgram.methods.sendPost("block", "content", newUser.username).accounts(
+    const tx = await postProgram.methods.sendPost("block", "content", "usernameALAND").accounts(
       {
         post: newPostAccount.publicKey,
         author: provider.wallet.publicKey,

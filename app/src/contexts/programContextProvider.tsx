@@ -63,7 +63,6 @@ export function ProgramWrapper({ children }: any) {
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
  const { commentProgram } = useCommentProgram({ connection, wallet });
-
  useEffect(() => {
   if (userProgram && wallet?.publicKey && !state.user.foundUser) {
    setUsername();
