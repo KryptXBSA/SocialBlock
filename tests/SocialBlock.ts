@@ -2,12 +2,30 @@ import * as anchor from "@project-serum/anchor";
 import { Program } from "@project-serum/anchor";
 import { Post } from "../target/types/post"
 import { Comment } from "../target/types/comment";
+import { User } from "../target/types/user";
 describe("SocialBlock", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
 
   const newPostAccount = anchor.web3.Keypair.generate();
+  const newUserAccount = anchor.web3.Keypair.generate();
+  it("New User Account", async () => {
+
+    const userProgram = anchor.workspace.User as Program<User>;
+    // Making new user
+    const tx = await userProgram.methods.newUser("aland").accounts(
+      {
+        userAccount: newUserAccount.publicKey,
+        user: provider.wallet.publicKey,
+      },
+    ).signers([newUserAccount]).rpc()
+
+    // Fetching the user
+
+    const newPostAccount0 = await userProgram.account.user.fetch(newUserAccount.publicKey);
+    console.log(newPostAccount0);
+  })
   it("New Post", async () => {
     const postProgram = anchor.workspace.Post as Program<Post>;
     // Making new post
@@ -39,4 +57,5 @@ describe("SocialBlock", () => {
 
     console.log(newCommentAccount0);
   })
+
 });
