@@ -1,6 +1,7 @@
 /** @format */
 
 import * as anchor from "@project-serum/anchor";
+import { AnchorWallet } from "@solana/wallet-adapter-react";
 import bs58 from "bs58";
 
 import { Post, AccountData } from "../post";
@@ -35,81 +36,39 @@ const toFilter = (authorBase58PublicKey: string) => ({
 
 
 
-type SendPostProps = {
-    program: anchor.Program<anchor.Idl>;
-    block: string;
+type SendMessage = {
+    program: anchor.Program<Message>;
     content: string;
-    username: string;
-    wallet: any;
+    wallet: AnchorWallet;
+    to: anchor.web3.PublicKey
 };
 
-export const sendPost = async ({
+export const newMessage = async ({
     wallet,
     program,
-    block,
     content,
-    username,
-}: SendPostProps) => {
+    to
+}: SendMessage) => {
 
 
-    const post = anchor.web3.Keypair.generate();
+    const message = anchor.web3.Keypair.generate();
 
     let tx = await program.methods
-        .sendPost(block, content, username)
+        .newMessage(to, content)
         .accounts({
-            author: wallet.publicKey.toBase58(),
-            post: post.publicKey.toBase58(),
+            message: message.publicKey,
+            from: wallet.publicKey,
         })
-        .signers([post])
+        .signers([message])
         .rpc();
 
-    const newPostAccount: AccountData = {
-        author: wallet.publicKey,
+    const sentMessage = {
+        publicKey: message.publicKey,
+        from: wallet.publicKey,
+        to: to,
         timestamp: new anchor.BN(new Date().getTime()),
-        block,
         content,
-        username,
-        likes: [],
-        comments: 0,
     };
 
-    let sentPost = new Post(post.publicKey, newPostAccount);
-    return { post: sentPost, tx };
-};
-export const like = async ({ wallet, program, postPubkey }: any) => {
-    await program.methods
-        .like(wallet.publicKey)
-        .accounts({
-            owner: wallet.publicKey,
-            post: postPubkey,
-        })
-        .signers([])
-        .rpc();
-    return "liked";
-};
-export const unlike = async ({ wallet, program, postPubkey }: any) => {
-    await program.methods
-        .unlike(wallet.publicKey)
-        .accounts({
-            owner: wallet.publicKey,
-            post: postPubkey,
-        })
-        .signers([])
-        .rpc();
-    return "unliked";
-};
-
-interface CommentType { username?: string, commentBody: string, authorPubkey: anchor.web3.PublicKey, wallet: any, program: anchor.Program<anchor.Idl>, postPubkey: anchor.web3.PublicKey }
-export const NewComment = async ({ wallet, program, postPubkey, commentBody, authorPubkey, username }: CommentType) => {
-    let c = await program.methods
-        .comment()
-        // .comment(commentBody,authorPubkey)
-        .accounts({
-            post: postPubkey,
-            owner: wallet.publicKey,
-        })
-        .signers([])
-        .rpc();
-
-    return "commented";
+    return { message: sentMessage, tx };
 };
