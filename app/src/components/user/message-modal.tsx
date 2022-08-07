@@ -1,17 +1,48 @@
 /** @format */
 
 import React, { useRef, useState, useEffect } from "react";
+import { useNotifier } from "react-headless-notifier";
+import { UseProgramContext } from "../../contexts/programContextProvider";
+import { getAllMessages, newMessage } from "../../program/message/message-methods";
+import { CheckWallet } from "../../utils/walletError";
 
 export function MessageModal({ message, setShowModal, username }: any) {
- let usernameInputRef: any = useRef("");
+ let programContext = UseProgramContext();
+ let messageInputRef: any = useRef("");
 
- async function tip(e: { preventDefault: () => void }) {
-  let username = usernameInputRef.current.value;
+ const { notify } = useNotifier();
+
+ async function sendNewMessage(e: { preventDefault: () => void }) {
   e.preventDefault();
-  if (!username) {
+  let message = messageInputRef.current.value;
+  if (!message) {
+   console.log("no message");
   }
-  if (username) {
-   await message(usernameInputRef.current.value);
+  if (message) {
+   let allMessages = await getAllMessages({
+    program: programContext?.messageProgram!,
+    pubkey: programContext?.getWallet?.publicKey.toBase58()!,
+   });
+   console.log(allMessages);
+
+   try {
+    let walletError = await CheckWallet(programContext?.getWallet, notify, programContext);
+    if (walletError.error) {
+     console.log(walletError);
+    } else {
+     let { sentMessage } = await newMessage({
+      wallet: programContext?.getWallet!,
+      program: programContext?.messageProgram!,
+      content: message,
+      to: programContext?.getWallet?.publicKey!,
+     });
+     console.log(sentMessage);
+    }
+   } catch (e) {
+    console.log(e);
+    console.log("newMessageError");
+   }
+
    setShowModal(false);
   }
  }
@@ -32,24 +63,24 @@ export function MessageModal({ message, setShowModal, username }: any) {
       className="btn btn-sm btn-circle absolute right-2 top-2">
       ✕
      </label>
-     <div className="flex mb-1 items-center">
-      <h3 className="flex flex-row text-lg font-bold">Tip</h3>
-      <img className=" mx-1 h-6 w-6 rounded-full  " src="/icons/sol-icon.png" />
-     </div>
-     <form className=" items-center flex flex-row" onSubmit={tip}>
+     <div className="flex mb-1 items-center"></div>
+     <form className=" mt-5 items-center flex flex-row" onSubmit={sendNewMessage}>
       <div className="relative rounded-lg w-full">
-       <input
-        type="number"
+       <textarea
+        cols={3}
+        ref={messageInputRef}
         id="search-dropdown"
         className="block rounded-lg p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-100 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-        placeholder="Amount"
+        placeholder="Message"
         required
        />
-       <button
-        type="submit"
-        className="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-blue-700 rounded-r-lg border border-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Tip
-       </button>
+       <div className="flex w-full justify-center ">
+        <button
+         type="submit"
+         className=" m-2 btn w-1/3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+         Send
+        </button>
+       </div>
       </div>
      </form>
     </div>

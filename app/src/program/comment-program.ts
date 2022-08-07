@@ -3,7 +3,6 @@ import { Connection, PublicKey } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
 import idl from "./comment_idl.json";
-// Getting a wierd error if the program is pubkey is different ill report it.
 
 const SOLANA_TWITTER_PROGRAM = "BaMuaou6Qk6p8KkyKLUG7Krzf2CVobwUepFKfrpQWCg2";
 // const SOLANA_TWITTER_PROGRAM = "926GETHcFsLU3vDWQUEnTpWYRYXktK6gCCfzivjFq4pa";

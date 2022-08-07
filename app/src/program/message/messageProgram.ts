@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
-import idl from "./message.json";
+import idl from "./message_idl.json";
 import { Message } from "./message-type";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
-// Getting a wierd error if the program is pubkey is different ill report it.
-
-const PROGRAM_PUBLICKEY = "FwFmSYvW8Rq6F5qFWzvKsmyPMkXTZheZh4iid6grkFSG";
+// You'll get Fallback functions are not supported error if the Program id is not correct.
+const PROGRAM_PUBLICKEY = "FPJbca4BGHZzyWkoANcKcGKhKBWXZsHJKiDFakGDyCX7";
 const programID = new PublicKey(PROGRAM_PUBLICKEY);
 
 export interface Wallet {
@@ -25,7 +24,7 @@ type ProgramProps = {
   wallet: AnchorWallet | undefined;
 };
 
-export const useProgram = ({ connection, wallet }: ProgramProps) => {
+export const useMessageProgram = ({ connection, wallet }: ProgramProps) => {
   const [program, setProgram] = useState<anchor.Program<Message>>();
 
   useEffect(() => {
@@ -39,15 +38,11 @@ export const useProgram = ({ connection, wallet }: ProgramProps) => {
       commitment: "processed",
     });
 
-    //   const idl = await anchor.Program.fetchIdl(programID, provider);
-    //   
-
     const program = new anchor.Program(idl as any, programID, provider);
-
     setProgram(program);
   };
 
   return {
-    postProgram: program,
+    messageProgram: program,
   };
 };

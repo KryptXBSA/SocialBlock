@@ -15,6 +15,8 @@ import { useCommentProgram } from "../program/comment-program";
 import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { AnchorWallet, useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import * as anchor from "@project-serum/anchor";
+import { useMessageProgram } from "../program/message/messageProgram";
+import { Message } from "../program/message/message-type";
 const endpoint = "https://explorer-api.devnet.solana.com";
 export const connection = new anchor.web3.Connection(endpoint);
 
@@ -50,6 +52,7 @@ export interface ProgramContextInterface {
  userProgram: anchor.Program<anchor.Idl> | undefined;
  postProgram: anchor.Program<anchor.Idl> | undefined;
  commentProgram: anchor.Program<anchor.Idl> | undefined;
+ messageProgram: anchor.Program<Message> | undefined;
  state: InitialState;
  disconnect: () => void;
  changeState: any;
@@ -63,6 +66,7 @@ export function ProgramWrapper({ children }: any) {
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
  const { commentProgram } = useCommentProgram({ connection, wallet });
+ const { messageProgram } = useMessageProgram({ connection, wallet });
  useEffect(() => {
   if (userProgram && wallet?.publicKey && !state.user.foundUser) {
    setUsername();
@@ -85,6 +89,7 @@ export function ProgramWrapper({ children }: any) {
     disconnect,
     postProgram,
     commentProgram,
+    messageProgram,
     state,
     changeState,
     getWallet: wallet,

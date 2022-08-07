@@ -1,17 +1,13 @@
 /** @format */
-
 import * as anchor from "@project-serum/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
-import bs58 from "bs58";
-
-import { Post, AccountData } from "../post";
 import { Message } from './message-type';
 
-type GetPostProps = {
+type GetMessages = {
     program: anchor.Program<Message>;
     pubkey: string;
 };
-export const getAllMessages = async ({ program, pubkey }: GetPostProps) => {
+export const getAllMessages = async ({ program, pubkey }: GetMessages) => {
     const fromMessagesRaw = await program.account.message.all([fromFilter(pubkey)]);
     const toMessagesRaw = await program.account.message.all([toFilter(pubkey)]);
     let messagesRaw = fromMessagesRaw.concat(toMessagesRaw)
@@ -20,27 +16,11 @@ export const getAllMessages = async ({ program, pubkey }: GetPostProps) => {
     return messages;
 };
 
-const fromFilter = (authorBase58PublicKey: string) => ({
-    memcmp: {
-        offset: 8, // Discriminator.
-        bytes: authorBase58PublicKey,
-    },
-});
-const toFilter = (authorBase58PublicKey: string) => ({
-    memcmp: {
-        offset: 8, // Discriminator.
-        bytes: authorBase58PublicKey,
-    },
-});
-
-
-
-
-type SendMessage = {
-    program: anchor.Program<Message>;
+type NewMessage = {
+    program: anchor.Program<Message> ;
     content: string;
-    wallet: AnchorWallet;
-    to: anchor.web3.PublicKey
+    wallet: AnchorWallet 
+    to: anchor.web3.PublicKey 
 };
 
 export const newMessage = async ({
@@ -48,27 +28,44 @@ export const newMessage = async ({
     program,
     content,
     to
-}: SendMessage) => {
-
-
+}: NewMessage) => {
     const message = anchor.web3.Keypair.generate();
+    let tx
+    try {
+        tx = await program?.methods
+            .newMessage(to!, 'dd')
+            .accounts({
+                message: message.publicKey,
+                from: wallet?.publicKey,
+            })
+            .signers([message])
+            .rpc();
+        console.log(tx);
+    } catch (e) {
+        console.log('new message Error');
+        console.log(e);
+    }
 
-    let tx = await program.methods
-        .newMessage(to, content)
-        .accounts({
-            message: message.publicKey,
-            from: wallet.publicKey,
-        })
-        .signers([message])
-        .rpc();
 
     const sentMessage = {
         publicKey: message.publicKey,
-        from: wallet.publicKey,
+        from: wallet?.publicKey,
         to: to,
         timestamp: new anchor.BN(new Date().getTime()),
         content,
     };
 
-    return { message: sentMessage, tx };
+    return { sentMessage, tx };
 };
+const fromFilter = (publicKey: string) => ({
+    memcmp: {
+        offset: 8, // Discriminator.
+        bytes: publicKey,
+    },
+});
+const toFilter = (publicKey: string) => ({
+    memcmp: {
+        offset: 40, // Discriminator.
+        bytes: publicKey,
+    },
+});

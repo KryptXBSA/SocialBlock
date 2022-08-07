@@ -23,7 +23,7 @@ const Layout = ({
  let ProgramContext = UseProgramContext();
  async function signup(username: string) {
   try {
-   let walletError = await CheckWallet(ProgramContext?.getWallet, notify);
+   let walletError = await CheckWallet(ProgramContext?.getWallet, notify,ProgramContext) ;
    if (walletError.error) {
    } else {
     let user = await createUsername({
