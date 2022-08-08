@@ -60,7 +60,7 @@ export const NewComment = ({ postPubkey }: NewCommentProps) => {
  
  async function newComment0(e: { preventDefault: () => void }) {
   e.preventDefault();
-  let walletError = await CheckWallet(programContext.getWallet, notify);
+  let walletError = await CheckWallet(programContext.getWallet, notify,programContext);
   if (walletError.error) {
   } else {
    let comment = commentInputRef.current.value;
