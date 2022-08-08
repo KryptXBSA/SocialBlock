@@ -1,0 +1,105 @@
+{
+  "version": "0.1.0",
+  "name": "user",
+  "instructions": [
+    {
+      "name": "newuser",
+      "accounts": [
+        {
+          "name": "useraccount",
+          "ismut": true,
+          "issigner": true
+        },
+        {
+          "name": "user",
+          "ismut": true,
+          "issigner": true
+        },
+        {
+          "name": "systemprogram",
+          "ismut": false,
+          "issigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "changeusername",
+      "accounts": [
+        {
+          "name": "useraccount",
+          "ismut": false,
+          "issigner": false
+        },
+        {
+          "name": "user",
+          "ismut": true,
+          "issigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "addbookmarks",
+      "accounts": [
+        {
+          "name": "useraccount",
+          "ismut": false,
+          "issigner": false
+        },
+        {
+          "name": "user",
+          "ismut": true,
+          "issigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "bookmark",
+          "type": "publickey"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "user",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "user",
+            "type": "publickey"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "username",
+            "type": "string"
+          },
+          {
+            "name": "bookmarks",
+            "type": {
+              "vec": "publickey"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "7hawrpy31cxvpvwcwxepiripkbnxrqhand4uksmp7j3c"
+  }
+}
