@@ -77,8 +77,8 @@ pub struct SendPost<'info> {
 #[account]
 pub struct Post {
     pub author: Pubkey,
-    pub timestamp: i64,
     pub block: String,
+    pub timestamp: i64,
     pub content: String,
     pub username: String,
     pub likes: Vec<Pubkey>,

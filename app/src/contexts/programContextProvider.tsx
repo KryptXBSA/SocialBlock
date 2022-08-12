@@ -9,14 +9,15 @@ import {
  useReducer,
  useState,
 } from "react";
-import { useUserProgram } from "../program/user-program";
 import { useProgram } from "../program/useProgram";
 import { useCommentProgram } from "../program/comment-program";
-import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { AnchorWallet, useAnchorWallet, useConnection } from "@solana/wallet-adapter-react";
 import * as anchor from "@project-serum/anchor";
 import { useMessageProgram } from "../program/message/messageProgram";
 import { Message } from "../program/message/message-type";
+import { useUserProgram } from "../program/user/user-program";
+import { User } from "../program/user/user-type";
+import { getUserByPubkey } from "../program/user/user-methods";
 const endpoint = "https://explorer-api.devnet.solana.com";
 export const connection = new anchor.web3.Connection(endpoint);
 
@@ -49,7 +50,7 @@ function reducer(state: InitialState, user: Actions) {
 export interface ProgramContextInterface {
  showSignupModal: boolean;
  setShowSignupModal: Dispatch<SetStateAction<boolean>>;
- userProgram: anchor.Program<anchor.Idl> | undefined;
+ userProgram: anchor.Program<User> | undefined;
  postProgram: anchor.Program<anchor.Idl> | undefined;
  commentProgram: anchor.Program<anchor.Idl> | undefined;
  messageProgram: anchor.Program<Message> | undefined;
@@ -61,7 +62,7 @@ export interface ProgramContextInterface {
 export const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
 export function ProgramWrapper({ children }: any) {
  const [state, changeState] = useReducer(reducer, initialState);
- const [showSignupModal, setShowSignupModal] = useState(false);
+ const [showSignupModal, setShowSignupModal] = useState(true);
  const wallet = useAnchorWallet();
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
@@ -73,8 +74,11 @@ export function ProgramWrapper({ children }: any) {
   }
  }, [userProgram, wallet]);
  async function setUsername() {
-  let { user } = await getUsername({ userProgram, publickey: wallet!.publicKey });
-  changeState({ data: user, action: "username" });
+//   let  user  = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
+//   let userr={ userData: username, username: username.name, foundUser: true }
+//   console.log(user);
+  
+//   changeState({ data: user, action: "username" });
  }
  function disconnect() {
   changeState({ data: { username: "", foundUser: false }, action: "username" });

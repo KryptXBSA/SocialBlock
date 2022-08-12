@@ -6,10 +6,11 @@ import { ReactNode, useEffect, useState } from "react";
 import { SignupModal } from "../components/modal";
 import { Sidebar } from "../components/sidebar";
 import { UseProgramContext } from "../contexts/programContextProvider";
-import { createUsername } from "../program/users";
 import { CheckWallet } from "../utils/walletError";
 import { useNotifier } from "react-headless-notifier";
 import { SpecialAlert } from "../components/alert";
+import { newUser } from "../program/user/user-methods";
+
 const Layout = ({
  children,
  active,
@@ -23,12 +24,12 @@ const Layout = ({
  let ProgramContext = UseProgramContext();
  async function signup(username: string) {
   try {
-   let walletError = await CheckWallet(ProgramContext?.getWallet, notify,ProgramContext) ;
+   let walletError = await CheckWallet(ProgramContext?.getWallet, notify, ProgramContext);
    if (walletError.error) {
    } else {
-    let user = await createUsername({
-     userProgram: ProgramContext?.userProgram,
-     pubKey: ProgramContext?.getWallet?.publicKey,
+    let user = await newUser({
+     program: ProgramContext?.userProgram!,
+     wallet: ProgramContext?.getWallet!,
      username,
     });
     ProgramContext?.changeState({ data: user, action: "username" });
@@ -113,7 +114,11 @@ function Trending() {
       </a>
      </div>
     </div>
- <button type="submit" className="fixed btn  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">New Block</button>
+    <button
+     type="submit"
+     className="fixed btn  text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+     New Block
+    </button>
    </div>
   </>
  );

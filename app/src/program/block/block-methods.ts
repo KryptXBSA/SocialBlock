@@ -5,10 +5,17 @@ import { Block } from './../../../../target/types/block';
 
 type GetUser = {
     program: anchor.Program<Block>;
-    pubkey: string;
+    pubkey?: string;
+    name?: string;
 };
-export const getBlock = async ({ program, pubkey }: GetUser) => {
-    const block0 = await program.account.block.all([filter(pubkey)]);
+export const getBlockByPubkey = async ({ program, pubkey }: GetUser) => {
+    const block0 = await program.account.block.all([pubkeyFilter(pubkey!)]);
+
+    const block = block0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
+    return block[0];
+};
+export const getBlockByName = async ({ program, name }: GetUser) => {
+    const block0 = await program.account.block.all([blockFilter(name!)]);
 
     const block = block0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
     return block[0];
@@ -58,9 +65,15 @@ export const newBlock = async ({
     return { newBlock, tx };
 };
 
-const filter = (publicKey: string) => ({
+const pubkeyFilter = (publicKey: string) => ({
     memcmp: {
         offset: 8, // Discriminator.
+        bytes: publicKey,
+    },
+});
+const blockFilter = (publicKey: string) => ({
+    memcmp: {
+        offset: 40, // Discriminator.
         bytes: publicKey,
     },
 });

@@ -8,6 +8,7 @@ pub mod block {
 
     pub fn new_block(ctx: Context<NewBlock>, block_name: String) -> Result<()> {
         let block: &mut Account<Block> = &mut ctx.accounts.block;
+        let owner: &Signer =  &ctx.accounts.owner;
 
         let clock: Clock = Clock::get().unwrap();
 
@@ -15,7 +16,9 @@ pub mod block {
             // return Err(ErrorCode::ContentTooLong.into());
         }
         block.block = block.block;
+        block.owner = *owner.key;
         block.block_name = block_name;
+        block.image = String::new();
         block.timestamp = clock.unix_timestamp;
         Ok(())
     }
@@ -33,8 +36,10 @@ pub struct NewBlock<'info> {
 #[account]
 pub struct Block {
     pub block: Pubkey,
-    pub timestamp: i64,
+    pub owner: Pubkey,
     pub block_name: String,
+    pub image: String,
+    pub timestamp: i64,
 }
 const DISCRIMINATOR_LENGTH: usize = 8;
 const PUBLIC_KEY_LENGTH: usize = 32;

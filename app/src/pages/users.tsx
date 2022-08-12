@@ -4,11 +4,11 @@ import Layout from "../sections/Layout";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
 import { Sidebar } from "../components/sidebar";
-import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { getAllPosts, sendPost, like, unlike } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { Post } from "../components/post/post";
 import { getAllComments, newComment } from "../program/comments";
+import * as anchor from "@project-serum/anchor";
 
 import { useNotifier } from "react-headless-notifier";
 import {
@@ -20,12 +20,15 @@ import {
 } from "../components/alert";
 import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
+import { getUserByPubkey, getUserByUsername } from "../program/user/user-methods";
 
 interface UserData {
- publickeyString: string;
+ publicKey: anchor.web3.PublicKey;
+ user: anchor.web3.PublicKey;
+ timestamp: string | any;
  username: string;
- img: string;
- date: string;
+ image: string;
+ bookmarks: anchor.web3.PublicKey[];
 }
 export default function Home() {
  const [selected, setSelected] = useState(1);
@@ -60,14 +63,21 @@ export default function Home() {
  }
 
  async function getUser() {
-  setUserData([
-   {
-    username: "aland",
-    img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-    date: "15 March 2022",
-    publickeyString: "pubkey",
-   }, 
-  ]);
+  let data: UserData;
+  try {
+   if (selected === 1) {
+    data = await getUserByUsername({
+     program: userProgram,
+     pubkey: searchInputRef.current.value,
+    });
+   } else {
+    data = await getUserByPubkey({
+     program: userProgram,
+     pubkey: searchInputRef.current.value,
+    });
+   }
+   setUserData([data]);
+  } catch (error) {}
  }
  async function getPosts(pubkey?: string | string[] | undefined) {
   let searchValue = searchInputRef?.current?.value;
@@ -138,15 +148,15 @@ export default function Home() {
         userData.length > 1 &&
         userData.map((u: UserData) => (
          <Profile
-          img={u.img}
-          publickeyString={u.publickeyString}
+          img={u.image}
+          publickeyString={u.publicKey.toBase58()}
           username={u.username}
-          date={u.date}
+          date={new Date(parseInt(u.timestamp) * 1000).toLocaleDateString()}
           setShowMessageModal={setShowMessageModal}
          />
         ))}
 
-       {userData && (
+       {/* {userData && (
         <Profile
          img={userData[0].img}
          publickeyString={userData[0].publickeyString}
@@ -154,7 +164,7 @@ export default function Home() {
          date={userData[0].date}
          setShowMessageModal={setShowMessageModal}
         />
-       )}
+       )} */}
 
        <div className="mt-2 w-full">
         {displayPosts()}

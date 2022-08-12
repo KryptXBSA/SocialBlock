@@ -17,6 +17,7 @@ describe("SocialBlock", () => {
   it("New User Account", async () => {
 
     const userProgram = anchor.workspace.User as Program<User>;
+    console.log(await userProgram.account.user.all());
     // Making new user
     const tx = await userProgram.methods.newUser("aland").accounts(
       {

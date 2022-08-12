@@ -82,12 +82,16 @@ export type User = {
             "type": "publicKey"
           },
           {
-            "name": "timestamp",
-            "type": "i64"
-          },
-          {
             "name": "username",
             "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
           },
           {
             "name": "bookmarks",
@@ -185,12 +189,16 @@ export const IDL: User = {
             "type": "publicKey"
           },
           {
-            "name": "timestamp",
-            "type": "i64"
-          },
-          {
             "name": "username",
             "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
           },
           {
             "name": "bookmarks",

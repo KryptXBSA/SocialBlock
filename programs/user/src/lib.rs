@@ -15,6 +15,7 @@ pub mod user {
         }
         user_account.user = *user.key;
         user_account.username = username;
+        user_account.image = String::new();
         user_account.timestamp = clock.unix_timestamp;
         user_account.bookmarks = Vec::new();
 
@@ -53,8 +54,9 @@ pub struct NewUser<'info> {
 #[account]
 pub struct User {
     pub user: Pubkey,
-    pub timestamp: i64,
     pub username: String,
+    pub image: String,
+    pub timestamp: i64,
     pub bookmarks: Vec<Pubkey>,
 }
 
