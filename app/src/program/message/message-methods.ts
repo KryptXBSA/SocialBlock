@@ -17,10 +17,10 @@ export const getAllMessages = async ({ program, pubkey }: GetMessages) => {
 };
 
 type NewMessage = {
-    program: anchor.Program<Message> ;
+    program: anchor.Program<Message>;
     content: string;
-    wallet: AnchorWallet 
-    to: anchor.web3.PublicKey 
+    wallet: AnchorWallet
+    to: anchor.web3.PublicKey
 };
 
 export const newMessage = async ({

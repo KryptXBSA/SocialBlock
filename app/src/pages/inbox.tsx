@@ -1,6 +1,7 @@
 /** @format */
 
 import Head from "next/head";
+import { ProgramContextInterface, UseProgramContext } from "../contexts/programContextProvider";
 import {
  Dispatch,
  LegacyRef,
@@ -10,8 +11,10 @@ import {
  useRef,
  useState,
 } from "react";
-
+import { getAllMessages } from "../program/message/message-methods";
+import * as anchor from "@project-serum/anchor";
 import Layout from "../sections/Layout";
+import { getDate } from "../utils/get-date-moment";
 
 export default function InboxPage() {
  return (
@@ -30,37 +33,73 @@ export default function InboxPage() {
  );
 }
 let messages0 = [
-  {
-   message: "h asdasdads sadasdads asddi",
-   date: "2 days ago",
-   self: false,
-   publickeyString: "a1",
-  },
-  {
-   message: "h asdasdads sadasdads asddi",
-   date: "2 days ago",
-   self: true,
-   publickeyString: "a2",
-  },
-  { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
- ]; let users = [
-  {
-   username: "aldddddand",
-   img: "https://i.imgur.com/6tq2RU8.jpeg",
-   publickeyString: "a1",
-  },
-  {
-   username: "fd",
-   img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-   publickeyString: "a2",
-  },
-  {
-   username: "ddaadsdsda",
-   img: "https://i.imgur.com/m7adBVb.jpeg",
-   publickeyString: "a3",
-  },
- ];
+ {
+  message: "h asdasdads sadasdads asddi",
+  date: "2 days ago",
+  self: false,
+  publickeyString: "a1",
+ },
+ {
+  message: "h asdasdads sadasdads asddi",
+  date: "2 days ago",
+  self: true,
+  publickeyString: "a2",
+ },
+ { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
+];
+let users = [
+ {
+  username: "aldddddand",
+  img: "https://i.imgur.com/6tq2RU8.jpeg",
+  publickeyString: "a1",
+ },
+ {
+  username: "fd",
+  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+  publickeyString: "a2",
+ },
+ {
+  username: "ddaadsdsda",
+  img: "https://i.imgur.com/m7adBVb.jpeg",
+  publickeyString: "a3",
+ },
+];
+type Message = {
+ from: anchor.web3.PublicKey;
+ publicKey: anchor.web3.PublicKey;
+ to: anchor.web3.PublicKey;
+ content: string;
+ timestamp: anchor.BN;
+};
 function Inbox() {
+ const programContext = UseProgramContext()!;
+
+ const [messages, setMessages] = useState(messages0);
+
+ async function fetchMessages() {
+  console.log("fetch msg");
+
+  let messages: Message[] = await getAllMessages({
+   program: programContext.messageProgram!,
+   pubkey: programContext.getWallet?.publicKey.toBase58()!,
+  });
+  console.log(messages);
+  let filteredMessages = messages.map((m) => {
+   return {
+    self: m.from !== programContext.getWallet?.publicKey,
+    message: m.content,
+    date: getDate(m.timestamp),
+    publickeyString: m.publicKey.toBase58(),
+   };
+  });
+  setMessages(filteredMessages);
+ }
+ useEffect(() => {
+  if (programContext.messageProgram && programContext.getWallet?.publicKey) {
+   fetchMessages();
+  }
+ }, [programContext]);
+
  let messageInputRef: any = useRef("");
  function sendMessage(e: { preventDefault: () => void }) {
   e.preventDefault();
@@ -69,8 +108,7 @@ function Inbox() {
  }
 
  const [selectedUser, setSelectedUser] = useState(0);
- 
- const [messages, setMessages] = useState(messages0);
+
  return (
   <div className="flex flex-row h-screen antialiased ">
    <div className="flex flex-row w-96 flex-shrink-0 p-4">
@@ -146,30 +184,28 @@ interface Messages {
  }[];
 }
 function Messages({ messages, users }: Messages) {
+ function findImg(m: any) {
+  let img = users.find(
+   (e: { publickeyString: string | undefined }) => e.publickeyString === m.publickeyString
+  )?.img;
+  return img ? img : "default";
+ }
  return (
-   <>
+  <>
    {messages.map((m) => (
-    <Message
-     date={m.date}
-     img={
-      users.find(
-       (e: { publickeyString: string | undefined }) => e.publickeyString === m.publickeyString
-      )!.img
-     }
-     message={m.message}
-     self={m.self}
-    />
-   ))}</>
+    <Message date={m.date} img={findImg(m)} message={m.message} self={m.self} />
+   ))}
+  </>
  );
 }
-interface Message {
+interface MessageBody {
  self: boolean;
  message: string;
  img: string;
  date: string;
  publickeyString?: string;
 }
-function Message({ self, message, img, date }: Message) {
+function Message({ self, message, img, date }: MessageBody) {
  return (
   <div className={`${!self ? "col-start-1 col-end-8 p-3" : "col-start-6 col-end-13"}  rounded-lg`}>
    <div className={`flex ${!self ? "flex-row" : "flex-row-reverse"} items-center`}>

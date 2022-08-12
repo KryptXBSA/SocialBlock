@@ -62,7 +62,7 @@ export interface ProgramContextInterface {
 export const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
 export function ProgramWrapper({ children }: any) {
  const [state, changeState] = useReducer(reducer, initialState);
- const [showSignupModal, setShowSignupModal] = useState(true);
+ const [showSignupModal, setShowSignupModal] = useState(false);
  const wallet = useAnchorWallet();
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
