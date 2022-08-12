@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-declare_id!("jDisgxcmUiyERDhxEUuHTtpJjHu9NP1oYVwQsHFNcGA");
+declare_id!("9cinoVsQBY4XcNEyM8wUwCLDXJcCFbcuhYs2pd7JF1HT");
 
 #[program]
 pub mod block {
@@ -15,7 +15,6 @@ pub mod block {
         if block_name.chars().count() > 280 {
             // return Err(ErrorCode::ContentTooLong.into());
         }
-        block.block = block.block;
         block.owner = *owner.key;
         block.block_name = block_name;
         block.image = String::new();
@@ -35,7 +34,6 @@ pub struct NewBlock<'info> {
 
 #[account]
 pub struct Block {
-    pub block: Pubkey,
     pub owner: Pubkey,
     pub block_name: String,
     pub image: String,

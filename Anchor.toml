@@ -1,17 +1,17 @@
 [features]
 seeds = false
 [programs.localnet]
-post = "7TqUKeDRtCKTpsr7TAAvXwQicDcT8y1eVaLzyAfHLHLL"
-comment = "2BqbRJMk2CPseUTzGJcQHbKrsyR3wVFZT1NEWCCUNv5d"
-user = "7HaWRPy31cXVPVWcWXEpiRiPKBNXrQhaNd4uKsMp7j3C"
-block = "jDisgxcmUiyERDhxEUuHTtpJjHu9NP1oYVwQsHFNcGA"
-message = "FPJbca4BGHZzyWkoANcKcGKhKBWXZsHJKiDFakGDyCX7"
+post = "E9QDukRnh9MGYamTCPndnxnjmHMmn6VLUwdcHTCU7AXt"
+comment = "7KFJjA73aTPNnDvsavcwbJ5w2TYJa4rU6yzSpM6TKcj3"
+user = "29FTScCpe4oB8zFMzQHcprtjdWisqGAB39NqRNuwtoeR"
+block = "9cinoVsQBY4XcNEyM8wUwCLDXJcCFbcuhYs2pd7JF1HT"
+message = "6DBciTm6TPwPWpemy3u6xiS9xVQqSqNvMLaYCFfCViG1"
 
 [registry]
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "localnet"
+cluster = "devnet"
 wallet = "/home/aland/.config/solana/id.json"
 
 [scripts]
