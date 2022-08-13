@@ -19,7 +19,7 @@ import { useUserProgram } from "../program/user/user-program";
 import { User } from "../program/user/user-type";
 import { getUserByPubkey } from "../program/user/user-methods";
 const endpoint =
- "https://responsive-dawn-sponge.solana-devnet.discover.quiknode.pro/2c9e6acd14a57270687f2920c37e9c56f2bb1f36";
+ "https://api.devnet.solana.com";
 export const connection = new anchor.web3.Connection(endpoint);
 
 let initialState: InitialState = {
@@ -81,7 +81,7 @@ export function ProgramWrapper({ children }: any) {
   }
  }, [userProgram, wallet]);
  async function setUsername() {
-  let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey });
+  let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
   if (!user) {
    setShowSignupModal(true);
   }

@@ -14,7 +14,7 @@ export type AccountData = {
 export class Post {
     publicKey: anchor.web3.PublicKey;
     author: anchor.web3.PublicKey;
-    timestamp: string;
+    timestamp: string|number;
     block: string;
     content: string;
     username: string;
@@ -41,10 +41,7 @@ export class Post {
         return author;
     }
 
-    get createdAt() {
-        const date = getDate(this.timestamp);
-        return date.toLocaleDateString();
-    }
+
 
     get getUsername() {
         return this.username ? this.username : 'noUsername';
@@ -61,14 +58,7 @@ export class Post {
     get getShares() {
         return 0;
     }
-    get createdAgo() {
-        const date = getDate(this.timestamp);
-        return timeSince(date);
-    }
-    get getTimestamp() {
-        const date = getDate(this.timestamp);
-        return date;
-    }
+  
 }
 
 // convert unix timestamp to js date object

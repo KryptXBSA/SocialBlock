@@ -2,32 +2,26 @@
 import * as anchor from "@project-serum/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { User } from './user-type';
+import bs58 from "bs58";
 
 type GetUser = {
     program: anchor.Program<User>;
-    pubkey?: anchor.web3.PublicKey;
+    pubkey?:string;
     username?: string;
 };
 export const getUserByPubkey = async ({ program, pubkey }: GetUser) => {
-    
-    const user1 = await program.account.user.all();
-    console.log(user1);
-//    111 3wqDxRfVpLYUpp4f4cYhqCkBQtSzJYgnAQ2kXfLo9eMM
-// user-methods.ts?7d94:46 222 Yz4QFqLuPCDQsJdFvTJTqPnir5DHr5YQMCeQFqXDqvP 
-    
-// 111 3wqDxRfVpLYUpp4f4cYhqCkBQtSzJYgnAQ2kXfLo9eMM
-// user-methods.ts?7d94:47 222 HNXKo3nfpdhvUjsvWq6eF9JR92fddnVfmGtqHLFfmZpy
-    const user0 = await program.account.user.all([pubkeyFilter(pubkey?.toBase58()!)]);
-console.log('filter',user0);
+
+    const user0 = await program.account.user.all([pubkeyFilter(pubkey)]);
 
     const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
     return user[0];
 };
 export const getUserByUsername = async ({ program, username }: GetUser) => {
-    console.log('programmm',program.account);
-    const user0 = await program.account.user.all([userFilter(username!)]);
 
-    const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
+    console.log(username);
+    
+    const user0 = await program.account.user.all([userFilter(username!)]);
+      const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
     return user[0];
 };
 type NewUser = {
@@ -115,7 +109,7 @@ const pubkeyFilter = (publicKey: any) => ({
 });
 const userFilter = (publicKey: string) => ({
     memcmp: {
-        offset: 40, // Discriminator.
-        bytes: publicKey,
+        offset: 44, // Discriminator.
+        bytes: bs58.encode(Buffer.from(publicKey)),
     },
 });

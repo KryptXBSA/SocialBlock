@@ -13,7 +13,7 @@ import { useNotifier } from "react-headless-notifier";
 import { CheckWallet } from "../utils/walletError";
 import { sendPost } from "../program/posts";
 
-export const NewPost = () => {
+export const NewPost = ({addPost}:{addPost:any}) => {
  const programContext = UseProgramContext()!;
  const { notify } = useNotifier();
  let contentInputRef: any = useRef("");
@@ -37,6 +37,7 @@ export const NewPost = () => {
      username: programContext.state.user.username,
     });
     console.log(postResult);
+    addPost(postResult.post)
     
    } catch (e) {}
   }

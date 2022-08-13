@@ -32,15 +32,28 @@ export default function Home() {
   }
  }, [programContext]);
 
+ function addPost(post: PostType) {
+  let postss = [post].concat(posts);
+  postss.sort(
+   (a: any, b: any) =>
+    parseInt(b.timestamp) - parseInt(a.timestamp)
+  );
+  setPosts(postss);
+ }
  async function fetchPosts() {
   try {
    let posts: any = await getAllPosts({ program: programContext.postProgram! });
+   posts.sort(
+    (a: { timestamp: string }, b: { timestamp: string }) =>
+     parseInt(b.timestamp) - parseInt(a.timestamp)
+   );
    setPosts(posts);
    return posts;
   } catch (e) {
    console.log("posts fetch error", e);
   }
  }
+ console.log(posts);
 
  function displayPosts() {
   return posts.map((p: any) => (
@@ -69,7 +82,7 @@ export default function Home() {
    <Layout active={0}>
     <main className="  bg-slate-900  w-1/3 flex justify-center flex-row">
      <div style={{ width: 733 }} className="flex mt-4 items-center flex-col space-y-2">
-      <NewPost />
+      <NewPost addPost={addPost} />
       {displayPosts()}
       {posts.length < 7 && <div style={{ marginBottom: 999 }} className=""></div>}
      </div>

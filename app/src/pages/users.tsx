@@ -31,7 +31,7 @@ interface UserData {
  bookmarks: anchor.web3.PublicKey[];
 }
 export default function Home() {
- const [selected, setSelected] = useState(1);
+ const [selected, setSelected] = useState(0);
  const { notify } = useNotifier();
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
@@ -48,7 +48,7 @@ export default function Home() {
   if (getWallet?.publicKey) {
   }
   if (postProgram && router?.query?.pubkey && !alreadyFetched) {
-   getUser();
+   getUser(router?.query?.pubkey!);
    getPosts(router?.query?.pubkey);
    setAlreadyFetched(true);
   }
@@ -62,18 +62,18 @@ export default function Home() {
   }
  }
 
- async function getUser() {
+ async function getUser(pub?: string | string[] | undefined) {
   let data: UserData;
   try {
    if (selected === 1) {
     data = await getUserByUsername({
      program: userProgram,
-     pubkey: searchInputRef.current.value,
+     username: searchInputRef.current.value,
     });
    } else {
     data = await getUserByPubkey({
      program: userProgram,
-     pubkey: searchInputRef.current.value,
+     pubkey: pub ? pub : searchInputRef.current.value,
     });
    }
    setUserData([data]);
@@ -125,7 +125,6 @@ export default function Home() {
    />
   ));
  }
- console.log(posts.length);
 
  if (!router.asPath) {
   return null;
@@ -145,11 +144,10 @@ export default function Home() {
        />
 
        {userData &&
-        userData.length > 1 &&
         userData.map((u: UserData) => (
          <Profile
           img={u.image}
-          publickeyString={u.publicKey.toBase58()}
+          publickeyString={u.user.toBase58()}
           username={u.username}
           date={new Date(parseInt(u.timestamp) * 1000).toLocaleDateString()}
           setShowMessageModal={setShowMessageModal}
@@ -194,7 +192,7 @@ function Profile({ setShowMessageModal, username, date, img, publickeyString }: 
       <Link href={`/users?pubkey=${"publickeyString"}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img} alt="Rounded avatar" />
+         <img className="w-14 h-14  rounded-full" src={img?img:'/img.png'} alt="Rounded avatar" />
         </div>
         <span className=" text-3xl ">{username}</span>
        </div>

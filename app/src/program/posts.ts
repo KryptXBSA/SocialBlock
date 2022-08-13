@@ -74,6 +74,7 @@ export const sendPost = async ({
     };
 
     let sentPost = new Post(post.publicKey, newPostAccount);
+    sentPost.timestamp=Date.now()/1000
     return { post: sentPost, tx };
 };
 export const like = async ({ wallet, program, postPubkey }: any) => {

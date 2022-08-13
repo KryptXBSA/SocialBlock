@@ -235,56 +235,13 @@ export const Search = ({ searchInputRef, clickSearch, selected, setSelected }: S
  return (
   <>
    <div className="flex mt-2">
-    <div className=" flex ">
-     <button
-      onClick={() => setDropDownOpen(!dropDownOpen)}
-      id="dropdownDefault"
-      data-dropdown-toggle="dropdown"
-      className="mr-2 text-white bg-blue-700 hover:bg-blue-800  transition-colors duration-300 font-medium rounded-lg text-sm  px-3  text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 "
-      type="button">
-      {selected === 1 ? "Block" : "Public Key"}
-      <svg
-       className="ml-2 w-4 h-4"
-       aria-hidden="true"
-       fill="none"
-       stroke="currentColor"
-       viewBox="0 0 24 24"
-       xmlns="http://www.w3.org/2000/svg">
-       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-      </svg>
-     </button>
-     <div
-      id="dropdown"
-      style={{ width: 121, marginTop: 53 }}
-      className={`z-10 ${
-       dropDownOpen ? "" : "hidden"
-      }  absolute bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 `}>
-      <ul className=" text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefault">
-       <li
-        onClick={() => {
-         setSelected(1);
-         setDropDownOpen(!dropDownOpen);
-        }}
-        className="transition-colors duration-300 text-base rounded cursor-pointer py-2.5 px-4 hover:bg-gray-600">
-        Block
-       </li>
-       <li
-        onClick={() => {
-         setSelected(2);
-         setDropDownOpen(!dropDownOpen);
-        }}
-        className="transition-colors duration-300 text-base cursor-pointer py-2.5 px-4 hover:bg-gray-600">
-        Public Key
-       </li>
-      </ul>
-     </div>
-    </div>
+    
     <form className="flex grow flex-row" onSubmit={clickSearch}>
      <input
       required
       ref={searchInputRef}
       type="text"
-      placeholder={selected === 1 ? "Block" : "Public Key"}
+      placeholder={selected === 1 ? "Block name" : "Public Key"}
       className=" border-none rounded-lg bg-gray-100 dark:bg-gray-800 rounded-r-none grow "
      />
      <button onClick={clickSearch} className="btn rounded-l-none btn-square">
