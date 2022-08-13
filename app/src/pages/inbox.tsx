@@ -11,11 +11,13 @@ import {
  useRef,
  useState,
 } from "react";
-import { getAllMessages } from "../program/message/message-methods";
+import { getAllMessages, newMessage } from "../program/message/message-methods";
 import * as anchor from "@project-serum/anchor";
 import Layout from "../sections/Layout";
 import { getDate } from "../utils/get-date-moment";
 import { getUserByPubkey } from "../program/user/user-methods";
+import Link from "next/link";
+import { nanoid } from "nanoid";
 
 export default function InboxPage() {
  return (
@@ -53,125 +55,60 @@ type Message = {
  content: string;
  timestamp: anchor.BN;
 };
-let messages0 = [
- {
-  message: "a11111111",
-  date: "2 days ago",
-  self: false,
-  publickeyString: "a1",
- },
- {
-  message: "a2222",
-  date: "2 days ago",
-  self: false,
-  publickeyString: "a2",
- },
- { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
- { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: true, publickeyString: "a3" },
- { message: "meeeeeeeeeee", date: "1 day ago", self: true, publickeyString: "a3" },
- { message: "meeeeeeeeeee", date: "1 day ago", self: true, publickeyString: "a3" },
- { message: "a2222", date: "1 day ago", self: true, publickeyString: "a2" },
- { message: "a111", date: "1 day ago", self: true, publickeyString: "a1" },
- { message: "a2222", date: "1 day ago", self: true, publickeyString: "a2" },
- { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
- { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
-];
-let users = [
- {
-  username: "aldddddand",
-  img: "https://i.imgur.com/6tq2RU8.jpeg",
-  publickeyString: "a1",
- },
- {
-  username: "fd",
-  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-  publickeyString: "a2",
- },
- {
-  username: "ddaadsdsda",
-  img: "https://i.imgur.com/m7adBVb.jpeg",
-  publickeyString: "a3",
- },
-];
-let users0 = [
- {
-  username: "aldddddand",
-  img: "https://i.imgur.com/6tq2RU8.jpeg",
-  publickeyString: "a1",
- },
- {
-  username: "fd",
-  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-  publickeyString: "a2",
- },
- {
-  username: "ddaadsdsda",
-  img: "https://i.imgur.com/m7adBVb.jpeg",
-  publickeyString: "a3",
- },
-];
+
 function Inbox() {
  const programContext = UseProgramContext()!;
 
- const [messages, setMessages] = useState<MessagesType[]>(messages0);
- const [users, setUsers] = useState<UsersType[]>(users0);
-
- async function fetchMessages() {
-  console.log("fetch msg");
-
-  let messages: Message[] = await getAllMessages({
-   program: programContext.messageProgram!,
-   pubkey: programContext.getWallet?.publicKey.toBase58()!,
-  });
-  console.log("o", messages);
-  let filteredMessages = messages.filter((m) => {
-   return {
-    self: m.from !== programContext.getWallet?.publicKey,
-    message: m.content,
-    date: getDate(m.timestamp),
-    publickeyString: m.publicKey.toBase58(),
-   };
-  });
-  let users: UsersType[] = [];
-
-  async function fetchUsers() {
-   let users = messages.map(async (message) => {
-    let user = await getUserByPubkey({
-     program: programContext.userProgram!,
-     pubkey: message.from.toBase58(),
-    });
-    return { username: user.username, img: user.image, publickeyString: user.user.toBase58() };
-   });
-   return Promise.all(users);
-  }
-  users = await fetchUsers();
-
-  console.log("f", filteredMessages);
-
-  //  setUsers(users!);
-  // setMessages(filteredMessages);
- }
- useEffect(() => {
-  if (programContext.messageProgram && programContext.getWallet?.publicKey) {
-   fetchMessages();
-  }
- }, [programContext]);
-
- let messageInputRef: any = useRef("");
- function sendMessage(e: { preventDefault: () => void }) {
-  e.preventDefault();
-  let message = messageInputRef.current.value;
-  setMessages(messages!.concat([{ message, date: "Just now", self: true, publickeyString: "a3" }]));
- }
-
+ const [messages, setMessages] = useState<MessagesType[]>(programContext.messages!);
+ const [users, setUsers] = useState<UsersType[]>(programContext.users!);
  const [selectedUser, setSelectedUser] = useState(0);
 
+
+ useEffect(() => {
+  if (programContext.messageProgram && programContext.getWallet?.publicKey) {
+  }
+ }, [programContext.messageProgram]);
+
+ let messageInputRef: any = useRef("");
+ async function sendMessage(e: { preventDefault: () => void }) {
+  e.preventDefault();
+  let message = messageInputRef.current.value;
+  try {
+   let newMessage0 = await newMessage({
+    program: programContext.messageProgram!,
+    wallet: programContext.getWallet!,
+    content: message,
+    to: users![selectedUser].publickeyString!,
+   });
+  } catch (e) {
+   console.log("new message Error", e);
+  }
+
+  setMessages(
+   messages!.concat([
+    {
+     message,
+     date: "Just now",
+     self: true,
+     publickeyString: users![selectedUser].publickeyString!,
+    },
+   ])
+  );
+ messageInputRef.current.value=''
+ }
+ if (!messages) {
+  return (
+   <div style={{ marginBottom: 999, marginTop: 20 }} className="">
+    No Messages
+   </div>
+  );
+ }
  return (
   <div className="flex flex-row h-screen antialiased ">
    <div className="flex flex-row w-96 flex-shrink-0 p-4">
     <div className="flex flex-col w-full h-full pl-4 pr-4 py-4 -mr-4">
      <MessageHeader />
-     {messages && <UserList setSelectedUser={setSelectedUser} users={users!} />}
+     {messages && <UserList messages={messages} setSelectedUser={setSelectedUser} users={users!} />}
     </div>
    </div>
    <div className="flex flex-col h-full w-full  px-4 py-6">
@@ -206,6 +143,7 @@ function Inbox() {
       <textarea
        rows={3}
        ref={messageInputRef}
+       required
        className="  bg-transparent focus:outline-none border-blue-500 border-2 p-1 w-full rounded-lg text-sm  flex items-center"
        placeholder="Type your message...."
       />
@@ -249,24 +187,28 @@ function Messages({ messages, users, selectedUser }: Messages) {
  const [currentMessages, setCurrentMessages] = useState<MessagesType[]>([]);
  function findMessages() {
   let messages0 = messages.filter((m) => {
-   return m.publickeyString === selectedUser.publickeyString ||( m.self === true&&m.publickeyString === selectedUser.publickeyString);
+   return (
+    m.publickeyString === selectedUser.publickeyString ||
+    (m.self === true && m.publickeyString === selectedUser.publickeyString)
+   );
   });
   setCurrentMessages(messages0);
  }
  useEffect(() => {
   findMessages();
- }, [messages, users,selectedUser]);
+ }, [messages, users, selectedUser]);
 
  function findImg(m: any) {
   let img = users.find(
    (e: { publickeyString: string | undefined }) => e.publickeyString === m.publickeyString
   )?.img;
-  return img ? img : "default";
+  return img ? img : "";
  }
  return (
   <>
    {currentMessages.map((m) => (
-    <Message date={m.date} img={findImg(m)} message={m.message} self={m.self} />
+    <Message key={nanoid()} date={m.date} img={findImg(m)} message={m.message} self={m.self} />
+     
    ))}
   </>
  );
@@ -340,21 +282,23 @@ function MessageHeader1({
  publickeyString: string;
 }) {
  return (
-  <div className="flex flex-row items-center py-4 px-6 rounded-2xl shadow">
-   <img
-    className="w-10 h-10  rounded-full"
-    src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-   />
-   <div className="flex flex-col ml-2">
-    <div className="font-semibold text-lg">{username}</div>{" "}
-    <p
-     style={{ marginTop: -8 }}
-     className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
-     {publickeyString}
-     {/* hhhhhhhhh */}
-    </p>
+  <Link href={`/users?pubkey=${publickeyString}`}>
+   <div className="flex flex-row items-center py-4 px-6 rounded-2xl shadow">
+    <img
+     className="w-10 h-10  rounded-full"
+     src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+    />
+    <div className="flex flex-col ml-2">
+     <div className="font-semibold text-lg">{username}</div>{" "}
+     <p
+      style={{ marginTop: -8 }}
+      className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
+      {publickeyString}
+      {/* hhhhhhhhh */}
+     </p>
+    </div>
    </div>
-  </div>
+  </Link>
  );
 }
 function MessageHeader() {
@@ -388,9 +332,11 @@ function MessageHeader() {
 
 function UserList({
  users,
+ messages,
  setSelectedUser,
 }: {
- users: { username: string; img: string }[];
+ users: UsersType[];
+ messages:MessagesType[]
  setSelectedUser: Dispatch<SetStateAction<number>>;
 }) {
  const [selectedMessage, setSelectedMessage] = useState(0);
@@ -398,12 +344,17 @@ function UserList({
   setSelectedMessage(user);
   setSelectedUser(user);
  }
+ function getLastUserMessage(u:UsersType) {
+ return messages.reverse().find(m=>m.publickeyString===u.publickeyString)
+  
+ }
  return (
   <div className="mt-2">
    <div className="flex flex-col -mx-4">
     {users.map((user, index) => (
      <User
-      lastMessage="asfaqsfasf asfasfasfd asfas "
+      key={user.username}
+      lastMessage={getLastUserMessage(user)?.message!}
       username={user.username}
       img={user.img}
       // img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"

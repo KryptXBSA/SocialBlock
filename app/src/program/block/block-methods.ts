@@ -1,7 +1,7 @@
 /** @format */
 import * as anchor from "@project-serum/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
-import { Block } from './../../../../target/types/block';
+import { Block } from './block-type';
 
 type GetUser = {
     program: anchor.Program<Block>;

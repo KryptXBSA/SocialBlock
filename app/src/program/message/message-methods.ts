@@ -21,7 +21,7 @@ type NewMessage = {
     program: anchor.Program<Message>;
     content: string;
     wallet: AnchorWallet
-    to: PublicKey
+    to: PublicKey|string
 };
 
 export const newMessage = async ({
@@ -35,7 +35,7 @@ export const newMessage = async ({
     let tx
     try {
         tx = await program?.methods
-            .newMessage(to!, 'dd')
+            .newMessage(to!, content)
             .accounts({
                 message: message.publicKey,
                 from: wallet?.publicKey,
