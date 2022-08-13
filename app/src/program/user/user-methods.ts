@@ -18,7 +18,6 @@ export const getUserByPubkey = async ({ program, pubkey }: GetUser) => {
 };
 export const getUserByUsername = async ({ program, username }: GetUser) => {
 
-    console.log(username);
     
     const user0 = await program.account.user.all([userFilter(username!)]);
       const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));

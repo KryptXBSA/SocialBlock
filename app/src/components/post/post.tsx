@@ -69,7 +69,6 @@ export function Post({
    program: commentProgram,
    publicKey: postPubkey.toBase58(),
   });
-  console.log(comments);
   setCommentcount0(comments.length);
   setPostComments(comments);
   setPostComments0(comments);

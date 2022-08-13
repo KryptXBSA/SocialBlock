@@ -91,7 +91,6 @@ export function ProgramWrapper({ children }: any) {
    image: user.image,
    foundUser: true,
   };
-  console.log("userrrr", user);
 
     changeState({ data: userr, action: "username" });
  }

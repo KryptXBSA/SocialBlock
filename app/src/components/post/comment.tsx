@@ -73,7 +73,6 @@ export const NewComment = ({ postPubkey,addComment }: NewCommentProps) => {
      walletPubkey: programContext.getWallet?.publicKey!,
      username:programContext.state.user.username
     });
-    console.log(result);
     commentInputRef.current.value=''
     addComment(result)
    } catch (e) {

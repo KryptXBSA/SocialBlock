@@ -76,12 +76,14 @@ export default function Home() {
      pubkey: pub ? pub : searchInputRef.current.value,
     });
    }
+   getPosts(data.user.toBase58())
+   
    setUserData([data]);
   } catch (error) {}
  }
  async function getPosts(pubkey?: string | string[] | undefined) {
   let searchValue = searchInputRef?.current?.value;
-  let value = searchValue ? searchValue : pubkey;
+  let value = pubkey ? pubkey:searchValue ;
   const authorFilter = (authorBase58PublicKey: any) => ({
    memcmp: {
     offset: 8, // Discriminator.
@@ -101,7 +103,6 @@ export default function Home() {
     //         );
    }
   }
-  console.log(posts);
   posts = posts.sort(function (a, b) {
    return b.getTimestamp - a.getTimestamp;
   });
