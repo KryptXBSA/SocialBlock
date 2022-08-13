@@ -12,6 +12,7 @@ interface CommentProps {
     walletPubkey: PublicKey
     username: string
     content: string
+    image: string
 }
 export const newComment = async ({
     commentProgram,
@@ -19,10 +20,11 @@ export const newComment = async ({
     walletPubkey,
     username,
     content,
+    image
 }: CommentProps) => {
     const newCommentAccount = anchor.web3.Keypair.generate();
     let result = await commentProgram.methods
-        .newComment(postPubkey, username, content)
+        .newComment(postPubkey, username, content, image)
         .accounts({
             comment: newCommentAccount.publicKey,
             author: walletPubkey,
@@ -35,8 +37,9 @@ export const newComment = async ({
         authorDisplay: walletPubkey.toBase58(),
         postPubkey: postPubkey,
         publicKey: newCommentAccount.publicKey,
-        createdAgo:getDate(Date.now()/1000),
+        createdAgo: getDate(Date.now() / 1000),
         content,
+        image,
         username,
     };
     return newCommentAccount0

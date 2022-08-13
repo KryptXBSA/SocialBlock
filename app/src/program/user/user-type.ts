@@ -50,6 +50,27 @@ export type User = {
       ]
     },
     {
+      "name": "changeImage",
+      "accounts": [
+        {
+          "name": "userAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "image",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "addBookmarks",
       "accounts": [
         {
@@ -152,6 +173,27 @@ export const IDL: User = {
       "args": [
         {
           "name": "username",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "changeImage",
+      "accounts": [
+        {
+          "name": "userAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "image",
           "type": "string"
         }
       ]

@@ -11,6 +11,7 @@ pub mod comment {
         post_pubkey: Pubkey,
         username: String,
         content: String,
+        image: String,
     ) -> Result<()> {
         let comment: &mut Account<Comment> = &mut ctx.accounts.comment;
         let author: &Signer = &ctx.accounts.author;
@@ -20,6 +21,7 @@ pub mod comment {
         comment.timestamp = clock.unix_timestamp;
         comment.username = username;
         comment.content = content;
+        comment.image = image;
         comment.post_pubkey = post_pubkey;
 
         Ok(())
@@ -52,6 +54,7 @@ pub struct Comment {
     pub timestamp: i64,
     pub username: String,
     pub content: String,
+    pub image: String,
 }
 
 const DISCRIMINATOR_LENGTH: usize = 8;

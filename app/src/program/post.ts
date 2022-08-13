@@ -8,6 +8,7 @@ export type AccountData = {
     block: string;
     content: string;
     username: string;
+    image:string
     likes: anchor.web3.PublicKey[];
     comments: Number;
 };
@@ -17,6 +18,7 @@ export class Post {
     timestamp: string|number;
     block: string;
     content: string;
+    image:string
     username: string;
     likes: anchor.web3.PublicKey[];
     comments: Number;
@@ -27,6 +29,7 @@ export class Post {
         this.timestamp = accountData.timestamp.toString();
         this.block = accountData.block;
         this.content = accountData.content;
+        this.image = accountData.image;
         this.username = accountData.username;
         this.likes = accountData.likes;
         this.comments = accountData.comments;

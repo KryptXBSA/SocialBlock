@@ -33,6 +33,10 @@
         {
           "name": "username",
           "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
         }
       ]
     },
@@ -102,6 +106,10 @@
             "type": "string"
           },
           {
+            "name": "image",
+            "type": "string"
+          },
+          {
             "name": "username",
             "type": "string"
           },
@@ -136,8 +144,5 @@
       "name": "AlreadyUnliked",
       "msg": "Already Unliked"
     }
-  ],
-  "metadata": {
-    "address": "E9QDukRnh9MGYamTCPndnxnjmHMmn6VLUwdcHTCU7AXt"
-  }
+  ]
 }

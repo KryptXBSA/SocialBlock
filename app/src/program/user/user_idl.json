@@ -50,6 +50,27 @@
       ]
     },
     {
+      "name": "changeImage",
+      "accounts": [
+        {
+          "name": "userAccount",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "image",
+          "type": "string"
+        }
+      ]
+    },
+    {
       "name": "addBookmarks",
       "accounts": [
         {

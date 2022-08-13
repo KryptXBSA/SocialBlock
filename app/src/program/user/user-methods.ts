@@ -18,9 +18,9 @@ export const getUserByPubkey = async ({ program, pubkey }: GetUser) => {
 };
 export const getUserByUsername = async ({ program, username }: GetUser) => {
 
-    
+
     const user0 = await program.account.user.all([userFilter(username!)]);
-      const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
+    const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
     return user[0];
 };
 type NewUser = {
@@ -34,9 +34,9 @@ export const newUser = async ({
     program,
     username,
 }: NewUser) => {
-    
+
     console.log(await program.account.user.all([]));
-    
+
     const user = anchor.web3.Keypair.generate();
     let tx
     try {
@@ -56,8 +56,8 @@ export const newUser = async ({
 
 
     const newUser = {
-        foundUser:true,
-        user:{username},
+        foundUser: true,
+        user: { username },
         publicKey: user.publicKey,
         timestamp: new anchor.BN(new Date().getTime()),
         //delete this
@@ -67,7 +67,68 @@ export const newUser = async ({
 
     return { newUser, tx };
 };
+type ChangeImage = {
+    program: anchor.Program<User>;
+    image: string;
+    wallet: AnchorWallet
+};
 
+export const changeImage = async ({
+    wallet,
+    program,
+    image,
+}: ChangeImage) => {
+
+
+    const user = anchor.web3.Keypair.generate();
+    let tx
+    try {
+        tx = await program?.methods
+            .changeImage(image)
+            .accounts({
+                userAccount: user.publicKey,
+                user: wallet?.publicKey,
+            })
+            .signers([user])
+            .rpc();
+        console.log(tx);
+    } catch (e) {
+        console.log('new user Error');
+        console.log(e);
+    }
+    return { status: 'success', tx };
+};
+type ChangeUsername = {
+    program: anchor.Program<User>;
+    username: string;
+    wallet: AnchorWallet
+};
+
+export const changeUsername = async ({
+    wallet,
+    program,
+    username,
+}: ChangeUsername) => {
+
+
+    const user = anchor.web3.Keypair.generate();
+    let tx
+    try {
+        tx = await program?.methods
+            .changeUsername(username)
+            .accounts({
+                userAccount: user.publicKey,
+                user: wallet?.publicKey,
+            })
+            .signers([user])
+            .rpc();
+        console.log(tx);
+    } catch (e) {
+        console.log('new user Error');
+        console.log(e);
+    }
+    return { status: 'success', tx };
+};
 type AddBookmark = {
     program: anchor.Program<User>;
     bookmark: anchor.web3.PublicKey;

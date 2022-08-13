@@ -33,6 +33,10 @@
         {
           "name": "content",
           "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
         }
       ]
     },
@@ -83,12 +87,13 @@
           {
             "name": "content",
             "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
           }
         ]
       }
     }
-  ],
-  "metadata": {
-    "address": "7KFJjA73aTPNnDvsavcwbJ5w2TYJa4rU6yzSpM6TKcj3"
-  }
+  ]
 }

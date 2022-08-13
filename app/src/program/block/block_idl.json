@@ -27,6 +27,48 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "changeImage",
+      "accounts": [
+        {
+          "name": "block",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "image",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "changeName",
+      "accounts": [
+        {
+          "name": "block",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -54,8 +96,5 @@
         ]
       }
     }
-  ],
-  "metadata": {
-    "address": "9cinoVsQBY4XcNEyM8wUwCLDXJcCFbcuhYs2pd7JF1HT"
-  }
+  ]
 }

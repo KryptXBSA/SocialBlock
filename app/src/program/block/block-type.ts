@@ -27,6 +27,48 @@ export type Block = {
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "changeImage",
+      "accounts": [
+        {
+          "name": "block",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "image",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "changeName",
+      "accounts": [
+        {
+          "name": "block",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -36,16 +78,20 @@ export type Block = {
         "kind": "struct",
         "fields": [
           {
-            "name": "block",
+            "name": "owner",
             "type": "publicKey"
-          },
-          {
-            "name": "timestamp",
-            "type": "i64"
           },
           {
             "name": "blockName",
             "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
           }
         ]
       }
@@ -82,6 +128,48 @@ export const IDL: Block = {
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "changeImage",
+      "accounts": [
+        {
+          "name": "block",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "image",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "changeName",
+      "accounts": [
+        {
+          "name": "block",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "owner",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -91,16 +179,20 @@ export const IDL: Block = {
         "kind": "struct",
         "fields": [
           {
-            "name": "block",
+            "name": "owner",
             "type": "publicKey"
-          },
-          {
-            "name": "timestamp",
-            "type": "i64"
           },
           {
             "name": "blockName",
             "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
           }
         ]
       }

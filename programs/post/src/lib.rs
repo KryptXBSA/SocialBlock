@@ -10,6 +10,7 @@ pub mod post {
         block: String,
         content: String,
         username: String,
+        image: String,
     ) -> Result<()> {
         let post: &mut Account<Post> = &mut ctx.accounts.post;
         let author: &Signer = &ctx.accounts.author;
@@ -26,6 +27,7 @@ pub mod post {
         post.timestamp = clock.unix_timestamp;
         post.block = block;
         post.content = content;
+        post.image = image;
         post.username = username;
         post.likes = Vec::new();
 
@@ -80,6 +82,7 @@ pub struct Post {
     pub block: String,
     pub timestamp: i64,
     pub content: String,
+    pub image: String,
     pub username: String,
     pub likes: Vec<Pubkey>,
 }

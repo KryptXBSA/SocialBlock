@@ -8,7 +8,7 @@ pub mod block {
 
     pub fn new_block(ctx: Context<NewBlock>, block_name: String) -> Result<()> {
         let block: &mut Account<Block> = &mut ctx.accounts.block;
-        let owner: &Signer =  &ctx.accounts.owner;
+        let owner: &Signer = &ctx.accounts.owner;
 
         let clock: Clock = Clock::get().unwrap();
 
@@ -21,6 +21,22 @@ pub mod block {
         block.timestamp = clock.unix_timestamp;
         Ok(())
     }
+    pub fn change_image(ctx: Context<ChangeImage>, image: String) -> Result<()> {
+        let block_account: &mut Account<Block> = &mut ctx.accounts.block;
+        if image.chars().count() > 280 {
+            // return Err(ErrorCode::ContentTooLong.into());
+        }
+        block_account.image = image;
+        Ok(())
+    }
+    pub fn change_name(ctx: Context<ChangeImage>, name: String) -> Result<()> {
+        let block_account: &mut Account<Block> = &mut ctx.accounts.block;
+        if name.chars().count() > 280 {
+            // return Err(ErrorCode::ContentTooLong.into());
+        }
+        block_account.block_name = name;
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -31,7 +47,16 @@ pub struct NewBlock<'info> {
     pub owner: Signer<'info>,
     pub system_program: Program<'info, System>,
 }
-
+#[derive(Accounts)]
+pub struct ChangeName<'info> {
+    pub block: Account<'info, Block>,
+    pub owner: Signer<'info>,
+}
+#[derive(Accounts)]
+pub struct ChangeImage<'info> {
+    pub block: Account<'info, Block>,
+    pub owner: Signer<'info>,
+}
 #[account]
 pub struct Block {
     pub owner: Pubkey,

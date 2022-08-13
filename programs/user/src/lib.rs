@@ -29,7 +29,14 @@ pub mod user {
         user_account.username = username;
         Ok(())
     }
-
+  pub fn change_image(ctx: Context<ChangeImage>, image: String) -> Result<()> {
+        let user_account: &mut Account<User> = &mut ctx.accounts.user_account;
+        if image.chars().count() > 280 {
+            // return Err(ErrorCode::ContentTooLong.into());
+        }
+        user_account.image = image;
+        Ok(())
+    }
     pub fn add_bookmarks(ctx: Context<AddBookmarks>, bookmark: Pubkey) -> Result<()> {
         let user_account: &mut Account<User> = &mut ctx.accounts.user_account;
           if user_account.bookmarks.contains(&bookmark) {
@@ -66,6 +73,13 @@ pub struct ChangeUsername<'info> {
     #[account(mut)]
     pub user: Signer<'info>,
 }
+#[derive(Accounts)]
+pub struct ChangeImage<'info> {
+    pub user_account: Account<'info, User>,
+    #[account(mut)]
+    pub user: Signer<'info>,
+}
+
 
 #[derive(Accounts)]
 pub struct AddBookmarks<'info> {

@@ -59,12 +59,76 @@ export const newBlock = async ({
     const newBlock = {
         publicKey: block.publicKey,
         timestamp: new anchor.BN(new Date().getTime()),
+        image: '',
         block,
     };
 
     return { newBlock, tx };
 };
+type NewImage = {
+    program: anchor.Program<Block>;
+    newImage: string;
+    wallet: AnchorWallet
+};
 
+
+export const changeImage = async ({
+    wallet,
+    program,
+    newImage,
+}: NewImage) => {
+    const block = anchor.web3.Keypair.generate();
+    let tx
+    try {
+        tx = await program?.methods
+            .changeImage(newImage)
+            .accounts({
+                block: block.publicKey,
+                owner: wallet?.publicKey,
+            })
+            .signers([block])
+            .rpc();
+        console.log(tx);
+    } catch (e) {
+        console.log('new block Error');
+        console.log(e);
+    }
+
+    return { status: 'success', tx };
+};
+type NewName = {
+    program: anchor.Program<Block>;
+    newName: string;
+    wallet: AnchorWallet
+};
+
+
+export const changeName = async ({
+    wallet,
+    program,
+    newName,
+}: NewName) => {
+    const block = anchor.web3.Keypair.generate();
+    let tx
+    try {
+        tx = await program?.methods
+            .changeName(newName)
+            .accounts({
+                block: block.publicKey,
+                owner: wallet?.publicKey,
+            })
+            .signers([block])
+            .rpc();
+        console.log(tx);
+    } catch (e) {
+        console.log('new block Error');
+        console.log(e);
+    }
+
+
+
+    return { status: 'success', tx };
+};
 const pubkeyFilter = (publicKey: string) => ({
     memcmp: {
         offset: 8, // Discriminator.

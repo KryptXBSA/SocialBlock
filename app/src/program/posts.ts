@@ -40,6 +40,7 @@ type SendPostProps = {
     block: string;
     content: string;
     username: string;
+    image: string;
     wallet: any;
 };
 
@@ -49,13 +50,14 @@ export const sendPost = async ({
     block,
     content,
     username,
+    image
 }: SendPostProps) => {
 
 
     const post = anchor.web3.Keypair.generate();
 
     let tx = await program.methods
-        .sendPost(block, content, username)
+        .sendPost(block, content, username,image)
         .accounts({
             author: wallet.publicKey.toBase58(),
             post: post.publicKey.toBase58(),
@@ -68,6 +70,7 @@ export const sendPost = async ({
         timestamp: new anchor.BN(new Date().getTime()),
         block,
         content,
+        image,
         username,
         likes: [],
         comments: 0,
