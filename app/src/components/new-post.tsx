@@ -38,7 +38,9 @@ export const NewPost = ({addPost}:{addPost:any}) => {
     });
     console.log(postResult);
     addPost(postResult.post)
-    
+    contentInputRef.current.value=''
+    blockInputRef.current.value=''
+    setBlockValue('')
    } catch (e) {}
   }
  }

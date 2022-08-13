@@ -53,7 +53,6 @@ export default function Home() {
    console.log("posts fetch error", e);
   }
  }
- console.log(posts);
 
  function displayPosts() {
   return posts.map((p: any) => (

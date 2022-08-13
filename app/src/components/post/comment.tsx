@@ -45,6 +45,7 @@ export const Comment = ({ name, date, content, authorPubkeyString }: Props) => {
 };
 interface NewCommentProps {
  postPubkey: PublicKey;
+ addComment:any
 }
 import { newComment } from "../../program/comments";
 import { NewComment as NewComment0 } from "../../program/posts";
@@ -52,7 +53,7 @@ import { CheckWallet } from "../../utils/walletError";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { useNotifier } from "react-headless-notifier";
 
-export const NewComment = ({ postPubkey }: NewCommentProps) => {
+export const NewComment = ({ postPubkey,addComment }: NewCommentProps) => {
  let commentInputRef: any = useRef();
 
  const { notify } = useNotifier();
@@ -65,13 +66,16 @@ export const NewComment = ({ postPubkey }: NewCommentProps) => {
   } else {
    let comment = commentInputRef.current.value;
    try {
-    let result = await NewComment0({
-     commentBody: comment,
-     program: programContext.postProgram!,
+    let result = await newComment({
+     content: comment,
+     commentProgram: programContext.commentProgram!,
      postPubkey,
-     wallet: programContext.getWallet,
-     authorPubkey: programContext.getWallet?.publicKey!,
+     walletPubkey: programContext.getWallet?.publicKey!,
+     username:programContext.state.user.username
     });
+    console.log(result);
+    commentInputRef.current.value=''
+    addComment(result)
    } catch (e) {
     console.log(e);
     

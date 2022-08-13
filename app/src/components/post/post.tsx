@@ -11,6 +11,7 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { TipModal } from "./tip-modal";
 import { useEffect } from "react";
+import { getAllComments } from "../../program/comments";
 interface Props {
  likes: anchor.web3.PublicKey[];
  content: string;
@@ -37,38 +38,68 @@ export function Post({
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
+ const [commentcount0, setCommentcount0] = useState(commentCount);
  const [commentsVisible, setCommentsVisible] = useState(false);
- const [postComments, setPostComments]: any = useState("");
+ const [postComments, setPostComments]: any = useState([]);
+ const [postComments0, setPostComments0]: any = useState([]);
  const [showTipModal, setShowTipModal] = useState(false);
  function displayComments() {
   setCommentsVisible(!commentsVisible);
   setPostComments(
    <>
-    <Comment
-     key={"comment.publicKey"}
-     content={"comment.content"}
-     //  postPubKey={"comment.postPublicKey"}
-     //  pubKey={"comment.key"}
-     authorPubkeyString={"comment.authorDisplay"}
-     name={"comment.username"}
-     date={"comment.createdAgo"}
-    />
+    {postComments0.map((comment: any) => (
+     <Comment
+      key={comment.publicKey}
+      content={comment.content}
+      //   postPubKey={comment.postPublicKey}
+      //   pubKey={comment.key}
+      authorPubkeyString={comment.authorDisplay}
+      name={comment.username}
+      date={comment.createdAgo}
+     />
+    ))}
    </>
   );
  }
  const [postedAt, setPostedAt] = useState(
   moment(new Date(parseInt(date) * 1000).toUTCString()).fromNow()
  );
-
+ async function fetchComments() {
+  let comments = await getAllComments({
+   program: commentProgram,
+   publicKey: postPubkey.toBase58(),
+  });
+  console.log(comments);
+  setCommentcount0(comments.length);
+  setPostComments(comments);
+  setPostComments0(comments);
+ }
  useEffect(() => {
   const interval = setInterval(() => {
    setPostedAt(moment(new Date(parseInt(date) * 1000).toUTCString()).fromNow());
   }, 1000);
+  if (postComments) fetchComments();
   return () => {
    clearInterval(interval);
   };
  }, [getWallet]);
-
+ function addComment(comment: any) {
+  let comments = [comment].concat(postComments0);
+  setCommentcount0(comments.length);
+  setPostComments(
+   comments.map((comment: any) => (
+    <Comment
+     key={comment.publicKey}
+     content={comment.content}
+     //   postPubKey={comment.postPublicKey}
+     //   pubKey={comment.key}
+     authorPubkeyString={comment.authorDisplay}
+     name={comment.username}
+     date={comment.createdAgo}
+    />
+   ))
+  );
+ }
  return (
   <div className="pl- break-all w-full border-gray-700 grow  ">
    {showTipModal && <TipModal username={username} setShowTipModal={setShowTipModal} />}
@@ -130,7 +161,7 @@ export function Post({
       unlikePost={"unlikePost"}
       likePost={"likePost"}
      />
-     <CommentButton commentCount={commentCount} setCommentsVisible={() => displayComments()} />
+     <CommentButton commentCount={commentcount0} setCommentsVisible={() => displayComments()} />
      {/* <div className="tooltip" data-tip="Coming Soon"> */}
      {/* <ShareButton /> */}
      {/* </div> */}
@@ -149,7 +180,7 @@ export function Post({
      <>
       {postComments}
       {!postComments && <div className="divider"></div>}
-      <NewComment postPubkey={postPubkey} />
+      <NewComment postPubkey={postPubkey} addComment={addComment} />
      </>
     )}
    </div>
