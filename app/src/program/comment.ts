@@ -6,7 +6,7 @@ export type AccountData = {
  author: anchor.web3.PublicKey;
  timestamp: anchor.BN;
  content: string;
- publickey:string;
+ publickey: string;
  postPubkey: anchor.web3.PublicKey;
  username: string;
 };

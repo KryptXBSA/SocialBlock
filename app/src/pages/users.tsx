@@ -40,7 +40,7 @@ export default function Home() {
  const router = useRouter();
  const [posts, setPosts]: any = useState([]);
  const [userData, setUserData] = useState<UserData[] | undefined>();
-
+ const [userKey, setUserKey] = useState('')
  let searchInputRef: any = useRef("");
 
  const [alreadyFetched, setAlreadyFetched] = useState(false);
@@ -84,6 +84,7 @@ export default function Home() {
  async function getPosts(pubkey?: string | string[] | undefined) {
   let searchValue = searchInputRef?.current?.value;
   let value = pubkey ? pubkey:searchValue ;
+  setUserKey(value)
   const authorFilter = (authorBase58PublicKey: any) => ({
    memcmp: {
     offset: 8, // Discriminator.
@@ -132,7 +133,7 @@ export default function Home() {
  } else {
   return (
    <Layout active={2}>
-    {showMessageModal && <MessageModal setShowModal={setShowMessageModal} />}
+    {showMessageModal && <MessageModal userKey={userKey} setShowModal={setShowMessageModal} />}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
      <div className="flex w-full  justify-start flex-row">
@@ -193,7 +194,7 @@ function Profile({ setShowMessageModal, username, date, img, publickeyString }: 
       <Link href={`/users?pubkey=${"publickeyString"}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img?img:'/img.png'} alt="Rounded avatar" />
+         <img className="w-14 h-14  rounded-full" src={img?img:'/img.png'}  />
         </div>
         <span className=" text-3xl ">{username}</span>
        </div>

@@ -113,7 +113,7 @@ export function Post({
           <img
            className="w-10 h-10  rounded-full"
            src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-           alt="Rounded avatar"
+           
           />
          </div>
          <span className=" text-2xl ">{username}</span>

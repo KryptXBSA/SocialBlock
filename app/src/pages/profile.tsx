@@ -167,7 +167,7 @@ function Profile({ setShowProfileModal, username, date, img, publickeyString }: 
      <div className="flex justify-start   items-center w-full  flex-row">
       <div className="flex cursor-pointer items-center">
        <div className="pb- pr-2">
-        <img className="w-14 h-14  rounded-full" src={img} alt="Rounded avatar" />
+        <img className="w-14 h-14  rounded-full" src={img}  />
        </div>
        <div className="flex items-center space-x-1">
         <span className=" text-3xl ">{username}</span>{" "}

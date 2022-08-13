@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js';
 /** @format */
 import * as anchor from "@project-serum/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
@@ -20,7 +21,7 @@ type NewMessage = {
     program: anchor.Program<Message>;
     content: string;
     wallet: AnchorWallet
-    to: anchor.web3.PublicKey
+    to: PublicKey
 };
 
 export const newMessage = async ({
@@ -29,6 +30,7 @@ export const newMessage = async ({
     content,
     to
 }: NewMessage) => {
+    to = new PublicKey(to)
     const message = anchor.web3.Keypair.generate();
     let tx
     try {

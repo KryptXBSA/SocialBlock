@@ -6,7 +6,7 @@ import bs58 from "bs58";
 
 type GetUser = {
     program: anchor.Program<User>;
-    pubkey?:string;
+    pubkey?: string;
     username?: string;
 };
 export const getUserByPubkey = async ({ program, pubkey }: GetUser) => {
@@ -36,10 +36,8 @@ export const newUser = async ({
 }: NewUser) => {
     
     console.log(await program.account.user.all([]));
-    console.log('111',wallet.publicKey.toBase58());
     
     const user = anchor.web3.Keypair.generate();
-    console.log('222',user.publicKey.toBase58());
     let tx
     try {
         tx = await program?.methods

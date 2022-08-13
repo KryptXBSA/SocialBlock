@@ -15,6 +15,7 @@ import { getAllMessages } from "../program/message/message-methods";
 import * as anchor from "@project-serum/anchor";
 import Layout from "../sections/Layout";
 import { getDate } from "../utils/get-date-moment";
+import { getUserByPubkey } from "../program/user/user-methods";
 
 export default function InboxPage() {
  return (
@@ -32,19 +33,47 @@ export default function InboxPage() {
   </>
  );
 }
+
+type MessagesType = {
+ self: boolean;
+ message: string;
+ date: string;
+ publickeyString: string;
+};
+type UsersType = {
+ username: string;
+ img: string;
+ publickeyString: string;
+};
+
+type Message = {
+ from: anchor.web3.PublicKey;
+ publicKey: anchor.web3.PublicKey;
+ to: anchor.web3.PublicKey;
+ content: string;
+ timestamp: anchor.BN;
+};
 let messages0 = [
  {
-  message: "h asdasdads sadasdads asddi",
+  message: "a11111111",
   date: "2 days ago",
   self: false,
   publickeyString: "a1",
  },
  {
-  message: "h asdasdads sadasdads asddi",
+  message: "a2222",
   date: "2 days ago",
-  self: true,
+  self: false,
   publickeyString: "a2",
  },
+ { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
+ { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: true, publickeyString: "a3" },
+ { message: "meeeeeeeeeee", date: "1 day ago", self: true, publickeyString: "a3" },
+ { message: "meeeeeeeeeee", date: "1 day ago", self: true, publickeyString: "a3" },
+ { message: "a2222", date: "1 day ago", self: true, publickeyString: "a2" },
+ { message: "a111", date: "1 day ago", self: true, publickeyString: "a1" },
+ { message: "a2222", date: "1 day ago", self: true, publickeyString: "a2" },
+ { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
  { message: "hasdsdsd asdasddas asdsai", date: "1 day ago", self: false, publickeyString: "a3" },
 ];
 let users = [
@@ -64,17 +93,28 @@ let users = [
   publickeyString: "a3",
  },
 ];
-type Message = {
- from: anchor.web3.PublicKey;
- publicKey: anchor.web3.PublicKey;
- to: anchor.web3.PublicKey;
- content: string;
- timestamp: anchor.BN;
-};
+let users0 = [
+ {
+  username: "aldddddand",
+  img: "https://i.imgur.com/6tq2RU8.jpeg",
+  publickeyString: "a1",
+ },
+ {
+  username: "fd",
+  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+  publickeyString: "a2",
+ },
+ {
+  username: "ddaadsdsda",
+  img: "https://i.imgur.com/m7adBVb.jpeg",
+  publickeyString: "a3",
+ },
+];
 function Inbox() {
  const programContext = UseProgramContext()!;
 
- const [messages, setMessages] = useState(messages0);
+ const [messages, setMessages] = useState<MessagesType[]>(messages0);
+ const [users, setUsers] = useState<UsersType[]>(users0);
 
  async function fetchMessages() {
   console.log("fetch msg");
@@ -83,8 +123,8 @@ function Inbox() {
    program: programContext.messageProgram!,
    pubkey: programContext.getWallet?.publicKey.toBase58()!,
   });
-  console.log(messages);
-  let filteredMessages = messages.map((m) => {
+  console.log("o", messages);
+  let filteredMessages = messages.filter((m) => {
    return {
     self: m.from !== programContext.getWallet?.publicKey,
     message: m.content,
@@ -92,7 +132,24 @@ function Inbox() {
     publickeyString: m.publicKey.toBase58(),
    };
   });
-  setMessages(filteredMessages);
+  let users: UsersType[] = [];
+
+  async function fetchUsers() {
+   let users = messages.map(async (message) => {
+    let user = await getUserByPubkey({
+     program: programContext.userProgram!,
+     pubkey: message.from.toBase58(),
+    });
+    return { username: user.username, img: user.image, publickeyString: user.user.toBase58() };
+   });
+   return Promise.all(users);
+  }
+  users = await fetchUsers();
+
+  console.log("f", filteredMessages);
+
+  //  setUsers(users!);
+  // setMessages(filteredMessages);
  }
  useEffect(() => {
   if (programContext.messageProgram && programContext.getWallet?.publicKey) {
@@ -104,7 +161,7 @@ function Inbox() {
  function sendMessage(e: { preventDefault: () => void }) {
   e.preventDefault();
   let message = messageInputRef.current.value;
-  setMessages(messages.concat([{ message, date: "Just now", self: true, publickeyString: "a3" }]));
+  setMessages(messages!.concat([{ message, date: "Just now", self: true, publickeyString: "a3" }]));
  }
 
  const [selectedUser, setSelectedUser] = useState(0);
@@ -114,19 +171,23 @@ function Inbox() {
    <div className="flex flex-row w-96 flex-shrink-0 p-4">
     <div className="flex flex-col w-full h-full pl-4 pr-4 py-4 -mr-4">
      <MessageHeader />
-     <UserList setSelectedUser={setSelectedUser} users={users} />
+     {messages && <UserList setSelectedUser={setSelectedUser} users={users!} />}
     </div>
    </div>
    <div className="flex flex-col h-full w-full  px-4 py-6">
-    <MessageHeader1
-     username={users[selectedUser].username}
-     publickeyString={users[selectedUser].publickeyString!}
-    />
+    {messages && (
+     <MessageHeader1
+      username={users![selectedUser]!.username!}
+      publickeyString={users![selectedUser].publickeyString!}
+     />
+    )}
     {/* messages */}
     <div className="h-full overflow-hidden py-4">
      <div className="h-full overflow-y-auto">
       <div className="grid grid-cols-12 gap-y-2">
-       <Messages messages={messages} users={users} />
+       {messages && (
+        <Messages selectedUser={users![selectedUser]} messages={messages!} users={users!} />
+       )}
        <div className="invisible">
         <Message
          date="1"
@@ -171,6 +232,7 @@ function Inbox() {
  );
 }
 interface Messages {
+ selectedUser: UsersType;
  messages: {
   self: boolean;
   message: string;
@@ -183,7 +245,18 @@ interface Messages {
   publickeyString: string;
  }[];
 }
-function Messages({ messages, users }: Messages) {
+function Messages({ messages, users, selectedUser }: Messages) {
+ const [currentMessages, setCurrentMessages] = useState<MessagesType[]>([]);
+ function findMessages() {
+  let messages0 = messages.filter((m) => {
+   return m.publickeyString === selectedUser.publickeyString ||( m.self === true&&m.publickeyString === selectedUser.publickeyString);
+  });
+  setCurrentMessages(messages0);
+ }
+ useEffect(() => {
+  findMessages();
+ }, [messages, users,selectedUser]);
+
  function findImg(m: any) {
   let img = users.find(
    (e: { publickeyString: string | undefined }) => e.publickeyString === m.publickeyString
@@ -192,7 +265,7 @@ function Messages({ messages, users }: Messages) {
  }
  return (
   <>
-   {messages.map((m) => (
+   {currentMessages.map((m) => (
     <Message date={m.date} img={findImg(m)} message={m.message} self={m.self} />
    ))}
   </>
@@ -246,7 +319,7 @@ function User({ username, lastMessage, index, selectedMessage, setSelectedMessag
      ? "bg-gradient-to-r from-blue-600 to-transparent border-l-2 border-sky-600 hover:border-sky-500 hover:from-blue-500"
      : "hover:bg-slate-800"
    }`}>
-   <img className="w-10 h-10  rounded-full" src={img} alt="Rounded avatar" />
+   <img className="w-10 h-10  rounded-full" src={img ? img : "/img.png"} />
    <div className="flex flex-col flex-grow ml-3">
     <div className="text-base font-semibold">{username}</div>
     <div className="text-sm truncate w-40">{lastMessage}</div>

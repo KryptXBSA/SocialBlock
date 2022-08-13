@@ -6,7 +6,7 @@ import { UseProgramContext } from "../../contexts/programContextProvider";
 import { getAllMessages, newMessage } from "../../program/message/message-methods";
 import { CheckWallet } from "../../utils/walletError";
 
-export function MessageModal({ message, setShowModal, username }: any) {
+export function MessageModal({ message, setShowModal, username,userKey }: any) {
  let programContext = UseProgramContext();
  let messageInputRef: any = useRef("");
 
@@ -34,7 +34,7 @@ export function MessageModal({ message, setShowModal, username }: any) {
       wallet: programContext?.getWallet!,
       program: programContext?.messageProgram!,
       content: message,
-      to: programContext?.getWallet?.publicKey!,
+      to: userKey,
      });
      console.log(sentMessage);
     }

@@ -168,7 +168,7 @@ function Profile({ setShowMessageModal, username, date, img, publickeyString }: 
       <Link href={`/users?pubkey=${"publickeyString"}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img} alt="Rounded avatar" />
+         <img className="w-14 h-14  rounded-full" src={img}  />
         </div>
         <span className=" text-3xl ">{username}</span>
        </div>

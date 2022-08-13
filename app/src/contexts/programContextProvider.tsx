@@ -84,7 +84,7 @@ export function ProgramWrapper({ children }: any) {
   let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
   if (!user) {
    setShowSignupModal(true);
-  }
+  }else{
   let userr = {
    timestamp: user.timestamp,
    username: user.username,
@@ -93,6 +93,8 @@ export function ProgramWrapper({ children }: any) {
   };
 
     changeState({ data: userr, action: "username" });
+  }
+
  }
  function disconnect() {
   changeState({ data: { username: "", foundUser: false }, action: "username" });
