@@ -36,19 +36,26 @@
         "kind": "struct",
         "fields": [
           {
-            "name": "block",
+            "name": "owner",
             "type": "publicKey"
-          },
-          {
-            "name": "timestamp",
-            "type": "i64"
           },
           {
             "name": "blockName",
             "type": "string"
+          },
+          {
+            "name": "image",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
           }
         ]
       }
     }
-  ]
+  ],
+  "metadata": {
+    "address": "9cinoVsQBY4XcNEyM8wUwCLDXJcCFbcuhYs2pd7JF1HT"
+  }
 }

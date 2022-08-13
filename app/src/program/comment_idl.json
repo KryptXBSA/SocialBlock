@@ -35,6 +35,27 @@
           "type": "string"
         }
       ]
+    },
+    {
+      "name": "editComment",
+      "accounts": [
+        {
+          "name": "comment",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "author",
+          "isMut": false,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "content",
+          "type": "string"
+        }
+      ]
     }
   ],
   "accounts": [
@@ -66,5 +87,8 @@
         ]
       }
     }
-  ]
+  ],
+  "metadata": {
+    "address": "7KFJjA73aTPNnDvsavcwbJ5w2TYJa4rU6yzSpM6TKcj3"
+  }
 }

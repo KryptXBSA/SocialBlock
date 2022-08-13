@@ -23,7 +23,7 @@
       ],
       "args": [
         {
-          "name": "topic",
+          "name": "block",
           "type": "string"
         },
         {
@@ -77,22 +77,6 @@
           "type": "publicKey"
         }
       ]
-    },
-    {
-      "name": "comment",
-      "accounts": [
-        {
-          "name": "post",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "owner",
-          "isMut": false,
-          "isSigner": true
-        }
-      ],
-      "args": []
     }
   ],
   "accounts": [
@@ -106,12 +90,12 @@
             "type": "publicKey"
           },
           {
-            "name": "timestamp",
-            "type": "i64"
+            "name": "block",
+            "type": "string"
           },
           {
-            "name": "topic",
-            "type": "string"
+            "name": "timestamp",
+            "type": "i64"
           },
           {
             "name": "content",
@@ -126,10 +110,6 @@
             "type": {
               "vec": "publicKey"
             }
-          },
-          {
-            "name": "comments",
-            "type": "u32"
           }
         ]
       }
@@ -138,8 +118,8 @@
   "errors": [
     {
       "code": 6000,
-      "name": "TopicTooLong",
-      "msg": "The provided topic should be 50 characters long maximum."
+      "name": "BlockTooLong",
+      "msg": "The provided block should be 50 characters long maximum."
     },
     {
       "code": 6001,
@@ -158,6 +138,6 @@
     }
   ],
   "metadata": {
-    "address": "8VjrWpqzuA68wEkaniJGbTezwm4x4uqJdkVgiXGxGZSM"
+    "address": "E9QDukRnh9MGYamTCPndnxnjmHMmn6VLUwdcHTCU7AXt"
   }
 }

@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Connection, PublicKey } from "@solana/web3.js";
 import * as anchor from "@project-serum/anchor";
 
-import idl from "./user_idl.json";
+import idl from "./block_idl.json";
 import {  Block } from "./block-type";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 // You'll get Fallback functions are not supported error if the Program id is not correct.
-const PROGRAM_PUBLICKEY = "FPJbca4BGHZzyWkoANcKcGKhKBWXZsHJKiDFakGDyCX7";
+const PROGRAM_PUBLICKEY = "9cinoVsQBY4XcNEyM8wUwCLDXJcCFbcuhYs2pd7JF1HT";
 const programID = new PublicKey(PROGRAM_PUBLICKEY);
 
 export interface Wallet {

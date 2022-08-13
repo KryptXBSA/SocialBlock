@@ -4,7 +4,6 @@ import Layout from "../sections/Layout";
 import { useRouter } from "next/router";
 import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
 import { Sidebar } from "../components/sidebar";
-import { createUsername, getUsername, findUsernamePDA } from "../program/users";
 import { getAllPosts, sendPost, like, unlike } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { Post } from "../components/post/post";

@@ -5,7 +5,7 @@ import * as anchor from "@project-serum/anchor";
 
 import idl from "./post_idl.json";
 
-const SOLANA_TWITTER_PROGRAM = "FwFmSYvW8Rq6F5qFWzvKsmyPMkXTZheZh4iid6grkFSG";
+const SOLANA_TWITTER_PROGRAM = "E9QDukRnh9MGYamTCPndnxnjmHMmn6VLUwdcHTCU7AXt";
 // const SOLANA_TWITTER_PROGRAM = "926GETHcFsLU3vDWQUEnTpWYRYXktK6gCCfzivjFq4pa";
 const programID = new PublicKey(SOLANA_TWITTER_PROGRAM);
 // const programID ="Ci9kfZvXGk6raNPCb77U5p7xSBfUzucsiAKYFsQ45epF";

@@ -18,15 +18,22 @@ import { Message } from "../program/message/message-type";
 import { useUserProgram } from "../program/user/user-program";
 import { User } from "../program/user/user-type";
 import { getUserByPubkey } from "../program/user/user-methods";
-const endpoint = "https://explorer-api.devnet.solana.com";
+const endpoint =
+ "https://responsive-dawn-sponge.solana-devnet.discover.quiknode.pro/2c9e6acd14a57270687f2920c37e9c56f2bb1f36";
 export const connection = new anchor.web3.Connection(endpoint);
 
-let initialState = {
- user: { username: "", foundUser: false },
+let initialState: InitialState = {
+ user: { username: "", image: "", foundUser: false },
  didWelcome: false,
 };
 export interface InitialState {
- user: { username: string; foundUser: boolean };
+ user: {
+  username: string;
+  image: string;
+  timestamp?: anchor.BN;
+  bookmarks?: anchor.web3.PublicKey[];
+  foundUser: boolean;
+ };
  didWelcome: boolean;
 }
 type Actions =
@@ -74,11 +81,19 @@ export function ProgramWrapper({ children }: any) {
   }
  }, [userProgram, wallet]);
  async function setUsername() {
-//   let  user  = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
-//   let userr={ userData: username, username: username.name, foundUser: true }
-//   console.log(user);
-  
-//   changeState({ data: user, action: "username" });
+  let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey });
+  if (!user) {
+   setShowSignupModal(true);
+  }
+  let userr = {
+   timestamp: user.timestamp,
+   username: user.username,
+   image: user.image,
+   foundUser: true,
+  };
+  console.log("userrrr", user);
+
+    changeState({ data: userr, action: "username" });
  }
  function disconnect() {
   changeState({ data: { username: "", foundUser: false }, action: "username" });

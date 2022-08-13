@@ -5,13 +5,20 @@ import { User } from './user-type';
 
 type GetUser = {
     program: anchor.Program<User>;
-    pubkey?: string;
+    pubkey?: anchor.web3.PublicKey;
     username?: string;
 };
 export const getUserByPubkey = async ({ program, pubkey }: GetUser) => {
-    console.log('programmm22',program.account.user);
     
-    const user0 = await program.account.user.all([pubkeyFilter(pubkey!)]);
+    const user1 = await program.account.user.all();
+    console.log(user1);
+//    111 3wqDxRfVpLYUpp4f4cYhqCkBQtSzJYgnAQ2kXfLo9eMM
+// user-methods.ts?7d94:46 222 Yz4QFqLuPCDQsJdFvTJTqPnir5DHr5YQMCeQFqXDqvP 
+    
+// 111 3wqDxRfVpLYUpp4f4cYhqCkBQtSzJYgnAQ2kXfLo9eMM
+// user-methods.ts?7d94:47 222 HNXKo3nfpdhvUjsvWq6eF9JR92fddnVfmGtqHLFfmZpy
+    const user0 = await program.account.user.all([pubkeyFilter(pubkey?.toBase58()!)]);
+console.log('filter',user0);
 
     const user = user0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
     return user[0];
@@ -36,8 +43,10 @@ export const newUser = async ({
 }: NewUser) => {
     
     console.log(await program.account.user.all([]));
+    console.log('111',wallet.publicKey.toBase58());
     
     const user = anchor.web3.Keypair.generate();
+    console.log('222',user.publicKey.toBase58());
     let tx
     try {
         tx = await program?.methods
@@ -98,7 +107,7 @@ export const addBookmark = async ({
 
     return { status: 'success', tx };
 };
-const pubkeyFilter = (publicKey: string) => ({
+const pubkeyFilter = (publicKey: any) => ({
     memcmp: {
         offset: 8, // Discriminator.
         bytes: publicKey,
