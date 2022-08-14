@@ -105,6 +105,7 @@ export default function Home() {
   return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
    <Post
+   image={p.image}
     commentCount={p.comments}
     key={p.publicKey}
     tip={18000000}

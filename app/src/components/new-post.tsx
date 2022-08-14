@@ -35,6 +35,7 @@ export const NewPost = ({addPost}:{addPost:any}) => {
      block,
      content,
      username: programContext.state.user.username,
+     image:programContext.state.user.image
     });
     console.log(postResult);
     addPost(postResult.post)

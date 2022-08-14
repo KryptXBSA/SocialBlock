@@ -66,7 +66,7 @@ it("New Message Account", async () => {
   it("New Post", async () => {
     const postProgram = anchor.workspace.Post as Program<Post>;
     // Making new post
-    const tx = await postProgram.methods.sendPost("block", "content", "usernameALAND").accounts(
+    const tx = await postProgram.methods.sendPost("block", "content", "usernameALAND",'').accounts(
       {
         post: newPostAccount.publicKey,
         author: provider.wallet.publicKey,
@@ -83,7 +83,7 @@ it("New Message Account", async () => {
     const commentProgram = anchor.workspace.Comment as Program<Comment>;
     const newCommentAccount = anchor.web3.Keypair.generate();
     //Making new Comment 
-    const commentTx = await commentProgram.methods.newComment(newPostAccount.publicKey, "usernameeeed", "slawwwwd").accounts(
+    const commentTx = await commentProgram.methods.newComment(newPostAccount.publicKey, "usernameeeed", "slawwwwd",'').accounts(
       {
         comment: newCommentAccount.publicKey,
         author: provider.wallet.publicKey,

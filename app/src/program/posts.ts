@@ -3,7 +3,7 @@
 import * as anchor from "@project-serum/anchor";
 import bs58 from "bs58";
 
-import { Post, AccountData } from "./post";
+import { Post, PostAccountData } from "./post";
 
 type GetPostProps = {
     program: anchor.Program<anchor.Idl>;
@@ -65,7 +65,7 @@ export const sendPost = async ({
         .signers([post])
         .rpc();
 
-    const newPostAccount: AccountData = {
+    const newPostAccount: PostAccountData = {
         author: wallet.publicKey,
         timestamp: new anchor.BN(new Date().getTime()),
         block,

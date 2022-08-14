@@ -5,17 +5,24 @@ import { useContext, useEffect, useState } from "react";
 import { NewPost } from "../components/new-post";
 import { Post } from "../components/post/post";
 import Layout from "../sections/Layout";
+import * as anchor from "@project-serum/anchor";
 
 import moment from "moment";
 import { ProgramContextInterface, UseProgramContext } from "../contexts/programContextProvider";
 import { getAllPosts } from "../program/posts";
+import { PostAccountData } from "../program/post";
 
 interface PostType {
- username: string;
- publickeyString: string;
+ likes: anchor.web3.PublicKey[];
  content: string;
- block: string;
+ username: string;
  date: string;
+ image: string;
+ publickeyString: string;
+ block: string;
+ tip: number;
+ postPubkey: anchor.web3.PublicKey;
+ commentCount: number;
 }
 
 export default function Home() {
@@ -64,6 +71,7 @@ export default function Home() {
     content={p.content}
     username={p.username}
     date={p.timestamp}
+    image={p.image}
     likes={p.likes}
     publickeyString={p.authorDisplay}
     block={p.block}

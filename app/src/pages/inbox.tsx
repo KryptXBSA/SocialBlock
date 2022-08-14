@@ -66,8 +66,10 @@ function Inbox() {
 
  useEffect(() => {
   if (programContext.messageProgram && programContext.getWallet?.publicKey) {
+    setMessages(programContext.messages!)
+    setUsers(programContext.users!)
   }
- }, [programContext.messageProgram]);
+ }, [programContext.messageProgram,programContext.users]);
 
  let messageInputRef: any = useRef("");
  async function sendMessage(e: { preventDefault: () => void }) {

@@ -2,7 +2,7 @@
 
 import * as anchor from "@project-serum/anchor";
 
-export type AccountData = {
+export type PostAccountData = {
     author: anchor.web3.PublicKey;
     timestamp: anchor.BN;
     block: string;
@@ -23,7 +23,7 @@ export class Post {
     likes: anchor.web3.PublicKey[];
     comments: Number;
 
-    constructor(publicKey: anchor.web3.PublicKey, accountData: AccountData) {
+    constructor(publicKey: anchor.web3.PublicKey, accountData: PostAccountData) {
         this.publicKey = publicKey;
         this.author = accountData.author;
         this.timestamp = accountData.timestamp.toString();

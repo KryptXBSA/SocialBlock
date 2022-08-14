@@ -17,6 +17,7 @@ interface Props {
  content: string;
  username: string;
  date: string;
+ image: string;
  publickeyString: string;
  block: string;
  tip: number;
@@ -34,6 +35,7 @@ export function Post({
  tip,
  postPubkey,
  commentCount,
+ image,
 }: Props) {
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
@@ -47,15 +49,16 @@ export function Post({
   setCommentsVisible(!commentsVisible);
   setPostComments(
    <>
-    {postComments0.map((comment: any) => (
+    {postComments0.map((c: any) => (
      <Comment
-      key={comment.publicKey}
-      content={comment.content}
+     image={c.image}
+      key={c.publicKey}
+      content={c.content}
       //   postPubKey={comment.postPublicKey}
       //   pubKey={comment.key}
-      authorPubkeyString={comment.authorDisplay}
-      name={comment.username}
-      date={comment.createdAgo}
+      authorPubkeyString={c.authorDisplay}
+      name={c.username}
+      date={c.createdAgo}
      />
     ))}
    </>
@@ -86,15 +89,16 @@ export function Post({
   let comments = [comment].concat(postComments0);
   setCommentcount0(comments.length);
   setPostComments(
-   comments.map((comment: any) => (
+   comments.map((c: any) => (
     <Comment
-     key={comment.publicKey}
-     content={comment.content}
+     image={c.image}
+     key={c.publicKey}
+     content={c.content}
      //   postPubKey={comment.postPublicKey}
      //   pubKey={comment.key}
-     authorPubkeyString={comment.authorDisplay}
-     name={comment.username}
-     date={comment.createdAgo}
+     authorPubkeyString={c.authorDisplay}
+     name={c.username}
+     date={c.createdAgo}
     />
    ))
   );
@@ -110,11 +114,7 @@ export function Post({
        <Link href={`/users?pubkey=${publickeyString}`}>
         <div className="flex cursor-pointer items-center">
          <div className="pb- pr-2">
-          <img
-           className="w-10 h-10  rounded-full"
-           src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-           
-          />
+          <img className="w-10 h-10  rounded-full" src={image ? image : "/img.png"} />
          </div>
          <span className=" text-2xl ">{username}</span>
         </div>

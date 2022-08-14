@@ -9,9 +9,10 @@ interface Props {
  name: string;
  date: string;
  content: string;
+ image:string
  authorPubkeyString: string;
 }
-export const Comment = ({ name, date, content, authorPubkeyString }: Props) => {
+export const Comment = ({ name, date, content,image, authorPubkeyString }: Props) => {
  return (
   <div>
    <div className="h-1 border-b-2 my-2 border-gray-700"></div>
@@ -20,7 +21,7 @@ export const Comment = ({ name, date, content, authorPubkeyString }: Props) => {
      <div className="pb- pr-2">
       <img
        className="w-10 h-10  rounded-full"
-       src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+           src={image?image:'/img.png'}    
        
       />
      </div>
@@ -71,7 +72,8 @@ export const NewComment = ({ postPubkey,addComment }: NewCommentProps) => {
      commentProgram: programContext.commentProgram!,
      postPubkey,
      walletPubkey: programContext.getWallet?.publicKey!,
-     username:programContext.state.user.username
+     username:programContext.state.user.username,
+     image:programContext.state.user.image
     });
     commentInputRef.current.value=''
     addComment(result)
