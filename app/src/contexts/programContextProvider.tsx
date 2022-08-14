@@ -20,6 +20,8 @@ import { User } from "../program/user/user-type";
 import { getUserByPubkey } from "../program/user/user-methods";
 import { getAllMessages } from "../program/message/message-methods";
 import { getDate } from "../utils/get-date-moment";
+import { useBlockProgram } from "../program/block/block-program";
+import { Block } from "../program/block/block-type";
 const endpoint =
  "https://responsive-dawn-sponge.solana-devnet.quiknode.pro/2c9e6acd14a57270687f2920c37e9c56f2bb1f36";
 export const connection = new anchor.web3.Connection(endpoint);
@@ -60,6 +62,7 @@ export interface ProgramContextInterface {
  showSignupModal: boolean;
  setShowSignupModal: Dispatch<SetStateAction<boolean>>;
  userProgram: anchor.Program<User> | undefined;
+ blockProgram: anchor.Program<Block> | undefined;
  postProgram: anchor.Program<anchor.Idl> | undefined;
  commentProgram: anchor.Program<anchor.Idl> | undefined;
  messageProgram: anchor.Program<Message> | undefined;
@@ -89,13 +92,14 @@ export function ProgramWrapper({ children }: any) {
  const { userProgram } = useUserProgram({ connection, wallet });
  const { postProgram } = useProgram({ connection, wallet });
  const { commentProgram } = useCommentProgram({ connection, wallet });
+ const { blockProgram } = useBlockProgram({ connection, wallet });
  const { messageProgram } = useMessageProgram({ connection, wallet });
  const [messages, setMessages] = useState<MessagesType[]>();
  const [users, setUsers] = useState<UsersType[]>();
  const [fetchEvery, setFetchEvery] = useState<any>();
  async function fetchMessages() {
-  console.log('fetch msg');
-  
+  console.log("fetch msg");
+
   let messages: any[] = await getAllMessages({
    program: messageProgram!,
    pubkey: wallet?.publicKey.toBase58()!,
@@ -112,6 +116,15 @@ export function ProgramWrapper({ children }: any) {
      m.from.toBase58() === wallet?.publicKey.toBase58() ? m.to.toBase58() : m.from.toBase58(),
    };
   });
+  let seen = localStorage.getItem("seenMessages");
+  let currentSeenMessages = seen ? parseInt(seen) : Infinity;
+  let newSeenMessages = filteredMessages.length;
+  if (newSeenMessages > currentSeenMessages) {
+  }
+
+  localStorage.setItem("seenMessages", JSON.stringify(newSeenMessages));
+  localStorage.setItem("messages", JSON.stringify(filteredMessages));
+
   let users: any[] = [];
 
   async function fetchUsers() {
@@ -141,7 +154,7 @@ export function ProgramWrapper({ children }: any) {
    setUsername();
    fetchMessages();
 
-   setFetchEvery(setInterval(() => fetchMessages(), 30000));
+   setFetchEvery(setInterval(() => fetchMessages(), 60000));
   }
   return () => {
    clearInterval(fetchEvery);
@@ -174,6 +187,7 @@ export function ProgramWrapper({ children }: any) {
     setShowSignupModal,
     disconnect,
     postProgram,
+    blockProgram,
     commentProgram,
     messageProgram,
     state,

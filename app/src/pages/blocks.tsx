@@ -8,7 +8,10 @@ import { getAllPosts, sendPost, like, unlike } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { Post } from "../components/post/post";
 import { getAllComments, newComment } from "../program/comments";
+import bs58 from "bs58";
+import * as anchor from "@project-serum/anchor";
 
+import { getDate } from "../utils/get-date-moment";
 import { useNotifier } from "react-headless-notifier";
 import {
  SuccessAlert,
@@ -19,67 +22,72 @@ import {
 } from "../components/alert";
 import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
+import { getBlockByName } from "../program/block/block-methods";
 
 interface UserData {
- publickeyString: string;
- username: string;
- img: string;
- date: string;
+ blockName: string;
+ image: string;
+ owner: anchor.web3.PublicKey;
+ publicKey: anchor.web3.PublicKey;
+ timestamp: anchor.BN;
 }
 export default function Home() {
- const [selected, setSelected] = useState(1);
- const { notify } = useNotifier();
  //  @ts-ignore
- const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
-  UseProgramContext();
+ const programContext = UseProgramContext()!;
  const [showMessageModal, setShowMessageModal] = useState(false);
  const router = useRouter();
  const [posts, setPosts]: any = useState([]);
- const [userData, setUserData] = useState<UserData | undefined>();
+ const [blockData, setBlockData] = useState<UserData | undefined>();
 
  let searchInputRef: any = useRef("");
 
  const [alreadyFetched, setAlreadyFetched] = useState(false);
  useEffect(() => {
-  if (getWallet?.publicKey) {
+  if (programContext.getWallet?.publicKey) {
   }
-  if (postProgram && router?.query?.pubkey && !alreadyFetched) {
-   getUser();
-   getPosts(router?.query?.pubkey);
+  if (programContext.postProgram && router?.query?.block_name && !alreadyFetched) {
+   getBlock(router?.query?.block_name);
+   getPosts(router?.query?.block_name);
    setAlreadyFetched(true);
   }
- }, [router, postProgram, getWallet, posts]);
+ }, [router, programContext.postProgram, programContext.getWallet, posts]);
 
  function searchOnClick(e: { preventDefault: () => void }) {
   e.preventDefault();
-  getUser();
+  getBlock();
   if (searchInputRef.current.value) {
    getPosts(searchInputRef.current.value);
   }
  }
 
- async function getUser() {
-  setUserData({
-   username: "aland",
-   img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-   date: "15 March 2022",
-   publickeyString: "pubkey",
+ async function getBlock(name?: any) {
+  let block = await getBlockByName({
+   program: programContext.blockProgram!,
+   name: name ? name : searchInputRef.current.value,
   });
+  console.log("block", block);
+  setBlockData(block);
+  // setBlockData({
+  //  username: "aland",
+  //  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
+  //  date: "15 March 2022",
+  //  publickeyString: "pubkey",
+  // });
  }
- async function getPosts(pubkey?: string | string[] | undefined) {
+ async function getPosts(name?: string | string[] | undefined) {
   let searchValue = searchInputRef?.current?.value;
-  let value = searchValue ? searchValue : pubkey;
-  const authorFilter = (authorBase58PublicKey: any) => ({
+  let value = name ? name : searchValue;
+  const blockFilter = (name: any) => ({
    memcmp: {
-    offset: 8, // Discriminator.
-    bytes: authorBase58PublicKey,
+    offset: 44, // Discriminator.
+    bytes: bs58.encode(Buffer.from(name)),
    },
   });
-  let filter = [authorFilter(value)];
+  let filter = [blockFilter(value)];
   let posts: any[] | ((prevState: never[]) => never[]) = [];
-  if (postProgram) {
+  if (programContext.postProgram) {
    try {
-    posts = await getAllPosts({ program: postProgram, filter: filter });
+    posts = await getAllPosts({ program: programContext.postProgram, filter: filter });
    } catch (e) {
     // notify(
     //           <SpecialAlert
@@ -88,7 +96,6 @@ export default function Home() {
     //         );
    }
   }
-  console.log(posts);
   posts = posts.sort(function (a, b) {
    return b.getTimestamp - a.getTimestamp;
   });
@@ -99,7 +106,7 @@ export default function Home() {
   return posts.map((p: any) => (
    // 2 pubkey man haya 1- bo user 2- bo post
    <Post
-   image={p.image}
+    image={p.image}
     commentCount={p.comments}
     key={p.publicKey}
     tip={18000000}
@@ -113,8 +120,7 @@ export default function Home() {
    />
   ));
  }
- console.log(posts.length);
- 
+
  if (!router.asPath) {
   return null;
  } else {
@@ -125,25 +131,19 @@ export default function Home() {
      {/* top isit !!!!!! Headlines */}
      <div className="flex w-full  justify-start flex-row">
       <div className=" flex grow  flex-col">
-       <Search
-        selected={selected}
-        setSelected={setSelected}
-        searchInputRef={searchInputRef}
-        clickSearch={searchOnClick}
-       />
-       {userData && (
-        <Profile
-         img={userData.img}
-         publickeyString={userData.publickeyString}
-         username={userData.username}
-         date={userData.date}
-         setShowMessageModal={setShowMessageModal}
+       <Search searchInputRef={searchInputRef} clickSearch={searchOnClick} />
+       {blockData && (
+        <BlockProfile
+         img={blockData.image}
+         publickeyString={blockData.publicKey.toBase58()}
+         blockName={blockData.blockName}
+         date={getDate(blockData.timestamp)}
         />
        )}
 
        <div className="mt-2 w-full">
         {displayPosts()}
-        {posts.length < 6 && <div style={{marginBottom:999}} className=""></div>}
+        {posts.length < 6 && <div style={{ marginBottom: 999 }} className=""></div>}
        </div>
       </div>
      </div>
@@ -154,13 +154,12 @@ export default function Home() {
  }
 }
 interface ProfileProps {
- setShowMessageModal: Dispatch<SetStateAction<boolean>>;
- username: string;
+ blockName: string;
  date: string;
  img: string;
  publickeyString: string;
 }
-function Profile({ setShowMessageModal, username, date, img, publickeyString }: ProfileProps) {
+function BlockProfile({ blockName, date, img, publickeyString }: ProfileProps) {
  return (
   <>
    <div className="mt-6 pb-2 border-b-2 border-gray-700 ">
@@ -169,27 +168,13 @@ function Profile({ setShowMessageModal, username, date, img, publickeyString }: 
       <Link href={`/users?pubkey=${"publickeyString"}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img}  />
+         <img className="w-14 h-14  rounded-full" src={img} />
         </div>
-        <span className=" text-3xl ">{username}</span>
+        <span className=" text-3xl ">{blockName}</span>
        </div>
       </Link>
       <span>&nbsp;•&nbsp;</span>
       <span className="text-base">Joined {date}</span>
-      <button
-       onClick={() => setShowMessageModal(true)}
-       className="text-base rounded-full ml-auto btn bg-blue-700 hover:bg-blue-600 text-slate-100 ">
-       <div className="flex flex-row items- justify-center">
-        {/* <svg
-        style={{marginTop:3}}
-        className="w-5 h-5  fill-slate-100 mr-2"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 512 512">
-        <path d="M511.1 63.1v287.1c0 35.25-28.75 63.1-64 63.1h-144l-124.9 93.68c-7.875 5.75-19.12 .0497-19.12-9.7v-83.98h-96c-35.25 0-64-28.75-64-63.1V63.1c0-35.25 28.75-63.1 64-63.1h384C483.2 0 511.1 28.75 511.1 63.1z" />
-       </svg>{" "} */}
-        <span>Message</span>
-       </div>
-      </button>
      </div>
     </div>
     <Link href={`/users?pubkey=${"publickeyString"}`}>
@@ -228,21 +213,18 @@ export const ActionButton = ({ text }: any) => {
 interface SearchProps {
  searchInputRef: any;
  clickSearch: any;
- selected: number;
- setSelected: Dispatch<SetStateAction<number>>;
 }
-export const Search = ({ searchInputRef, clickSearch, selected, setSelected }: SearchProps) => {
+export const Search = ({ searchInputRef, clickSearch }: SearchProps) => {
  const [dropDownOpen, setDropDownOpen] = useState(false);
  return (
   <>
    <div className="flex mt-2">
-    
     <form className="flex grow flex-row" onSubmit={clickSearch}>
      <input
       required
       ref={searchInputRef}
       type="text"
-      placeholder={selected === 1 ? "Block name" : "Public Key"}
+      placeholder={"Block name"}
       className=" border-none rounded-lg bg-gray-100 dark:bg-gray-800 rounded-r-none grow "
      />
      <button onClick={clickSearch} className="btn rounded-l-none btn-square">

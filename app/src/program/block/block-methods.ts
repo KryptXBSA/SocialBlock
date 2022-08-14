@@ -2,6 +2,7 @@
 import * as anchor from "@project-serum/anchor";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { Block } from './block-type';
+import bs58 from "bs58";
 
 type GetUser = {
     program: anchor.Program<Block>;
@@ -16,6 +17,8 @@ export const getBlockByPubkey = async ({ program, pubkey }: GetUser) => {
 };
 export const getBlockByName = async ({ program, name }: GetUser) => {
     const block0 = await program.account.block.all([blockFilter(name!)]);
+    console.log('block0',block0);
+    
 
     const block = block0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
     return block[0];
@@ -135,9 +138,9 @@ const pubkeyFilter = (publicKey: string) => ({
         bytes: publicKey,
     },
 });
-const blockFilter = (publicKey: string) => ({
+const blockFilter = (name: string) => ({
     memcmp: {
         offset: 40, // Discriminator.
-        bytes: publicKey,
+        bytes: bs58.encode(Buffer.from(name)),
     },
 });
