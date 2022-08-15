@@ -1,11 +1,11 @@
 [features]
 seeds = false
 [programs.localnet]
-post = "ABrF92BKVCYA4bw123Hhbhdg1nCeFfPwscT9o4q8DMWy"
-comment = "7KFJjA73aTPNnDvsavcwbJ5w2TYJa4rU6yzSpM6TKcj3"
-user = "29FTScCpe4oB8zFMzQHcprtjdWisqGAB39NqRNuwtoeR"
-block = "9cinoVsQBY4XcNEyM8wUwCLDXJcCFbcuhYs2pd7JF1HT"
-message = "6DBciTm6TPwPWpemy3u6xiS9xVQqSqNvMLaYCFfCViG1"
+post = "9UEB181u3WjjiiWV2WWHHEq16LPhkZa8STAUHXBLx2bp"
+comment = "9rbzD7Ae9doWFbxpZw9SYH6Jzw19Gug7heo5i4eHQHE7"
+user = "81g9iq98nK574jk5G5tbYy19QZSrdVMfyFjmxj1EqVw5"
+block = "5ZGZX4uPcbRmXVhAYmiSs3Bf3h6uBvcph2LPxG2a5Sxv"
+message = "7Qy3XGGyGXVZAeC1Thxz38jwQ49jgyMtA2pQgNtB8Z4y"
 
 [registry]
 url = "https://anchor.projectserum.com"

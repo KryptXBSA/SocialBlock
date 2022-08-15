@@ -14,12 +14,12 @@ describe("SocialBlock", () => {
   const newBlockAccount = anchor.web3.Keypair.generate();
   const newPostAccount = anchor.web3.Keypair.generate();
   const newMessageAccount = anchor.web3.Keypair.generate();
-  it("New User Account", async () => {
+  it("New User Account and change username", async () => {
 
     const userProgram = anchor.workspace.User as Program<User>;
     console.log(await userProgram.account.user.all());
     // Making new user
-    const tx = await userProgram.methods.newUser("aland").accounts(
+    const tx = await userProgram.methods.newUser("alan",'').accounts(
       {
         userAccount: newUserAccount.publicKey,
         user: provider.wallet.publicKey,
@@ -30,6 +30,7 @@ describe("SocialBlock", () => {
 
     const newPostAccount0 = await userProgram.account.user.fetch(newUserAccount.publicKey);
     console.log(newPostAccount0);
+
   })
 it("New Message Account", async () => {
 
@@ -51,7 +52,7 @@ it("New Message Account", async () => {
 
     const blockProgram = anchor.workspace.Block as Program<Block>;
     // Making new block
-    const tx = await blockProgram.methods.newBlock("aland").accounts(
+    const tx = await blockProgram.methods.newBlock("alan").accounts(
       {
         block: newBlockAccount.publicKey,
         owner: provider.wallet.publicKey,
@@ -66,7 +67,7 @@ it("New Message Account", async () => {
   it("New Post", async () => {
     const postProgram = anchor.workspace.Post as Program<Post>;
     // Making new post
-    const tx = await postProgram.methods.sendPost("block", "content", "usernameALAND",'').accounts(
+    const tx = await postProgram.methods.sendPost("block", "content", "alan",'').accounts(
       {
         post: newPostAccount.publicKey,
         author: provider.wallet.publicKey,
@@ -83,7 +84,7 @@ it("New Message Account", async () => {
     const commentProgram = anchor.workspace.Comment as Program<Comment>;
     const newCommentAccount = anchor.web3.Keypair.generate();
     //Making new Comment 
-    const commentTx = await commentProgram.methods.newComment(newPostAccount.publicKey, "usernameeeed", "slawwwwd",'').accounts(
+    const commentTx = await commentProgram.methods.newComment(newPostAccount.publicKey, "alan", "slawwwwd",'').accounts(
       {
         comment: newCommentAccount.publicKey,
         author: provider.wallet.publicKey,

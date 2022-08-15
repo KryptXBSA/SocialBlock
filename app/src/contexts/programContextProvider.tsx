@@ -4,13 +4,13 @@ import * as anchor from "@project-serum/anchor";
 import { TypeDef } from "@project-serum/anchor/dist/cjs/program/namespace/types";
 import { AnchorWallet, useAnchorWallet } from "@solana/wallet-adapter-react";
 import {
-   createContext,
-   Dispatch,
-   SetStateAction,
-   useContext,
-   useEffect,
-   useReducer,
-   useState
+ createContext,
+ Dispatch,
+ SetStateAction,
+ useContext,
+ useEffect,
+ useReducer,
+ useState,
 } from "react";
 import { useBlockProgram } from "../program/block/block-program";
 import { Block } from "../program/block/block-type";
@@ -98,8 +98,8 @@ export function ProgramWrapper({ children }: any) {
  const [messages, setMessages] = useState<MessagesType[]>();
  const [users, setUsers] = useState<UsersType[]>();
  const [fetchEvery, setFetchEvery] = useState<any>();
- async function fetchMessages() {
 
+ async function fetchMessages() {
   let messages: any[];
   try {
    messages = await getAllMessages({
@@ -107,7 +107,11 @@ export function ProgramWrapper({ children }: any) {
     pubkey: wallet?.publicKey.toBase58()!,
    });
   } catch (error) {}
-  messages!.sort(function (a, b) {
+  if (!messages!) {
+   setMessages([]);
+   return;
+  }
+  messages.sort(function (a, b) {
    return a.timestamp.toNumber() - b.timestamp.toNumber();
   });
   let filteredMessages = messages!.map((m) => {
@@ -132,7 +136,22 @@ export function ProgramWrapper({ children }: any) {
 
   async function fetchUsers() {
    let users = messages.map(async (message) => {
-    let user: { publicKey: anchor.web3.PublicKey; } & TypeDef<{ name: "user"; type: { kind: "struct"; fields: [{ name: "user"; type: "publicKey"; }, { name: "username"; type: "string"; }, { name: "image"; type: "string"; }, { name: "timestamp"; type: "i64"; }, { name: "bookmarks"; type: { vec: "publicKey"; }; }]; }; }, anchor.IdlTypes<User>>
+    let user: { publicKey: anchor.web3.PublicKey } & TypeDef<
+     {
+      name: "user";
+      type: {
+       kind: "struct";
+       fields: [
+        { name: "user"; type: "publicKey" },
+        { name: "username"; type: "string" },
+        { name: "image"; type: "string" },
+        { name: "timestamp"; type: "i64" },
+        { name: "bookmarks"; type: { vec: "publicKey" } }
+       ];
+      };
+     },
+     anchor.IdlTypes<User>
+    >;
     try {
      user = await getUserByPubkey({
       program: userProgram!,
@@ -164,7 +183,7 @@ export function ProgramWrapper({ children }: any) {
   }
   if (!wallet?.publicKey) {
    clearInterval(fetchEvery);
-   disconnect()
+   disconnect();
   }
   return () => {
    clearInterval(fetchEvery);
