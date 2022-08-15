@@ -83,8 +83,8 @@ export default function Home() {
  return (
   <>
    <Head>
-    <title>Social Block</title>
-    <link rel="icon" href="/favicon.ico" />
+    <title>Home</title>
+    <link rel="icon" href="/logo.svg" />
    </Head>
    <Layout active={0}>
     <main className="  bg-slate-900  w-1/3 flex justify-center flex-row">

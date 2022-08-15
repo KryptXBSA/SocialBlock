@@ -23,8 +23,7 @@ export default function InboxPage() {
  return (
   <>
    <Head>
-    <title>Social Block</title>
-    <link rel="icon" href="/favicon.ico" />
+    <title>Inbox</title>
    </Head>
    <Layout active={1}>
     <main className="  bg-slate-900   flex justify-center flex-row">
@@ -63,13 +62,16 @@ function Inbox() {
  const [users, setUsers] = useState<UsersType[]>(programContext.users!);
  const [selectedUser, setSelectedUser] = useState(0);
 
-
  useEffect(() => {
-  if (programContext.messageProgram && programContext.getWallet?.publicKey) {
-    setMessages(programContext.messages!)
-    setUsers(programContext.users!)
+  if (programContext?.notSeenMessages! > 0) {
+   programContext.setNotSeenMessages(0);
+  localStorage.setItem("seenMessages", JSON.stringify(programContext.messages?.length));
   }
- }, [programContext.messageProgram,programContext.users]);
+  if (programContext.messageProgram && programContext.getWallet?.publicKey) {
+   setMessages(programContext.messages!);
+   setUsers(programContext.users!);
+  }
+ }, [programContext.messageProgram, programContext.users]);
 
  let messageInputRef: any = useRef("");
  async function sendMessage(e: { preventDefault: () => void }) {
@@ -96,9 +98,9 @@ function Inbox() {
     },
    ])
   );
- messageInputRef.current.value=''
+  messageInputRef.current.value = "";
  }
- if (!messages|| messages.length===0) {
+ if (!messages || messages.length === 0) {
   return (
    <div style={{ marginBottom: 999, marginTop: 20 }} className="">
     No Messages
@@ -106,7 +108,7 @@ function Inbox() {
   );
  }
  return (
-  <div className="flex flex-row h-screen antialiased ">
+  <div className="flex w-11/12 flex-row h-screen antialiased ">
    <div className="flex flex-row w-96 flex-shrink-0 p-4">
     <div className="flex flex-col w-full h-full pl-4 pr-4 py-4 -mr-4">
      <MessageHeader />
@@ -114,8 +116,9 @@ function Inbox() {
     </div>
    </div>
    <div className="flex flex-col h-full w-full  px-4 py-6">
-    {users.length>0 && (
+    {users.length > 0 && (
      <MessageHeader1
+      image={users[selectedUser].img}
       username={users[selectedUser].username}
       publickeyString={users[selectedUser].publickeyString}
      />
@@ -210,7 +213,6 @@ function Messages({ messages, users, selectedUser }: Messages) {
   <>
    {currentMessages.map((m) => (
     <Message key={nanoid()} date={m.date} img={findImg(m)} message={m.message} self={m.self} />
-     
    ))}
   </>
  );
@@ -226,7 +228,7 @@ function Message({ self, message, img, date }: MessageBody) {
  return (
   <div className={`${!self ? "col-start-1 col-end-8 p-3" : "col-start-6 col-end-13"}  rounded-lg`}>
    <div className={`flex ${!self ? "flex-row" : "flex-row-reverse"} items-center`}>
-    <img className="w-10 h-10  rounded-full" src={self ? "/img.png" : img} />
+    <img className="w-10 h-10  rounded-full" src={img ? img : "/img.png"} />
     <div className="flex flex-col">
      <span className=" invisible self-end text-xs text-gray-400">{date}</span>
      <div
@@ -279,17 +281,16 @@ function User({ username, lastMessage, index, selectedMessage, setSelectedMessag
 function MessageHeader1({
  username,
  publickeyString,
+ image,
 }: {
  username: string;
  publickeyString: string;
+ image: string;
 }) {
  return (
   <Link href={`/users?pubkey=${publickeyString}`}>
    <div className="flex flex-row items-center py-4 px-6 rounded-2xl shadow">
-    <img
-     className="w-10 h-10  rounded-full"
-     src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-    />
+    <img className="w-10 h-10  rounded-full" src={image ? image : "/img.png"} />
     <div className="flex flex-col ml-2">
      <div className="font-semibold text-lg">{username}</div>{" "}
      <p
@@ -338,7 +339,7 @@ function UserList({
  setSelectedUser,
 }: {
  users: UsersType[];
- messages:MessagesType[]
+ messages: MessagesType[];
  setSelectedUser: Dispatch<SetStateAction<number>>;
 }) {
  const [selectedMessage, setSelectedMessage] = useState(0);
@@ -346,9 +347,8 @@ function UserList({
   setSelectedMessage(user);
   setSelectedUser(user);
  }
- function getLastUserMessage(u:UsersType) {
- return messages.reverse().find(m=>m.publickeyString===u.publickeyString)
-  
+ function getLastUserMessage(u: UsersType) {
+  return messages.reverse().find((m) => m.publickeyString === u.publickeyString);
  }
  return (
   <div className="mt-2">

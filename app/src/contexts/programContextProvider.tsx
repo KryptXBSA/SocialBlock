@@ -23,6 +23,8 @@ import { getUserByPubkey } from "../program/user/user-methods";
 import { useUserProgram } from "../program/user/user-program";
 import { User } from "../program/user/user-type";
 import { getDate } from "../utils/get-date-moment";
+import { useNotifier } from "react-headless-notifier";
+import { InfoAlert } from "../components/alert";
 const endpoint =
  "https://responsive-dawn-sponge.solana-devnet.quiknode.pro/2c9e6acd14a57270687f2920c37e9c56f2bb1f36";
 export const connection = new anchor.web3.Connection(endpoint);
@@ -63,6 +65,8 @@ function reducer(state: InitialState, user: Actions) {
 export interface ProgramContextInterface {
  showSignupModal: boolean;
  setShowSignupModal: Dispatch<SetStateAction<boolean>>;
+ setNotSeenMessages: Dispatch<SetStateAction<number>>;
+ notSeenMessages: number | undefined;
  userProgram: anchor.Program<User> | undefined;
  blockProgram: anchor.Program<Block> | undefined;
  postProgram: anchor.Program<anchor.Idl> | undefined;
@@ -88,6 +92,7 @@ type UsersType = {
 };
 export const ProgramContext = createContext<ProgramContextInterface | undefined>(undefined);
 export function ProgramWrapper({ children }: any) {
+ const { notify } = useNotifier();
  const [state, changeState] = useReducer(reducer, initialState);
  const [showSignupModal, setShowSignupModal] = useState(false);
  const wallet = useAnchorWallet();
@@ -98,6 +103,7 @@ export function ProgramWrapper({ children }: any) {
  const { messageProgram } = useMessageProgram({ connection, wallet });
  const [messages, setMessages] = useState<MessagesType[]>();
  const [users, setUsers] = useState<UsersType[]>();
+ const [notSeenMessages, setNotSeenMessages] = useState(0)
  const [fetchEvery, setFetchEvery] = useState<any>();
 
  async function fetchMessages() {
@@ -129,10 +135,12 @@ export function ProgramWrapper({ children }: any) {
   let seen = localStorage.getItem("seenMessages");
   let currentSeenMessages = seen ? parseInt(seen) : Infinity;
   let newSeenMessages = filteredMessages.length;
+
   if (newSeenMessages > currentSeenMessages) {
+  setNotSeenMessages(newSeenMessages - currentSeenMessages)
   }
 
-  localStorage.setItem("seenMessages", JSON.stringify(newSeenMessages));
+//   localStorage.setItem("seenMessages", JSON.stringify(newSeenMessages));
   localStorage.setItem("messages", JSON.stringify(filteredMessages));
 
   let users: any[] = [];
@@ -182,7 +190,7 @@ export function ProgramWrapper({ children }: any) {
    setUser();
    fetchMessages();
 
-   setFetchEvery(setInterval(() => fetchMessages(), 60000));
+   setFetchEvery(setInterval(() => fetchMessages(), 5000));
   }
   if (!wallet?.publicKey) {
    clearInterval(fetchEvery);
@@ -191,7 +199,7 @@ export function ProgramWrapper({ children }: any) {
   return () => {
    clearInterval(fetchEvery);
   };
- }, [userProgram, wallet?.publicKey]);
+ }, [userProgram, wallet?.publicKey,notify]);
  async function setUser() {
   let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
   if (!user) {
@@ -217,6 +225,8 @@ export function ProgramWrapper({ children }: any) {
    value={{
     userProgram,
     showSignupModal,
+    notSeenMessages,
+    setNotSeenMessages,
     setShowSignupModal,
     disconnect,
     postProgram,

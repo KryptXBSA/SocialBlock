@@ -23,6 +23,7 @@ import {
 import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
 import { getBlockByName } from "../program/block/block-methods";
+import Head from "next/head";
 
 interface UserData {
  blockName: string;
@@ -126,6 +127,9 @@ export default function Home() {
  } else {
   return (
    <Layout page="blockk" active={3}>
+    <Head>
+     <title>{blockData?blockData.blockName:'Blocks'}</title>
+    </Head>
     {showMessageModal && <MessageModal setShowModal={setShowMessageModal} />}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
@@ -165,25 +169,16 @@ function BlockProfile({ blockName, date, img, publickeyString }: ProfileProps) {
    <div className="mt-6 pb-2 border-b-2 border-gray-700 ">
     <div className="flex  justify-start items-center flex-row">
      <div className="flex justify-start   items-center w-full  flex-row">
-      <Link href={`/users?pubkey=${"publickeyString"}`}>
-       <div className="flex cursor-pointer items-center">
-        <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img?img:'/img.png'} />
-        </div>
-        <span className=" text-3xl ">{blockName}</span>
+      <div className="flex cursor-pointer items-center">
+       <div className="pb- pr-2">
+        <img className="w-14 h-14  rounded-full" src={img ? img : "/img.png"} />
        </div>
-      </Link>
+       <span className=" text-3xl ">{blockName}</span>
+      </div>
       <span>&nbsp;•&nbsp;</span>
-      <span className="text-base">Joined {date}</span>
+      <span className="text-base">Created {date}</span>
      </div>
     </div>
-    <Link href={`/users?pubkey=${"publickeyString"}`}>
-     <p
-      style={{ marginLeft: 65, marginTop: -19 }}
-      className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
-      {publickeyString}
-     </p>
-    </Link>
    </div>
   </>
  );

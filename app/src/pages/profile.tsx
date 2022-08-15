@@ -17,6 +17,7 @@ import { Block } from "../program/block/block-type";
 import { getUserByPubkey } from "../program/user/user-methods";
 import { User } from "../program/user/user-type";
 import { getDate } from "../utils/get-date-moment";
+import Head from "next/head";
 
 type UserData = {
  publicKey: anchor.web3.PublicKey;
@@ -101,20 +102,19 @@ export default function Home() {
  const [alreadyFetched, setAlreadyFetched] = useState(false);
  const [blocks, setBlocks] = useState<BlocksType[]>();
  useEffect(() => {
-  if (programContext?.blockProgram && programContext.getWallet?.publicKey&&!alreadyFetched) {
-       getUser();
+  if (programContext?.blockProgram && programContext.getWallet?.publicKey && !alreadyFetched) {
+   getUser();
    setAlreadyFetched(true);
-    
-    getOwnedBlocks();}
- 
+
+   getOwnedBlocks();
+  }
+
   if (!programContext?.getWallet) {
    setBlocks([]);
-   setUserData(undefined)
-   setAlreadyFetched(false)
+   setUserData(undefined);
+   setAlreadyFetched(false);
   }
- }, [router, programContext!.postProgram, programContext!.getWallet, ]);
-
- 
+ }, [router, programContext!.postProgram, programContext!.getWallet]);
 
  async function getUser() {
   try {
@@ -133,79 +133,81 @@ export default function Home() {
     pubkey: programContext?.getWallet?.publicKey.toBase58(),
    });
    console.log(blocks);
-   
+
    setBlocks(blocks);
   } catch (error) {}
  }
-
 
  if (!router.asPath) {
   return null;
  } else {
   return (
-   <Layout>
-    {showProfileModal && <ProfileModal setShowModal={setShowProfileModal} />}
-    {showNewBlockModal && <NewBlockModal setShowModal={setShowNewBlockModal} />}
-    {showBlockEditModal && (
-     <BlockEditModal
-      blockName={selectedBlockName}
-      blockImage={selectedBlockImage}
-      publickey={selectedBlockPubkey!}
-      setShowModal={setSetShowBlockEditModal}
-     />
-    )}
-    <main className="flex  w-1/3 ">
-     {/* top isit !!!!!! Headlines */}
-     <div className="flex w-full  justify-start flex-row">
-      <div className=" flex grow  flex-col">
-       {userData && (
-        <Profile
-         img={userData.image}
-         publickeyString={userData.user.toBase58()}
-         username={userData.username}
-         date={getDate(userData.timestamp)}
-         setShowProfileModal={setShowProfileModal}
-        />
-       )}
-       {userData && (
-        <button
-         onClick={() => setShowNewBlockModal(true)}
-         className=" btn mt-1 w-1/3 self-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-         <div className="w-5 h-5 mr-24 mb-1 fill-blue-300 absolute">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-           <path d="M234.5 5.709C248.4 .7377 263.6 .7377 277.5 5.709L469.5 74.28C494.1 83.38 512 107.5 512 134.6V377.4C512 404.5 494.1 428.6 469.5 437.7L277.5 506.3C263.6 511.3 248.4 511.3 234.5 506.3L42.47 437.7C17 428.6 0 404.5 0 377.4V134.6C0 107.5 17 83.38 42.47 74.28L234.5 5.709zM256 65.98L82.34 128L256 190L429.7 128L256 65.98zM288 434.6L448 377.4V189.4L288 246.6V434.6z" />
-          </svg>
-         </div>
-         New Block
-        </button>
-       )}
-       <div>
-        {blocks &&
-         blocks.map((b) => (
-          <div
-           onClick={() => {
-            setSelectedBlockImage(b.image);
-            setSelectedBlockName(b.blockName);
-            setSelectedBlockPubkey(b.publicKey);
-           }}>
-           <BlockProfile
-            img={b.image}
-            publickeyString={b.publicKey.toBase58()}
-            username={b.blockName}
-            date={getDate(b.timestamp)}
-            setShowProfileModal={setSetShowBlockEditModal}
-           />
+   <>
+    <Head>
+     <title>Profile</title>
+    </Head>
+    <Layout>
+     {showProfileModal && <ProfileModal setShowModal={setShowProfileModal} />}
+     {showNewBlockModal && <NewBlockModal setShowModal={setShowNewBlockModal} />}
+     {showBlockEditModal && (
+      <BlockEditModal
+       blockName={selectedBlockName}
+       blockImage={selectedBlockImage}
+       publickey={selectedBlockPubkey!}
+       setShowModal={setSetShowBlockEditModal}
+      />
+     )}
+     <main className="flex  w-1/3 ">
+      {/* top isit !!!!!! Headlines */}
+      <div className="flex w-full  justify-start flex-row">
+       <div className=" flex grow  flex-col">
+        {userData && (
+         <Profile
+          img={userData.image}
+          publickeyString={userData.user.toBase58()}
+          username={userData.username}
+          date={getDate(userData.timestamp)}
+          setShowProfileModal={setShowProfileModal}
+         />
+        )}
+        {userData && (
+         <button
+          onClick={() => setShowNewBlockModal(true)}
+          className=" btn mt-1 w-1/3 self-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+          <div className="w-5 h-5 mr-24 mb-1 fill-blue-300 absolute">
+           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+            <path d="M234.5 5.709C248.4 .7377 263.6 .7377 277.5 5.709L469.5 74.28C494.1 83.38 512 107.5 512 134.6V377.4C512 404.5 494.1 428.6 469.5 437.7L277.5 506.3C263.6 511.3 248.4 511.3 234.5 506.3L42.47 437.7C17 428.6 0 404.5 0 377.4V134.6C0 107.5 17 83.38 42.47 74.28L234.5 5.709zM256 65.98L82.34 128L256 190L429.7 128L256 65.98zM288 434.6L448 377.4V189.4L288 246.6V434.6z" />
+           </svg>
           </div>
-         ))}
-       </div>
-       <div className="mt-2 w-full">
-        { <div style={{ marginBottom: 999 }} className=""></div>}
+          New Block
+         </button>
+        )}
+        <div>
+         {blocks &&
+          blocks.map((b) => (
+           <div
+            onClick={() => {
+             setSelectedBlockImage(b.image);
+             setSelectedBlockName(b.blockName);
+             setSelectedBlockPubkey(b.publicKey);
+            }}>
+            <BlockProfile
+             img={b.image}
+             publickeyString={b.publicKey.toBase58()}
+             username={b.blockName}
+             date={getDate(b.timestamp)}
+             setShowProfileModal={setSetShowBlockEditModal}
+            />
+           </div>
+          ))}
+        </div>
+        <div className="mt-2 w-full">{<div style={{ marginBottom: 999 }} className=""></div>}</div>
        </div>
       </div>
-     </div>
-    </main>
-    <div className="mb-96 pb-96"></div>
-   </Layout>
+     </main>
+     <div className="mb-96 pb-96"></div>
+    </Layout>
+   </>
   );
  }
 }
@@ -233,7 +235,9 @@ function BlockProfile({
         <img className="w-14 h-14  rounded-full" src={img ? img : "/img.png"} />
        </div>
        <div className="flex items-center space-x-1">
-        <span className=" text-3xl ">{username}</span>{" "}
+        <Link href={`/blocks?block_name=${username}`}>
+         <span className=" text-3xl ">{username}</span>
+        </Link>{" "}
         <svg
          onClick={() => setShowProfileModal(true)}
          className="cursor-pointer w-5 h-5 fill-gray-500 "
@@ -247,13 +251,6 @@ function BlockProfile({
       <span className="text-base">Created {date}</span>
      </div>
     </div>
-    <Link href={`/users?pubkey=${"publickeyString"}`}>
-     <p
-      style={{ marginLeft: 65, marginTop: -19 }}
-      className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
-      {publickeyString}
-     </p>
-    </Link>
    </div>
   </>
  );

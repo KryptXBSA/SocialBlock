@@ -21,6 +21,7 @@ import {
 import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
 import { getUserByPubkey, getUserByUsername } from "../program/user/user-methods";
+import Head from "next/head";
 
 interface UserData {
  publicKey: anchor.web3.PublicKey;
@@ -134,6 +135,9 @@ export default function Home() {
  } else {
   return (
    <Layout active={2}>
+<Head>
+     <title>{userData?userData[0].username:'Users'}</title>
+    </Head>
     {showMessageModal && <MessageModal userKey={userKey} setShowModal={setShowMessageModal} />}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}

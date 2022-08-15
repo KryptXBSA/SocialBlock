@@ -116,8 +116,16 @@ export const Sidebar = ({ active }: { active: number | undefined }) => {
  return (
   <div className="flex z-20  flex-col">
    <div className="flex w-52 z-20   h-full bg-slate-800 flex-col left-0 fixed">
-    <div className="h-20 w-52 border-b-2 mb-2 border-gray-700  z-10 top-0 bg-slate-800 inline-flex items-center">
-     <span className="font-bold ml-10 text-lg"> LOGO</span>
+    <div className="h-20 w-52 border-b-2 mb-2 border-gray-700  z-10 top-0 bg-slate-800 inline-flex justify-center  items-center">
+       <Link href={`/`}>
+        <div className=" inline-flex justify-center  items-center">
+    <div className="w-8 h-8   mb-0.5 mr-1 fill-blue-300 ">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+           <path d="M234.5 5.709C248.4 .7377 263.6 .7377 277.5 5.709L469.5 74.28C494.1 83.38 512 107.5 512 134.6V377.4C512 404.5 494.1 428.6 469.5 437.7L277.5 506.3C263.6 511.3 248.4 511.3 234.5 506.3L42.47 437.7C17 428.6 0 404.5 0 377.4V134.6C0 107.5 17 83.38 42.47 74.28L234.5 5.709zM256 65.98L82.34 128L256 190L429.7 128L256 65.98zM288 434.6L448 377.4V189.4L288 246.6V434.6z" />
+          </svg>
+         </div> <span className="font-bold mr-8 text-lg">Social Block</span>
+</div>
+    </Link>
     </div>
     <Button icon={homeIcon} index={0} active={active} href="/" text="Home" />
     <Button icon={inboxIcon} index={1} active={active} href="/inbox" text="Inbox" />
@@ -134,7 +142,7 @@ export const Sidebar = ({ active }: { active: number | undefined }) => {
          <div className="pb- pr-2">
           <img
            className="w-10 h-10  rounded-full"
-           src="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
+           src={programContext.state.user.image?programContext.state.user.image:'/img.png'}
           />
          </div>
          <span className=" text-2xl hover:text-slate-400 ">

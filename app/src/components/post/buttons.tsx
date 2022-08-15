@@ -62,9 +62,9 @@ export const TipButton = ({
   }, [wallet]);
   return (
     <>
-      <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Tip">
+      <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Tip, Coming soon">
         <button
-          onClick={() => setShowTipModal(true)}
+          // onClick={() => setShowTipModal(true)}
           className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
           <img className="  h-7 w-7 rounded-full  " src="/icons/sol-icon.png" />
         </button>
@@ -165,16 +165,17 @@ export const LikeButton = ({ likes, postPubkey }: LikeButtonProps) => {
     );
   }
   return (
-    <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Tip">
+    // <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Like">
       <button onClick={likePost0} className="btn bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
         {didLikePost()}
       </button>
-    </div>
+    // </div>
   );
 };
 
 export const ShareButton = () => {
   return (
+    // <div className="tooltip  bg-transparent items-center flex flex-row " data-tip="Comment">
     <button className="btn hover:bg-slate-800 bg-transparent m-1 w-32 border-opacity-0 gap-2 ">
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -191,6 +192,7 @@ export const ShareButton = () => {
       </svg>
       <span className="font-semibold text-slate-300"></span>
     </button>
+    // </div>
   );
 };
 export const CommentButton = ({

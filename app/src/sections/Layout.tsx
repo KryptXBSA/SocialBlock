@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { ReactNode, useEffect } from "react";
 import { useNotifier } from "react-headless-notifier";
-import { SpecialAlert } from "../components/alert";
+import { InfoAlert, MessageAlert, SpecialAlert } from "../components/alert";
 import { SignupModal } from "../components/modal";
 import { Sidebar } from "../components/sidebar";
 import { UseProgramContext } from "../contexts/programContextProvider";
@@ -41,18 +41,22 @@ const Layout = ({
   }
  }
  useEffect(() => {
+
+     if (ProgramContext?.notSeenMessages!>0&&active!==1) {
+     notify(<MessageAlert text={`You have ${ProgramContext?.notSeenMessages} new message${ProgramContext?.notSeenMessages!>1?'s':''}`} dismiss={undefined} />);
+     }
   if (!ProgramContext?.state.didWelcome && ProgramContext?.state.user.foundUser) {
    notify(
     <SpecialAlert text={`Welcome Back ${ProgramContext.state.user.username}`} dismiss={undefined} />
    );
    ProgramContext.changeState({ action: "welcome" });
   }
- }, [ProgramContext?.state]);
+ }, [ProgramContext?.state,ProgramContext?.notSeenMessages]);
 
  return (
   <>
    <Head>
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="icon" href="/logo.svg" />
    </Head>
    {ProgramContext?.showSignupModal && (
     <SignupModal signup={signup} setShowSignupModal={ProgramContext.setShowSignupModal} />
@@ -62,11 +66,8 @@ const Layout = ({
    <Sidebar active={active} />
    {/* </div> */}
    <div className={page === "block" ? "" : `relative justify-center flex flex-row `}>
-    <div className=" invisible">
-     <Trending />
-    </div>
+   
     {children}
-    <Trending />
    </div>
   </>
  );

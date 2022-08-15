@@ -169,14 +169,14 @@ export function Post({
      <TipButton setShowTipModal={setShowTipModal} />
     </div>
 
-    {tip > 0 && (
+    {/* {tip > 0 && (
      <div className="flex  mb-2  items-center">
       <div className="tooltip flex items-center" data-tip="Sol Received From tips">
        <img className=" mx-1 h-7 w-7 rounded-full  " src="/icons/sol-icon.png" />{" "}
        <span className="">{tip / LAMPORTS_PER_SOL}</span>
       </div>
      </div>
-    )}
+    )} */}
     {commentsVisible && (
      <>
       {postComments}

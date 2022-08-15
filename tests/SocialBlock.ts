@@ -9,7 +9,6 @@ describe("SocialBlock", () => {
   // Configure the client to use the local cluster.
   const provider = anchor.AnchorProvider.env();
   anchor.setProvider(provider);
-
   const newUserAccount = anchor.web3.Keypair.generate();
   const newBlockAccount = anchor.web3.Keypair.generate();
   const newPostAccount = anchor.web3.Keypair.generate();
