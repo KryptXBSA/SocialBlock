@@ -14,9 +14,6 @@ export function ProfileModal({ message, setShowModal, username }: any) {
  const { notify } = useNotifier();
  useEffect(() => {
   imageRef.current.value = programContext?.state.user.image;
-  console.log('thiss');
-  console.log(programContext?.state.user);
-  
   usernameInputRef.current.value = programContext?.state.user.username;
  }, [programContext]);
  async function changeUser(e: any) {
@@ -35,8 +32,6 @@ export function ProfileModal({ message, setShowModal, username }: any) {
    if (walletError.error) {
    } else {
     try {
-        console.log(newImage);
-        
      if (programContext?.state.user.image !== newImage) {
       try {
           let result = await changeImage({
@@ -68,7 +63,6 @@ export function ProfileModal({ message, setShowModal, username }: any) {
     
      }
       setShowModal(false);
-     notify(<SuccessAlert text="Success" dismiss={undefined} />);
     } catch (error) {
      notify(<DangerAlert text="An error occured!" dismiss={undefined} />);
     }

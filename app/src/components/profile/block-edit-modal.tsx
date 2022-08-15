@@ -46,8 +46,6 @@ export function BlockEditModal({
    } else {
     try {
      if (blockImage !== newImage) {
-      console.log('1');
-      console.log(newImage);
       
       let result = await changeImage({
        wallet: programContext?.getWallet!,
@@ -58,7 +56,6 @@ export function BlockEditModal({
       
      }
      if (newName !== blockName) {
-        console.log('22');
         
       let result = await changeName({
        block: publickey,

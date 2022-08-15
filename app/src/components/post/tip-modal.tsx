@@ -11,8 +11,6 @@ export function TipModal({ signup, setShowTipModal, username }: any) {
   if (!username) {
   }
   if (username) {
-   await signup(usernameInputRef.current.value);
-   setShowTipModal(false);
   }
  }
 

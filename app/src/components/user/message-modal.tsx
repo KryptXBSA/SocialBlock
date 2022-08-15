@@ -17,19 +17,16 @@ export function MessageModal({ message, setShowModal, username,userKey }: any) {
   e.preventDefault();
   let message = messageInputRef.current.value;
   if (!message) {
-   console.log("no message");
   }
   if (message) {
    let allMessages = await getAllMessages({
     program: programContext?.messageProgram!,
     pubkey: programContext?.getWallet?.publicKey.toBase58()!,
    });
-   console.log(allMessages);
 
    try {
     let walletError = await CheckWallet(programContext?.getWallet, notify, programContext);
     if (walletError.error) {
-     console.log(walletError);
     } else {
 await newMessage({
       wallet: programContext?.getWallet!,

@@ -59,11 +59,11 @@ export const newUser = async ({
 
     const newUser = {
         foundUser: true,
-        user: { username },
         publicKey: user.publicKey,
         timestamp: new anchor.BN(new Date().getTime()),
         //delete this
         username,
+        image:'',
         bookmarks: []
     };
 

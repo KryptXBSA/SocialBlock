@@ -93,7 +93,6 @@ export function NewBlockModal({ message, setShowModal, username }: any) {
       blockName: blockName,
       image:blockImageRef.current.value,
      });
-     console.log(block);
      setShowModal(false)
      notify(<SuccessAlert text="Success" dismiss={undefined} />);
     } catch (error) {

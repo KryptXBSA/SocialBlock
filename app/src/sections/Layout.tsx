@@ -32,7 +32,8 @@ const Layout = ({
      username,
      image: "",
     });
-    ProgramContext?.changeState({ data: user, action: "username" });
+    ProgramContext?.changeState({ data: user.newUser, action: "username" });
+    notify(<SpecialAlert text={`Welcome  ${username}`} dismiss={undefined} />);
     return user;
    }
   } catch (e) {
@@ -41,17 +42,23 @@ const Layout = ({
   }
  }
  useEffect(() => {
-
-     if (ProgramContext?.notSeenMessages!>0&&active!==1) {
-     notify(<MessageAlert text={`You have ${ProgramContext?.notSeenMessages} new message${ProgramContext?.notSeenMessages!>1?'s':''}`} dismiss={undefined} />);
-     }
+  if (ProgramContext?.notSeenMessages! > 0 && active !== 1) {
+   notify(
+    <MessageAlert
+     text={`You have ${ProgramContext?.notSeenMessages} new message${
+      ProgramContext?.notSeenMessages! > 1 ? "s" : ""
+     }`}
+     dismiss={undefined}
+    />
+   );
+  }
   if (!ProgramContext?.state.didWelcome && ProgramContext?.state.user.foundUser) {
    notify(
     <SpecialAlert text={`Welcome Back ${ProgramContext.state.user.username}`} dismiss={undefined} />
    );
    ProgramContext.changeState({ action: "welcome" });
   }
- }, [ProgramContext?.state,ProgramContext?.notSeenMessages]);
+ }, [ProgramContext?.state, ProgramContext?.notSeenMessages]);
 
  return (
   <>
@@ -66,7 +73,6 @@ const Layout = ({
    <Sidebar active={active} />
    {/* </div> */}
    <div className={page === "block" ? "" : `relative justify-center flex flex-row `}>
-   
     {children}
    </div>
   </>

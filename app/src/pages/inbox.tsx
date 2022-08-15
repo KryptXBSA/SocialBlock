@@ -65,7 +65,7 @@ function Inbox() {
  useEffect(() => {
   if (programContext?.notSeenMessages! > 0) {
    programContext.setNotSeenMessages(0);
-  localStorage.setItem("seenMessages", JSON.stringify(programContext.messages?.length));
+   localStorage.setItem("seenMessages", JSON.stringify(programContext.messages?.length));
   }
   if (programContext.messageProgram && programContext.getWallet?.publicKey) {
    setMessages(programContext.messages!);
@@ -270,11 +270,6 @@ function User({ username, lastMessage, index, selectedMessage, setSelectedMessag
     <div className="text-base font-semibold">{username}</div>
     <div className="text-sm truncate w-40">{lastMessage}</div>
    </div>
-   <div className="flex-shrink-0 ml-2 self-end mb-1">
-    <span className="flex items-center justify-center h-5 w-5 bg-red-500 text-white text-xs rounded-full">
-     5
-    </span>
-   </div>
   </div>
  );
 }
@@ -297,7 +292,6 @@ function MessageHeader1({
       style={{ marginTop: -8 }}
       className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
       {publickeyString}
-      {/* hhhhhhhhh */}
      </p>
     </div>
    </div>
@@ -305,13 +299,12 @@ function MessageHeader1({
  );
 }
 function MessageHeader() {
+ const programContext = UseProgramContext()!;
  return (
   <div className="flex flex-row items-center">
    <div className="flex flex-row items-center">
     <div className="text-xl font-semibold">Messages</div>
-    <div className="flex items-center justify-center ml-2 text-xs h-5 w-5  bg-red-500 rounded-full font-medium">
-     5
-    </div>
+  
    </div>
    <div className="ml-auto">
     {/* <button className="flex items-center justify-center h-7 w-7 bg-gray-200  rounded-full">

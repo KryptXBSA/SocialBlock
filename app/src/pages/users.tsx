@@ -196,7 +196,7 @@ function Profile({ setShowMessageModal, username, date, img, publickeyString }: 
    <div className="mt-6 pb-2 border-b-2 border-gray-700 ">
     <div className="flex  justify-start items-center flex-row">
      <div className="flex justify-start   items-center w-full  flex-row">
-      <Link href={`/users?pubkey=${"publickeyString"}`}>
+      <Link href={`/users?pubkey=${publickeyString}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
          <img className="w-14 h-14  rounded-full" src={img?img:'/img.png'}  />
@@ -222,7 +222,7 @@ function Profile({ setShowMessageModal, username, date, img, publickeyString }: 
       </button>
      </div>
     </div>
-    <Link href={`/users?pubkey=${"publickeyString"}`}>
+    <Link href={`/users?pubkey=${publickeyString}`}>
      <p
       style={{ marginLeft: 65, marginTop: -19 }}
       className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">

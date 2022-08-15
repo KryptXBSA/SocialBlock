@@ -56,6 +56,8 @@ function reducer(state: InitialState, user: Actions) {
   return { user: state.user, didWelcome: true };
  }
  if (user?.action === "username") {
+  console.log('change user');
+  
   if (!user) return { user: state.user, didWelcome: state.didWelcome };
   return { user: user.data, didWelcome: state.didWelcome };
  } else {
@@ -107,6 +109,7 @@ export function ProgramWrapper({ children }: any) {
  const [fetchEvery, setFetchEvery] = useState<any>();
 
  async function fetchMessages() {
+  
   let messages: any[];
   try {
    messages = await getAllMessages({
@@ -132,7 +135,7 @@ export function ProgramWrapper({ children }: any) {
    };
   });
   let seen = localStorage.getItem("seenMessages");
-  let currentSeenMessages = seen ? parseInt(seen) : Infinity;
+  let currentSeenMessages = seen ? parseInt(seen) : 0;
   let newSeenMessages = filteredMessages.length;
 
   if (newSeenMessages > currentSeenMessages) {
@@ -194,11 +197,12 @@ export function ProgramWrapper({ children }: any) {
   if (!wallet?.publicKey) {
    clearInterval(fetchEvery);
    disconnect();
+   localStorage.clear()
   }
   return () => {
    clearInterval(fetchEvery);
   };
- }, [userProgram, wallet?.publicKey,notify]);
+ }, [wallet?.publicKey]);
  async function setUser() {
   let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
   if (!user) {
