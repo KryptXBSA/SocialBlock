@@ -34,7 +34,7 @@ pub mod comment {
 }
 #[derive(Accounts)]
 pub struct EditComment<'info> {
-    #[account(mut)]
+    #[account(mut, has_one = author)]
     pub comment: Account<'info, Comment>,
     pub author: Signer<'info>,
 }

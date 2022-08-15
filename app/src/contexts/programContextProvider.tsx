@@ -22,6 +22,7 @@ import { getAllMessages } from "../program/message/message-methods";
 import { getDate } from "../utils/get-date-moment";
 import { useBlockProgram } from "../program/block/block-program";
 import { Block } from "../program/block/block-type";
+import { TypeDef } from "@project-serum/anchor/dist/cjs/program/namespace/types";
 const endpoint =
  "https://responsive-dawn-sponge.solana-devnet.quiknode.pro/2c9e6acd14a57270687f2920c37e9c56f2bb1f36";
 export const connection = new anchor.web3.Connection(endpoint);
@@ -98,16 +99,18 @@ export function ProgramWrapper({ children }: any) {
  const [users, setUsers] = useState<UsersType[]>();
  const [fetchEvery, setFetchEvery] = useState<any>();
  async function fetchMessages() {
-  console.log("fetch msg");
 
-  let messages: any[] = await getAllMessages({
-   program: messageProgram!,
-   pubkey: wallet?.publicKey.toBase58()!,
-  });
-  messages.sort(function (a, b) {
+  let messages: any[];
+  try {
+   messages = await getAllMessages({
+    program: messageProgram!,
+    pubkey: wallet?.publicKey.toBase58()!,
+   });
+  } catch (error) {}
+  messages!.sort(function (a, b) {
    return a.timestamp.toNumber() - b.timestamp.toNumber();
   });
-  let filteredMessages = messages.map((m) => {
+  let filteredMessages = messages!.map((m) => {
    return {
     self: m.from.toBase58() === wallet?.publicKey.toBase58(),
     message: m.content,
@@ -129,14 +132,17 @@ export function ProgramWrapper({ children }: any) {
 
   async function fetchUsers() {
    let users = messages.map(async (message) => {
-    let user = await getUserByPubkey({
-     program: userProgram!,
-     pubkey:
-      message.from.toBase58() === wallet?.publicKey.toBase58()
-       ? message.to.toBase58()
-       : message.from.toBase58(),
-    });
-    return { username: user.username, img: user.image, publickeyString: user.user.toBase58() };
+    let user: { publicKey: anchor.web3.PublicKey; } & TypeDef<{ name: "user"; type: { kind: "struct"; fields: [{ name: "user"; type: "publicKey"; }, { name: "username"; type: "string"; }, { name: "image"; type: "string"; }, { name: "timestamp"; type: "i64"; }, { name: "bookmarks"; type: { vec: "publicKey"; }; }]; }; }, anchor.IdlTypes<User>>
+    try {
+     user = await getUserByPubkey({
+      program: userProgram!,
+      pubkey:
+       message.from.toBase58() === wallet?.publicKey.toBase58()
+        ? message.to.toBase58()
+        : message.from.toBase58(),
+     });
+    } catch (error) {}
+    return { username: user!.username, img: user!.image, publickeyString: user!.user.toBase58() };
    });
    return Promise.all(users);
   }
@@ -151,16 +157,20 @@ export function ProgramWrapper({ children }: any) {
  }
  useEffect(() => {
   if (userProgram && wallet?.publicKey) {
-   setUsername();
+   setUser();
    fetchMessages();
 
    setFetchEvery(setInterval(() => fetchMessages(), 60000));
+  }
+  if (!wallet?.publicKey) {
+   clearInterval(fetchEvery);
+   disconnect()
   }
   return () => {
    clearInterval(fetchEvery);
   };
  }, [userProgram, wallet?.publicKey]);
- async function setUsername() {
+ async function setUser() {
   let user = await getUserByPubkey({ program: userProgram!, pubkey: wallet?.publicKey.toBase58() });
   if (!user) {
    setShowSignupModal(true);

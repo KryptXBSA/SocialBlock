@@ -9,11 +9,11 @@ type GetUser = {
     pubkey?: string;
     name?: string;
 };
-export const getBlockByPubkey = async ({ program, pubkey }: GetUser) => {
+export const getBlockByOwner = async ({ program, pubkey }: GetUser) => {
     const block0 = await program.account.block.all([pubkeyFilter(pubkey!)]);
 
     const block = block0.map((m) => Object.assign({ publicKey: m.publicKey }, m.account));
-    return block[0];
+    return block;
 };
 export const getBlockByName = async ({ program, name }: GetUser) => {
     const block0 = await program.account.block.all([blockFilter(name!)]);
@@ -34,18 +34,21 @@ type NewBlock = {
     program: anchor.Program<Block>;
     blockName: string;
     wallet: AnchorWallet
+    image:string
 };
 
 export const newBlock = async ({
     wallet,
     program,
     blockName,
+    image
 }: NewBlock) => {
     const block = anchor.web3.Keypair.generate();
     let tx
     try {
         tx = await program?.methods
-            .newBlock(blockName)
+            // @ts-ignore
+            .newBlock(blockName,image)
             .accounts({
                 block: block.publicKey,
                 owner: wallet?.publicKey,
@@ -71,7 +74,8 @@ export const newBlock = async ({
 type NewImage = {
     program: anchor.Program<Block>;
     newImage: string;
-    wallet: AnchorWallet
+    wallet: any
+    block:anchor.web3.PublicKey
 };
 
 
@@ -79,17 +83,17 @@ export const changeImage = async ({
     wallet,
     program,
     newImage,
+    block
 }: NewImage) => {
-    const block = anchor.web3.Keypair.generate();
     let tx
     try {
         tx = await program?.methods
             .changeImage(newImage)
             .accounts({
-                block: block.publicKey,
+                block: block,
                 owner: wallet?.publicKey,
             })
-            .signers([block])
+            .signers([])
             .rpc();
         console.log(tx);
     } catch (e) {
@@ -100,31 +104,31 @@ export const changeImage = async ({
     return { status: 'success', tx };
 };
 type NewName = {
+    block:anchor.web3.PublicKey
     program: anchor.Program<Block>;
     newName: string;
-    wallet: AnchorWallet
+    wallet: any
 };
 
 
 export const changeName = async ({
     wallet,
     program,
+    block,
     newName,
 }: NewName) => {
-    const block = anchor.web3.Keypair.generate();
     let tx
     try {
         tx = await program?.methods
             .changeName(newName)
             .accounts({
-                block: block.publicKey,
+                block: block,
                 owner: wallet?.publicKey,
             })
-            .signers([block])
             .rpc();
         console.log(tx);
     } catch (e) {
-        console.log('new block Error');
+        console.log('change name Error');
         console.log(e);
     }
 

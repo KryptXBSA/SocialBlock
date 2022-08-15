@@ -26,6 +26,7 @@ export const getUserByUsername = async ({ program, username }: GetUser) => {
 type NewUser = {
     program: anchor.Program<User>;
     username: string;
+    image: string;
     wallet: AnchorWallet
 };
 
@@ -33,6 +34,7 @@ export const newUser = async ({
     wallet,
     program,
     username,
+    image
 }: NewUser) => {
 
     console.log(await program.account.user.all([]));
@@ -41,7 +43,8 @@ export const newUser = async ({
     let tx
     try {
         tx = await program?.methods
-            .newUser(username)
+            // @ts-ignore
+            .newUser(username, image)
             .accounts({
                 userAccount: user.publicKey,
                 user: wallet?.publicKey,
@@ -89,7 +92,6 @@ export const changeImage = async ({
                 userAccount: user.publicKey,
                 user: wallet?.publicKey,
             })
-            .signers([user])
             .rpc();
         console.log(tx);
     } catch (e) {
@@ -120,7 +122,6 @@ export const changeUsername = async ({
                 userAccount: user.publicKey,
                 user: wallet?.publicKey,
             })
-            .signers([user])
             .rpc();
         console.log(tx);
     } catch (e) {

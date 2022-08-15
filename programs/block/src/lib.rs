@@ -49,11 +49,13 @@ pub struct NewBlock<'info> {
 }
 #[derive(Accounts)]
 pub struct ChangeName<'info> {
+    #[account(mut, has_one = owner)]
     pub block: Account<'info, Block>,
     pub owner: Signer<'info>,
 }
 #[derive(Accounts)]
 pub struct ChangeImage<'info> {
+    #[account(mut, has_one = owner)]
     pub block: Account<'info, Block>,
     pub owner: Signer<'info>,
 }

@@ -54,12 +54,7 @@ pub mod post {
     }
 }
 
-#[derive(Accounts)]
-pub struct Comment<'info> {
-    #[account(mut)]
-    pub post: Account<'info, Post>,
-    pub owner: Signer<'info>,
-}
+
 #[derive(Accounts)]
 pub struct Like<'info> {
     #[account(mut)]

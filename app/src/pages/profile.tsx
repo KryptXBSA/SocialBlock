@@ -8,6 +8,7 @@ import { getAllPosts, sendPost, like, unlike } from "../program/posts";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { Post } from "../components/post/post";
 import { getAllComments, newComment } from "../program/comments";
+import * as anchor from "@project-serum/anchor";
 
 import { useNotifier } from "react-headless-notifier";
 import {
@@ -20,106 +21,133 @@ import {
 import Link from "next/link";
 import { MessageModal } from "../components/user/message-modal";
 import { ProfileModal } from "../components/profile/profile-modal";
+import { NewBlockModal } from "../components/profile/new-block-modal";
+import { BlockEditModal } from "../components/profile/block-edit-modal";
+import { getBlockByOwner } from "../program/block/block-methods";
+import { TypeDef } from "@project-serum/anchor/dist/cjs/program/namespace/types";
+import { Block } from "../program/block/block-type";
+import { getDate } from "../utils/get-date-moment";
+import { getUserByPubkey } from "../program/user/user-methods";
+import { User } from "../program/user/user-type";
 
-interface UserData {
- publickeyString: string;
- username: string;
- img: string;
- date: string;
-}
+type UserData = {
+ publicKey: anchor.web3.PublicKey;
+} & TypeDef<
+ {
+  name: "user";
+  type: {
+   kind: "struct";
+   fields: [
+    {
+     name: "user";
+     type: "publicKey";
+    },
+    {
+     name: "username";
+     type: "string";
+    },
+    {
+     name: "image";
+     type: "string";
+    },
+    {
+     name: "timestamp";
+     type: "i64";
+    },
+    {
+     name: "bookmarks";
+     type: {
+      vec: "publicKey";
+     };
+    }
+   ];
+  };
+ },
+ anchor.IdlTypes<User>
+>;
+type BlocksType = {
+ publicKey: anchor.web3.PublicKey;
+} & TypeDef<
+ {
+  name: "block";
+  type: {
+   kind: "struct";
+   fields: [
+    {
+     name: "owner";
+     type: "publicKey";
+    },
+    {
+     name: "blockName";
+     type: "string";
+    },
+    {
+     name: "image";
+     type: "string";
+    },
+    {
+     name: "timestamp";
+     type: "i64";
+    }
+   ];
+  };
+ },
+ anchor.IdlTypes<Block>
+>;
 export default function Home() {
  const [selected, setSelected] = useState(1);
  const { notify } = useNotifier();
  //  @ts-ignore
- const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
-  UseProgramContext();
+ const programContext = UseProgramContext();
  const [showProfileModal, setShowProfileModal] = useState(false);
+ const [showBlockEditModal, setSetShowBlockEditModal] = useState(false);
+ const [showNewBlockModal, setShowNewBlockModal] = useState(false);
+ const [selectedBlockName, setSelectedBlockName] = useState("");
+ const [selectedBlockImage, setSelectedBlockImage] = useState("");
+ const [selectedBlockPubkey, setSelectedBlockPubkey] = useState<anchor.web3.PublicKey>();
  const router = useRouter();
- const [posts, setPosts]: any = useState([]);
- const [userData, setUserData] = useState<UserData | undefined>({
-  username: "aland",
-  img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-  date: "15 March 2022",
-  publickeyString: "pubkey",
- });
+ const [userData, setUserData] = useState<UserData | undefined>();
 
  let searchInputRef: any = useRef("");
 
  const [alreadyFetched, setAlreadyFetched] = useState(false);
+ const [blocks, setBlocks] = useState<BlocksType[]>();
  useEffect(() => {
-  if (getWallet?.publicKey) {
-  }
-  if (postProgram && router?.query?.pubkey && !alreadyFetched) {
-   getUser();
-   getPosts(router?.query?.pubkey);
+  if (programContext?.blockProgram && programContext.getWallet?.publicKey&&!alreadyFetched) {
+       getUser();
    setAlreadyFetched(true);
+    
+    getOwnedBlocks();}
+ 
+  if (!programContext?.getWallet) {
+   setBlocks([]);
+   setUserData(undefined)
+   setAlreadyFetched(false)
   }
- }, [router, postProgram, getWallet, posts]);
+ }, [router, programContext!.postProgram, programContext!.getWallet, ]);
 
- function searchOnClick(e: { preventDefault: () => void }) {
-  e.preventDefault();
-  getUser();
-  if (searchInputRef.current.value) {
-   getPosts(searchInputRef.current.value);
-  }
- }
+ 
 
  async function getUser() {
-  setUserData({
-   username: "aland",
-   img: "https://flowbite.com/docs/images/people/profile-picture-5.jpg",
-   date: "15 March 2022",
-   publickeyString: "pubkey",
-  });
+  try {
+   let user = await getUserByPubkey({
+    program: programContext?.userProgram!,
+    pubkey: programContext?.getWallet?.publicKey.toBase58(),
+   });
+
+   setUserData(user);
+  } catch (error) {}
  }
- async function getPosts(pubkey?: string | string[] | undefined) {
-  let searchValue = searchInputRef?.current?.value;
-  let value = searchValue ? searchValue : pubkey;
-  const authorFilter = (authorBase58PublicKey: any) => ({
-   memcmp: {
-    offset: 8, // Discriminator.
-    bytes: authorBase58PublicKey,
-   },
-  });
-  let filter = [authorFilter(value)];
-  let posts: any[] | ((prevState: never[]) => never[]) = [];
-  if (postProgram) {
-   try {
-    posts = await getAllPosts({ program: postProgram, filter: filter });
-   } catch (e) {
-    // notify(
-    //           <SpecialAlert
-    //             text={`Welcome Back ${username}`}
-    //           />
-    //         );
-   }
-  }
-  console.log(posts);
-  posts = posts.sort(function (a, b) {
-   return b.getTimestamp - a.getTimestamp;
-  });
-  setPosts(posts);
+ async function getOwnedBlocks() {
+  try {
+   let blocks = await getBlockByOwner({
+    program: programContext!.blockProgram!,
+    pubkey: programContext?.getWallet?.publicKey.toBase58(),
+   });
+   setBlocks(blocks);
+  } catch (error) {}
  }
 
- function displayPosts() {
-  return posts.map((p: any) => (
-   // 2 pubkey man haya 1- bo user 2- bo post
-   <Post
-   image={p.image}
-    commentCount={p.comments}
-    key={p.publicKey}
-    tip={18000000}
-    content={p.content}
-    username={p.username}
-    date={p.timestamp}
-    likes={p.likes}
-    publickeyString={p.authorDisplay}
-    block={p.block}
-    postPubkey={p.publicKey}
-   />
-  ));
- }
- console.log(posts.length);
 
  if (!router.asPath) {
   return null;
@@ -127,23 +155,61 @@ export default function Home() {
   return (
    <Layout>
     {showProfileModal && <ProfileModal setShowModal={setShowProfileModal} />}
+    {showNewBlockModal && <NewBlockModal setShowModal={setShowNewBlockModal} />}
+    {showBlockEditModal && (
+     <BlockEditModal
+      blockName={selectedBlockName}
+      blockImage={selectedBlockImage}
+      publickey={selectedBlockPubkey!}
+      setShowModal={setSetShowBlockEditModal}
+     />
+    )}
     <main className="flex  w-1/3 ">
      {/* top isit !!!!!! Headlines */}
      <div className="flex w-full  justify-start flex-row">
       <div className=" flex grow  flex-col">
        {userData && (
         <Profile
-         img={userData.img}
-         publickeyString={userData.publickeyString}
+         img={userData.image}
+         publickeyString={userData.user.toBase58()}
          username={userData.username}
-         date={userData.date}
+         date={getDate(userData.timestamp)}
          setShowProfileModal={setShowProfileModal}
         />
        )}
-
+       {userData && (
+        <button
+         onClick={() => setShowNewBlockModal(true)}
+         className=" btn mt-1 w-1/3 self-center text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+         <div className="w-5 h-5 mr-24 mb-1 fill-blue-300 absolute">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+           <path d="M234.5 5.709C248.4 .7377 263.6 .7377 277.5 5.709L469.5 74.28C494.1 83.38 512 107.5 512 134.6V377.4C512 404.5 494.1 428.6 469.5 437.7L277.5 506.3C263.6 511.3 248.4 511.3 234.5 506.3L42.47 437.7C17 428.6 0 404.5 0 377.4V134.6C0 107.5 17 83.38 42.47 74.28L234.5 5.709zM256 65.98L82.34 128L256 190L429.7 128L256 65.98zM288 434.6L448 377.4V189.4L288 246.6V434.6z" />
+          </svg>
+         </div>
+         New Block
+        </button>
+       )}
+       <div>
+        {blocks &&
+         blocks.map((b) => (
+          <div
+           onClick={() => {
+            setSelectedBlockImage(b.image);
+            setSelectedBlockName(b.blockName);
+            setSelectedBlockPubkey(b.publicKey);
+           }}>
+           <BlockProfile
+            img={b.image}
+            publickeyString={b.publicKey.toBase58()}
+            username={b.blockName}
+            date={getDate(b.timestamp)}
+            setShowProfileModal={setSetShowBlockEditModal}
+           />
+          </div>
+         ))}
+       </div>
        <div className="mt-2 w-full">
-        {displayPosts()}
-        {posts.length < 6 && <div style={{ marginBottom: 999 }} className=""></div>}
+        { <div style={{ marginBottom: 999 }} className=""></div>}
        </div>
       </div>
      </div>
@@ -152,6 +218,55 @@ export default function Home() {
    </Layout>
   );
  }
+}
+interface BlockProfileProps {
+ setShowProfileModal: Dispatch<SetStateAction<boolean>>;
+ username: string;
+ date: string;
+ img: string;
+ publickeyString: string;
+}
+function BlockProfile({
+ setShowProfileModal,
+ username,
+ date,
+ img,
+ publickeyString,
+}: BlockProfileProps) {
+ return (
+  <>
+   <div className="mt-6 pb-2 border-b-2 border-gray-700 ">
+    <div className="flex  justify-start items-center flex-row">
+     <div className="flex justify-start   items-center w-full  flex-row">
+      <div className="flex cursor-pointer items-center">
+       <div className="pb- pr-2">
+        <img className="w-14 h-14  rounded-full" src={img ? img : "/img.png"} />
+       </div>
+       <div className="flex items-center space-x-1">
+        <span className=" text-3xl ">{username}</span>{" "}
+        <svg
+         onClick={() => setShowProfileModal(true)}
+         className="cursor-pointer w-5 h-5 fill-gray-500 "
+         xmlns="http://www.w3.org/2000/svg"
+         viewBox="0 0 512 512">
+         <path d="M490.3 40.4C512.2 62.27 512.2 97.73 490.3 119.6L460.3 149.7L362.3 51.72L392.4 21.66C414.3-.2135 449.7-.2135 471.6 21.66L490.3 40.4zM172.4 241.7L339.7 74.34L437.7 172.3L270.3 339.6C264.2 345.8 256.7 350.4 248.4 353.2L159.6 382.8C150.1 385.6 141.5 383.4 135 376.1C128.6 370.5 126.4 361 129.2 352.4L158.8 263.6C161.6 255.3 166.2 247.8 172.4 241.7V241.7zM192 63.1C209.7 63.1 224 78.33 224 95.1C224 113.7 209.7 127.1 192 127.1H96C78.33 127.1 64 142.3 64 159.1V416C64 433.7 78.33 448 96 448H352C369.7 448 384 433.7 384 416V319.1C384 302.3 398.3 287.1 416 287.1C433.7 287.1 448 302.3 448 319.1V416C448 469 405 512 352 512H96C42.98 512 0 469 0 416V159.1C0 106.1 42.98 63.1 96 63.1H192z" />
+        </svg>
+       </div>
+      </div>
+      <span>&nbsp;•&nbsp;</span>
+      <span className="text-base">Created {date}</span>
+     </div>
+    </div>
+    <Link href={`/users?pubkey=${"publickeyString"}`}>
+     <p
+      style={{ marginLeft: 65, marginTop: -19 }}
+      className=" cursor-pointer   text-sm underline text-blue-500 hover:text-blue-600 visited:text-purple-600 truncate w-44">
+      {publickeyString}
+     </p>
+    </Link>
+   </div>
+  </>
+ );
 }
 interface ProfileProps {
  setShowProfileModal: Dispatch<SetStateAction<boolean>>;
@@ -168,10 +283,10 @@ function Profile({ setShowProfileModal, username, date, img, publickeyString }: 
      <div className="flex justify-start   items-center w-full  flex-row">
       <div className="flex cursor-pointer items-center">
        <div className="pb- pr-2">
-        <img className="w-14 h-14  rounded-full" src={img}  />
+        <img className="w-14 h-14  rounded-full" src={img ? img : "/img.png"} />
        </div>
        <div className="flex items-center space-x-1">
-        <span className=" text-3xl ">{username}</span>{" "}
+        <span className=" text-3xl ">{username}</span>
         <svg
          onClick={() => setShowProfileModal(true)}
          className="cursor-pointer w-5 h-5 fill-gray-500 "

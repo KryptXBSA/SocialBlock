@@ -1,46 +1,64 @@
 /** @format */
 
 import React, { useRef, useState, useEffect } from "react";
+import { changeImage, changeName, newBlock } from "../../program/block/block-methods";
+
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { CheckWallet } from "../../utils/walletError";
 import { useNotifier } from "react-headless-notifier";
 import { DangerAlert, SuccessAlert } from "../alert";
-import { changeImage, changeUsername } from "../../program/user/user-methods";
-export function ProfileModal({ message, setShowModal, username }: any) {
- const programContext = UseProgramContext();
- let usernameInputRef: any = useRef("");
- let imageRef: any = useRef("");
- const [error, setError] = useState("");
- const { notify } = useNotifier();
+import * as anchor from "@project-serum/anchor";
 
- async function changeUser(e: any) {
+export function BlockEditModal({
+ blockName,
+ setShowModal,
+ blockImage,
+ publickey,
+}: {
+ blockName: string;
+ setShowModal: any;
+ blockImage: string;
+ publickey: anchor.web3.PublicKey;
+}) {
+ const programContext = UseProgramContext();
+ let blockImageRef: any = useRef("");
+ let blockNameRef: any = useRef("");
+ const [error, setError] = useState("");
+
+ const { notify } = useNotifier();
+ useEffect(() => {
+  blockImageRef.current.value = blockImage;
+  blockNameRef.current.value = blockName;
+ }, [blockImage, blockName]);
+
+ async function changeBlock(e: any) {
   e.preventDefault();
   setError("");
   let error = false;
-  let image = await loadImage(imageRef.current.value, 3e3);
-  let newName: any = usernameInputRef.current.value;
-  let newImage: any = imageRef.current.value;
-  if (!image && programContext?.state.user.image !== newImage)
-   setError("Not a valid Image"), (error = true);
+  let image = await loadImage(blockImageRef.current.value, 3e3);
+  let newName: any = blockNameRef.current.value;
+  let newImage: any = blockImageRef.current.value;
+  if (!image && blockImage !== newImage) setError("Not a valid Image"), (error = true);
   if (newName && newName.length > 50) setError("Block Name Too long");
-
   if (!error) {
    let walletError = await CheckWallet(programContext!.getWallet, notify, programContext);
    if (walletError.error) {
    } else {
     try {
-     if (programContext?.state.user.image !== newImage) {
+     if (blockImage !== newImage) {
       let result = await changeImage({
        wallet: programContext?.getWallet!,
-       program: programContext?.userProgram!,
-       image: newImage,
+       block: publickey,
+       program: programContext?.blockProgram!,
+       newImage: blockImage,
       });
      }
-     if (newName !== programContext?.state.user.username) {
-      let result = await changeUsername({
+     if (newName !== blockName) {
+      let result = await changeName({
+       block: publickey,
        wallet: programContext?.getWallet!,
-       program: programContext?.userProgram!,
-       username: newName,
+       program: programContext?.blockProgram!,
+       newName: newName,
       });
      }
      //  setShowModal(false);
@@ -51,7 +69,6 @@ export function ProfileModal({ message, setShowModal, username }: any) {
    }
   }
  }
-
  const [modalClass, setModalClass] = useState("modal modal-middle modal-open");
  useEffect(() => {}, []);
  function closeModal() {
@@ -69,28 +86,26 @@ export function ProfileModal({ message, setShowModal, username }: any) {
       ✕
      </label>
      <div className="flex mb-1 items-center">
-      <h3 className="flex flex-row text-lg font-bold">Settings </h3>
+      <h3 className="flex flex-row text-lg font-bold">Change Block Details </h3>
      </div>
-     <form className=" items-center flex flex-row" onSubmit={changeUser}>
+     <form className=" items-center flex flex-row" onSubmit={changeBlock}>
       <div className="relative rounded-lg w-full">
        <input
-        ref={imageRef}
-        id="search-dropdown"
+        ref={blockImageRef}
         className="block mb-2 rounded-lg p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-100 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-        placeholder="Image Url"
+        placeholder={"Block Image (Link to image)"}
        />
        <input
-        ref={usernameInputRef}
-        id="search-dropdown"
+        ref={blockNameRef}
         className="mb-2 block rounded-lg p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-100 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-        placeholder="Username"
+        placeholder="Block Name"
        />
        {error && <span className="text-red-500 ml-1">{error}</span>}
        <br />
        <button
         type="submit"
         className=" btn w-1/3 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 capitalize  rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-        Change Settings
+        Save Changes
        </button>
       </div>
      </form>

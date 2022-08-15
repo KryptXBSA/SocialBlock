@@ -6,7 +6,7 @@ declare_id!("29FTScCpe4oB8zFMzQHcprtjdWisqGAB39NqRNuwtoeR");
 pub mod user {
     use super::*;
 
-    pub fn new_user(ctx: Context<NewUser>, username: String) -> Result<()> {
+    pub fn new_user(ctx: Context<NewUser>, username: String,image:String) -> Result<()> {
         let user_account: &mut Account<User> = &mut ctx.accounts.user_account;
         let clock: Clock = Clock::get().unwrap();
         let user: &Signer = &ctx.accounts.user;
@@ -15,7 +15,7 @@ pub mod user {
         }
         user_account.user = *user.key;
         user_account.username = username;
-        user_account.image = String::new();
+        user_account.image = image;
         user_account.timestamp = clock.unix_timestamp;
         user_account.bookmarks = Vec::new();
 
@@ -69,22 +69,22 @@ pub struct User {
 
 #[derive(Accounts)]
 pub struct ChangeUsername<'info> {
+    #[account(mut, has_one = user)]
     pub user_account: Account<'info, User>,
-    #[account(mut)]
     pub user: Signer<'info>,
 }
 #[derive(Accounts)]
 pub struct ChangeImage<'info> {
+    #[account(mut, has_one = user)]
     pub user_account: Account<'info, User>,
-    #[account(mut)]
     pub user: Signer<'info>,
 }
 
 
 #[derive(Accounts)]
 pub struct AddBookmarks<'info> {
+    #[account(mut,has_one=user)]
     pub user_account: Account<'info, User>,
-    #[account(mut)]
     pub user: Signer<'info>,
 }
 

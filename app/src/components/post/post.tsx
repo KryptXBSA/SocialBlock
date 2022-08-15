@@ -121,10 +121,12 @@ export function Post({
        </Link>
        <span>&nbsp;•&nbsp;</span>
        <span className="text-base">{postedAt}</span>
+       <Link href={`/blocks?block_name=${block}`}>
        <span className="text-base ml-2 cursor-pointer hover:text-sky-700  text-sky-600">
         <span className=" tracking-widest">#</span>
         {block}
        </span>
+       </Link>
       </div>
       <Link href={`/users?pubkey=${publickeyString}`}>
        <p
