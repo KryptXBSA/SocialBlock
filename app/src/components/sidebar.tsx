@@ -1,9 +1,9 @@
 /** @format */
 
 import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { WalletDisconnectButton, WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { useEffect, useState } from "react";
 import { UseProgramContext } from "../contexts/programContextProvider";
 
 

@@ -1,11 +1,11 @@
 /** @format */
 
-import React, { useRef, useState, useEffect } from "react";
-import { UseProgramContext } from "../../contexts/programContextProvider";
-import { CheckWallet } from "../../utils/walletError";
+import { useEffect, useRef, useState } from "react";
 import { useNotifier } from "react-headless-notifier";
-import { DangerAlert, SuccessAlert } from "../alert";
+import { UseProgramContext } from "../../contexts/programContextProvider";
 import { changeImage, changeUsername } from "../../program/user/user-methods";
+import { CheckWallet } from "../../utils/walletError";
+import { DangerAlert, SuccessAlert } from "../alert";
 export function ProfileModal({ message, setShowModal, username }: any) {
  const programContext = UseProgramContext();
  let usernameInputRef: any = useRef("");

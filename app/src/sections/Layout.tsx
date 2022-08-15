@@ -1,15 +1,14 @@
 /** @format */
 
-import { program } from "@project-serum/anchor/dist/cjs/spl/token";
 import Head from "next/head";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect } from "react";
+import { useNotifier } from "react-headless-notifier";
+import { SpecialAlert } from "../components/alert";
 import { SignupModal } from "../components/modal";
 import { Sidebar } from "../components/sidebar";
 import { UseProgramContext } from "../contexts/programContextProvider";
-import { CheckWallet } from "../utils/walletError";
-import { useNotifier } from "react-headless-notifier";
-import { SpecialAlert } from "../components/alert";
 import { newUser } from "../program/user/user-methods";
+import { CheckWallet } from "../utils/walletError";
 
 const Layout = ({
  children,
@@ -24,13 +23,14 @@ const Layout = ({
  let ProgramContext = UseProgramContext();
  async function signup(username: string) {
   try {
-   let walletError = await CheckWallet(ProgramContext?.getWallet, notify, ProgramContext,true);
+   let walletError = await CheckWallet(ProgramContext?.getWallet, notify, ProgramContext, true);
    if (walletError.error) {
    } else {
     let user = await newUser({
      program: ProgramContext?.userProgram!,
      wallet: ProgramContext?.getWallet!,
      username,
+     image: "",
     });
     ProgramContext?.changeState({ data: user, action: "username" });
     return user;

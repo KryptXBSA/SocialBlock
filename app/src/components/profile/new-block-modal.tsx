@@ -1,11 +1,11 @@
 /** @format */
 
-import React, { useRef, useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { newBlock } from "../../program/block/block-methods";
 
+import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { CheckWallet } from "../../utils/walletError";
-import { useNotifier } from "react-headless-notifier";
 type LoadedCallback = (loaded: boolean) => void;
 function loadImage(url: string, timeout?: number): Promise<boolean>;
 function loadImage(url: string, timeout: number, callback: LoadedCallback): void;

@@ -1,17 +1,10 @@
 /** @format */
 
 import { useRef, useState } from "react";
-import { UseProgramContext } from "../contexts/programContextProvider";
-import {
- SuccessAlert,
- InfoAlert,
- DangerAlert,
- SpecialAlert,
- WarningAlert,
-} from "../components/alert";
 import { useNotifier } from "react-headless-notifier";
-import { CheckWallet } from "../utils/walletError";
+import { UseProgramContext } from "../contexts/programContextProvider";
 import { sendPost } from "../program/posts";
+import { CheckWallet } from "../utils/walletError";
 
 export const NewPost = ({addPost}:{addPost:any}) => {
  const programContext = UseProgramContext()!;

@@ -1,13 +1,7 @@
 /** @format */
 import {
- SuccessAlert,
- InfoAlert,
- DangerAlert,
- SpecialAlert,
- WarningAlert,
- DangerAlertWallet,
+    DangerAlert, DangerAlertWallet
 } from "../components/alert";
-import { UseProgramContext } from "../contexts/programContextProvider";
 import { connection } from "../contexts/programContextProvider";
 import { getWalletBalance } from "./get-wallet-balance";
 export async function CheckWallet(

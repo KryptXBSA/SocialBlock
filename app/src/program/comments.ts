@@ -3,8 +3,8 @@
 import * as anchor from "@project-serum/anchor";
 import { PublicKey } from "@solana/web3.js";
 import { getDate } from "../utils/get-date-moment";
+import { Comment } from "./comment";
 const Transaction = anchor.web3.Transaction;
-import { Comment, AccountData } from "./comment";
 
 interface CommentProps {
     commentProgram: anchor.Program<anchor.Idl>

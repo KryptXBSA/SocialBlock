@@ -1,13 +1,13 @@
 /** @format */
 
-import React, { useRef, useState, useEffect } from "react";
-import { changeImage, changeName, newBlock } from "../../program/block/block-methods";
+import { useEffect, useRef, useState } from "react";
+import { changeImage, changeName } from "../../program/block/block-methods";
 
+import * as anchor from "@project-serum/anchor";
+import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { CheckWallet } from "../../utils/walletError";
-import { useNotifier } from "react-headless-notifier";
 import { DangerAlert, SuccessAlert } from "../alert";
-import * as anchor from "@project-serum/anchor";
 
 export function BlockEditModal({
  blockName,

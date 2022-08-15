@@ -1,34 +1,22 @@
 /** @format */
 
-import Layout from "../sections/Layout";
-import { useRouter } from "next/router";
-import { useEffect, useState, useRef, SetStateAction, Dispatch } from "react";
-import { Sidebar } from "../components/sidebar";
-import { getAllPosts, sendPost, like, unlike } from "../program/posts";
-import { UseProgramContext } from "../contexts/programContextProvider";
-import { Post } from "../components/post/post";
-import { getAllComments, newComment } from "../program/comments";
 import * as anchor from "@project-serum/anchor";
+import { useRouter } from "next/router";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { UseProgramContext } from "../contexts/programContextProvider";
+import Layout from "../sections/Layout";
 
-import { useNotifier } from "react-headless-notifier";
-import {
- SuccessAlert,
- InfoAlert,
- DangerAlert,
- SpecialAlert,
- WarningAlert,
-} from "../components/alert";
-import Link from "next/link";
-import { MessageModal } from "../components/user/message-modal";
-import { ProfileModal } from "../components/profile/profile-modal";
-import { NewBlockModal } from "../components/profile/new-block-modal";
-import { BlockEditModal } from "../components/profile/block-edit-modal";
-import { getBlockByOwner } from "../program/block/block-methods";
 import { TypeDef } from "@project-serum/anchor/dist/cjs/program/namespace/types";
+import Link from "next/link";
+import { useNotifier } from "react-headless-notifier";
+import { BlockEditModal } from "../components/profile/block-edit-modal";
+import { NewBlockModal } from "../components/profile/new-block-modal";
+import { ProfileModal } from "../components/profile/profile-modal";
+import { getBlockByOwner } from "../program/block/block-methods";
 import { Block } from "../program/block/block-type";
-import { getDate } from "../utils/get-date-moment";
 import { getUserByPubkey } from "../program/user/user-methods";
 import { User } from "../program/user/user-type";
+import { getDate } from "../utils/get-date-moment";
 
 type UserData = {
  publicKey: anchor.web3.PublicKey;
