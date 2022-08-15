@@ -5,6 +5,7 @@ import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../contexts/programContextProvider";
 import { sendPost } from "../program/posts";
 import { CheckWallet } from "../utils/walletError";
+import { DangerAlert } from "./alert";
 
 export const NewPost = ({addPost}:{addPost:any}) => {
  const programContext = UseProgramContext()!;
@@ -35,7 +36,10 @@ export const NewPost = ({addPost}:{addPost:any}) => {
     contentInputRef.current.value=''
     blockInputRef.current.value=''
     setBlockValue('')
-   } catch (e) {}
+   } catch (e) {
+
+     notify(<DangerAlert text="An Error Occured while fetching posts..." dismiss={undefined} />);
+   }
   }
  }
 

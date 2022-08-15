@@ -6,6 +6,7 @@ import { newBlock } from "../../program/block/block-methods";
 import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { CheckWallet } from "../../utils/walletError";
+import { DangerAlert, SuccessAlert } from "../alert";
 type LoadedCallback = (loaded: boolean) => void;
 function loadImage(url: string, timeout?: number): Promise<boolean>;
 function loadImage(url: string, timeout: number, callback: LoadedCallback): void;
@@ -93,7 +94,12 @@ export function NewBlockModal({ message, setShowModal, username }: any) {
       image:blockImageRef.current.value,
      });
      console.log(block);
-    } catch (error) {}
+     setShowModal(false)
+     notify(<SuccessAlert text="Success" dismiss={undefined} />);
+    } catch (error) {
+ console.log(error);
+   notify(<DangerAlert text="An Error Occured (like)..." dismiss={undefined} />);
+    }
    }
   }
  }

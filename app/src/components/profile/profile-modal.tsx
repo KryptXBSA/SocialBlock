@@ -38,26 +38,36 @@ export function ProfileModal({ message, setShowModal, username }: any) {
         console.log(newImage);
         
      if (programContext?.state.user.image !== newImage) {
-      console.log('1111');
-      
-      let result = await changeImage({
+      try {
+          let result = await changeImage({
        publickey: programContext?.state.user.publickey!,
        wallet: programContext?.getWallet!,
        program: programContext?.userProgram!,
        image: newImage,
       });
+      } catch (error) {
+         console.log(error);
+         
+         notify(<DangerAlert text="An Error Occured change..." dismiss={undefined} />);
+      }
+     
      }
      if (newName !== programContext?.state.user.username) {
-        console.log('222');
-        
-      let result = await changeUsername({
+        try {
+           let result = await changeUsername({
        publickey: programContext?.state.user.publickey!,
        wallet: programContext?.getWallet!,
        program: programContext?.userProgram!,
        username: newName,
       });
+        } catch (error) {
+          console.log(error);
+         
+         notify(<DangerAlert text="An Error Occured change..." dismiss={undefined} />);
+        }
+    
      }
-     //  setShowModal(false);
+      setShowModal(false);
      notify(<SuccessAlert text="Success" dismiss={undefined} />);
     } catch (error) {
      notify(<DangerAlert text="An error occured!" dismiss={undefined} />);

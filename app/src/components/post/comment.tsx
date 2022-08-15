@@ -4,7 +4,11 @@ import Link from "next/link";
 import { useRef } from "react";
 
 import { PublicKey } from "@solana/web3.js";
-import * as anchor from "@project-serum/anchor";
+import { useNotifier } from "react-headless-notifier";
+import { UseProgramContext } from "../../contexts/programContextProvider";
+import { newComment } from "../../program/comments";
+import { CheckWallet } from "../../utils/walletError";
+import { DangerAlert } from "../alert";
 interface Props {
  name: string;
  date: string;
@@ -48,11 +52,6 @@ interface NewCommentProps {
  postPubkey: PublicKey;
  addComment:any
 }
-import { newComment } from "../../program/comments";
-import { NewComment as NewComment0 } from "../../program/posts";
-import { CheckWallet } from "../../utils/walletError";
-import { UseProgramContext } from "../../contexts/programContextProvider";
-import { useNotifier } from "react-headless-notifier";
 
 export const NewComment = ({ postPubkey,addComment }: NewCommentProps) => {
  let commentInputRef: any = useRef();
@@ -80,6 +79,7 @@ export const NewComment = ({ postPubkey,addComment }: NewCommentProps) => {
    } catch (e) {
     console.log(e);
     
+notify(<DangerAlert text="An Error Occured comment..." dismiss={undefined} />);
     console.log("comment Erorr");
    }
   }

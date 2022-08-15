@@ -5,6 +5,7 @@ import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../../contexts/programContextProvider";
 import { getAllMessages, newMessage } from "../../program/message/message-methods";
 import { CheckWallet } from "../../utils/walletError";
+import { DangerAlert } from "../alert";
 
 export function MessageModal({ message, setShowModal, username,userKey }: any) {
  let programContext = UseProgramContext();
@@ -30,16 +31,16 @@ export function MessageModal({ message, setShowModal, username,userKey }: any) {
     if (walletError.error) {
      console.log(walletError);
     } else {
-     let { sentMessage } = await newMessage({
+await newMessage({
       wallet: programContext?.getWallet!,
       program: programContext?.messageProgram!,
       content: message,
       to: userKey,
      });
-     console.log(sentMessage);
     }
    } catch (e) {
     console.log(e);
+notify(<DangerAlert text="newMessageError" dismiss={undefined} />);
     console.log("newMessageError");
    }
 

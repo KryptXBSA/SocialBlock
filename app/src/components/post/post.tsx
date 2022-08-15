@@ -1,17 +1,16 @@
 /** @format */
 
-import Link from "next/link";
-import { useState } from "react";
-import { BookmarkButton, LikeButton, TipButton } from "./buttons";
-import { ShareButton, CommentButton } from "./buttons";
-import { Comment, NewComment } from "./comment";
 import * as anchor from "@project-serum/anchor";
 import moment from "moment";
-import { LAMPORTS_PER_SOL } from "@solana/web3.js";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { useNotifier } from "react-headless-notifier";
 import { UseProgramContext } from "../../contexts/programContextProvider";
-import { TipModal } from "./tip-modal";
-import { useEffect } from "react";
 import { getAllComments } from "../../program/comments";
+import { DangerAlert } from "../alert";
+import { CommentButton, LikeButton, TipButton } from "./buttons";
+import { Comment, NewComment } from "./comment";
+import { TipModal } from "./tip-modal";
 interface Props {
  likes: anchor.web3.PublicKey[];
  content: string;
@@ -37,6 +36,7 @@ export function Post({
  commentCount,
  image,
 }: Props) {
+ const { notify } = useNotifier();
  //  @ts-ignore
  const { state, postProgram, commentProgram, getWallet, userProgram, changeState } =
   UseProgramContext();
@@ -51,7 +51,7 @@ export function Post({
    <>
     {postComments0.map((c: any) => (
      <Comment
-     image={c.image}
+      image={c.image}
       key={c.publicKey}
       content={c.content}
       //   postPubKey={comment.postPublicKey}
@@ -68,10 +68,17 @@ export function Post({
   moment(new Date(parseInt(date) * 1000).toUTCString()).fromNow()
  );
  async function fetchComments() {
-  let comments = await getAllComments({
-   program: commentProgram,
-   publicKey: postPubkey.toBase58(),
-  });
+  let comments;
+  try {
+   comments = await getAllComments({
+    program: commentProgram,
+    publicKey: postPubkey.toBase58(),
+   });
+  } catch (error) {
+   console.log(error);
+   notify(<DangerAlert text="An Error Occured (fetch)..." dismiss={undefined} />);
+  }
+
   setCommentcount0(comments.length);
   setPostComments(comments);
   setPostComments0(comments);
@@ -122,10 +129,10 @@ export function Post({
        <span>&nbsp;•&nbsp;</span>
        <span className="text-base">{postedAt}</span>
        <Link href={`/blocks?block_name=${block}`}>
-       <span className="text-base ml-2 cursor-pointer hover:text-sky-700  text-sky-600">
-        <span className=" tracking-widest">#</span>
-        {block}
-       </span>
+        <span className="text-base ml-2 cursor-pointer hover:text-sky-700  text-sky-600">
+         <span className=" tracking-widest">#</span>
+         {block}
+        </span>
        </Link>
       </div>
       <Link href={`/users?pubkey=${publickeyString}`}>

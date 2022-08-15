@@ -118,7 +118,6 @@ export function ProgramWrapper({ children }: any) {
    setMessages([]);
    return;
   }
-  console.log(messages);
   
   messages.sort(function (a, b) {
    return a.timestamp.toNumber() - b.timestamp.toNumber();

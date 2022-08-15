@@ -132,8 +132,6 @@ export default function Home() {
     program: programContext!.blockProgram!,
     pubkey: programContext?.getWallet?.publicKey.toBase58(),
    });
-   console.log(blocks);
-
    setBlocks(blocks);
   } catch (error) {}
  }
@@ -186,6 +184,7 @@ export default function Home() {
          {blocks &&
           blocks.map((b) => (
            <div
+           key={b.publicKey.toBase58()}
             onClick={() => {
              setSelectedBlockImage(b.image);
              setSelectedBlockName(b.blockName);

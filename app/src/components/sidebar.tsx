@@ -145,7 +145,7 @@ export const Sidebar = ({ active }: { active: number | undefined }) => {
            src={programContext.state.user.image?programContext.state.user.image:'/img.png'}
           />
          </div>
-         <span className=" text-2xl hover:text-slate-400 ">
+         <span className="truncate text-2xl hover:text-slate-400 ">
           {programContext.state.user.username}
          </span>
         </div>
