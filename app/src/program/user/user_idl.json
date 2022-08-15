@@ -25,6 +25,10 @@
         {
           "name": "username",
           "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
         }
       ]
     },
@@ -33,12 +37,12 @@
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -54,12 +58,12 @@
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -75,12 +79,12 @@
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -123,5 +127,8 @@
         ]
       }
     }
-  ]
+  ],
+  "metadata": {
+    "address": "81g9iq98nK574jk5G5tbYy19QZSrdVMfyFjmxj1EqVw5"
+  }
 }

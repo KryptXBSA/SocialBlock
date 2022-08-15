@@ -33,7 +33,7 @@
       "accounts": [
         {
           "name": "block",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -54,7 +54,7 @@
       "accounts": [
         {
           "name": "block",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -96,5 +96,8 @@
         ]
       }
     }
-  ]
+  ],
+  "metadata": {
+    "address": "5ZGZX4uPcbRmXVhAYmiSs3Bf3h6uBvcph2LPxG2a5Sxv"
+  }
 }

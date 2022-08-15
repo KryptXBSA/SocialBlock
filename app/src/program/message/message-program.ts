@@ -6,7 +6,7 @@ import idl from "./message_idl.json";
 import { Message } from "./message-type";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 // You'll get Fallback functions are not supported error if the Program id is not correct.
-const PROGRAM_PUBLICKEY = "6DBciTm6TPwPWpemy3u6xiS9xVQqSqNvMLaYCFfCViG1";
+const PROGRAM_PUBLICKEY = "7Qy3XGGyGXVZAeC1Thxz38jwQ49jgyMtA2pQgNtB8Z4y";
 const programID = new PublicKey(PROGRAM_PUBLICKEY);
 
 export interface Wallet {

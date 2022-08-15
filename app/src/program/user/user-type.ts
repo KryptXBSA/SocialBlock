@@ -25,6 +25,10 @@ export type User = {
         {
           "name": "username",
           "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
         }
       ]
     },
@@ -33,12 +37,12 @@ export type User = {
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -54,12 +58,12 @@ export type User = {
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -75,12 +79,12 @@ export type User = {
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -153,6 +157,10 @@ export const IDL: User = {
         {
           "name": "username",
           "type": "string"
+        },
+        {
+          "name": "image",
+          "type": "string"
         }
       ]
     },
@@ -161,12 +169,12 @@ export const IDL: User = {
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -182,12 +190,12 @@ export const IDL: User = {
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],
@@ -203,12 +211,12 @@ export const IDL: User = {
       "accounts": [
         {
           "name": "userAccount",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         }
       ],

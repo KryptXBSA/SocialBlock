@@ -33,7 +33,7 @@ export type Block = {
       "accounts": [
         {
           "name": "block",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -54,7 +54,7 @@ export type Block = {
       "accounts": [
         {
           "name": "block",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -134,7 +134,7 @@ export const IDL: Block = {
       "accounts": [
         {
           "name": "block",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -155,7 +155,7 @@ export const IDL: Block = {
       "accounts": [
         {
           "name": "block",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
