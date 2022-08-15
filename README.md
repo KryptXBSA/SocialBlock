@@ -2,7 +2,7 @@
 
 ⚠️ This Project is sill in active development, and it's not ready for production.
 
-Social Block is a web3-based Decentralized social media built on top of the Solana blockchain, Features:
+**Social Block is a web3-based Decentralized social media built on top of the Solana blockchain, Features:**
 
  - Create an account, the account data is stored on the blockchain rather than a server/database.
  - Write posts, like posts and comment on them. 
