@@ -12,7 +12,13 @@ export function ProfileModal({ message, setShowModal, username }: any) {
  let imageRef: any = useRef("");
  const [error, setError] = useState("");
  const { notify } = useNotifier();
-
+ useEffect(() => {
+  imageRef.current.value = programContext?.state.user.image;
+  console.log('thiss');
+  console.log(programContext?.state.user);
+  
+  usernameInputRef.current.value = programContext?.state.user.username;
+ }, [programContext]);
  async function changeUser(e: any) {
   e.preventDefault();
   setError("");
@@ -29,15 +35,23 @@ export function ProfileModal({ message, setShowModal, username }: any) {
    if (walletError.error) {
    } else {
     try {
+        console.log(newImage);
+        
      if (programContext?.state.user.image !== newImage) {
+      console.log('1111');
+      
       let result = await changeImage({
+       publickey: programContext?.state.user.publickey!,
        wallet: programContext?.getWallet!,
        program: programContext?.userProgram!,
        image: newImage,
       });
      }
      if (newName !== programContext?.state.user.username) {
+        console.log('222');
+        
       let result = await changeUsername({
+       publickey: programContext?.state.user.publickey!,
        wallet: programContext?.getWallet!,
        program: programContext?.userProgram!,
        username: newName,
@@ -53,7 +67,6 @@ export function ProfileModal({ message, setShowModal, username }: any) {
  }
 
  const [modalClass, setModalClass] = useState("modal modal-middle modal-open");
- useEffect(() => {}, []);
  function closeModal() {
   setShowModal(false);
  }

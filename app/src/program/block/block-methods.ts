@@ -47,8 +47,7 @@ export const newBlock = async ({
     let tx
     try {
         tx = await program?.methods
-            // @ts-ignore
-            .newBlock(blockName,image)
+            .newBlock(blockName)
             .accounts({
                 block: block.publicKey,
                 owner: wallet?.publicKey,
@@ -93,9 +92,7 @@ export const changeImage = async ({
                 block: block,
                 owner: wallet?.publicKey,
             })
-            .signers([])
             .rpc();
-        console.log(tx);
     } catch (e) {
         console.log('new block Error');
         console.log(e);
@@ -144,7 +141,7 @@ const pubkeyFilter = (publicKey: string) => ({
 });
 const blockFilter = (name: string) => ({
     memcmp: {
-        offset: 40, // Discriminator.
+        offset: 44, // Discriminator.
         bytes: bs58.encode(Buffer.from(name)),
     },
 });

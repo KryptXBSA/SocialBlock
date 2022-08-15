@@ -43,7 +43,6 @@ export const newUser = async ({
     let tx
     try {
         tx = await program?.methods
-            // @ts-ignore
             .newUser(username, image)
             .accounts({
                 userAccount: user.publicKey,
@@ -74,22 +73,23 @@ type ChangeImage = {
     program: anchor.Program<User>;
     image: string;
     wallet: AnchorWallet
+    publickey:anchor.web3.PublicKey
 };
 
 export const changeImage = async ({
     wallet,
     program,
     image,
+    publickey
 }: ChangeImage) => {
 
 
-    const user = anchor.web3.Keypair.generate();
     let tx
     try {
         tx = await program?.methods
             .changeImage(image)
             .accounts({
-                userAccount: user.publicKey,
+                userAccount: publickey,
                 user: wallet?.publicKey,
             })
             .rpc();
@@ -104,22 +104,23 @@ type ChangeUsername = {
     program: anchor.Program<User>;
     username: string;
     wallet: AnchorWallet
+    publickey:anchor.web3.PublicKey
 };
 
 export const changeUsername = async ({
     wallet,
     program,
     username,
+    publickey
 }: ChangeUsername) => {
 
 
-    const user = anchor.web3.Keypair.generate();
     let tx
     try {
         tx = await program?.methods
             .changeUsername(username)
             .accounts({
-                userAccount: user.publicKey,
+                userAccount: publickey,
                 user: wallet?.publicKey,
             })
             .rpc();

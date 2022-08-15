@@ -77,9 +77,9 @@ export function NewBlockModal({ message, setShowModal, username }: any) {
   e.preventDefault();
   setError("");
   let error = false;
-  let image = await loadImage(blockImageRef.current.value, 3e3);
+//   let image = await loadImage(blockImageRef.current.value, 3e3);
   let blockName: any = blockNameRef.current.value;
-  if (!image) setError("Not a valid Image"), (error = true);
+//   if (!image) setError("Not a valid Image"), (error = true);
   if (blockName.length > 50) setError("Block Name Too long");
   if (!error) {
    let walletError = await CheckWallet(programContext!.getWallet, notify, programContext);
@@ -118,11 +118,11 @@ export function NewBlockModal({ message, setShowModal, username }: any) {
      </div>
      <form className=" items-center flex flex-row" onSubmit={newBlock0}>
       <div className="relative rounded-lg w-full">
-       <input
+       {/* <input
         ref={blockImageRef}
         className="block mb-2 rounded-lg p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-100 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
         placeholder={"Block Image (Link to image)"}
-       />
+       /> */}
        <input
         ref={blockNameRef}
         className="mb-2 block rounded-lg p-2.5 w-full z-20 text-sm text-gray-900 bg-gray-50 rounded-r-lg border-l-gray-100 border-l-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"

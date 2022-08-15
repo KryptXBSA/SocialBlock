@@ -98,7 +98,7 @@ function Inbox() {
   );
  messageInputRef.current.value=''
  }
- if (!messages) {
+ if (!messages|| messages.length===0) {
   return (
    <div style={{ marginBottom: 999, marginTop: 20 }} className="">
     No Messages
@@ -114,10 +114,10 @@ function Inbox() {
     </div>
    </div>
    <div className="flex flex-col h-full w-full  px-4 py-6">
-    {messages && (
+    {users.length>0 && (
      <MessageHeader1
-      username={users![selectedUser]!.username!}
-      publickeyString={users![selectedUser].publickeyString!}
+      username={users[selectedUser].username}
+      publickeyString={users[selectedUser].publickeyString}
      />
     )}
     {/* messages */}
@@ -204,7 +204,7 @@ function Messages({ messages, users, selectedUser }: Messages) {
   let img = users.find(
    (e: { publickeyString: string | undefined }) => e.publickeyString === m.publickeyString
   )?.img;
-  return img ? img : "";
+  return img ? img : "/img.png";
  }
  return (
   <>

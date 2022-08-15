@@ -11,7 +11,7 @@ message = "7Qy3XGGyGXVZAeC1Thxz38jwQ49jgyMtA2pQgNtB8Z4y"
 url = "https://anchor.projectserum.com"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "/home/aland/.config/solana/id.json"
 
 [scripts]

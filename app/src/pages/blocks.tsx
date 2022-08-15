@@ -168,7 +168,7 @@ function BlockProfile({ blockName, date, img, publickeyString }: ProfileProps) {
       <Link href={`/users?pubkey=${"publickeyString"}`}>
        <div className="flex cursor-pointer items-center">
         <div className="pb- pr-2">
-         <img className="w-14 h-14  rounded-full" src={img} />
+         <img className="w-14 h-14  rounded-full" src={img?img:'/img.png'} />
         </div>
         <span className=" text-3xl ">{blockName}</span>
        </div>

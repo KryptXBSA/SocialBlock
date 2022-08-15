@@ -8,6 +8,7 @@ export type AccountData = {
  content: string;
  publickey: string;
  postPubkey: anchor.web3.PublicKey;
+ image: string;
  username: string;
 };
 export class Comment {
@@ -16,10 +17,12 @@ export class Comment {
  postPubkey: anchor.web3.PublicKey;
  timestamp: string;
  content: string;
+ image: string;
  username: string;
 
  constructor(publicKey: anchor.web3.PublicKey, accountData: AccountData) {
   this.publicKey = publicKey;
+  this.image = accountData.image;
   this.author = accountData.author;
   this.postPubkey = accountData.postPubkey;
   this.timestamp = accountData.timestamp.toString();

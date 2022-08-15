@@ -30,8 +30,9 @@ describe("SocialBlock", () => {
 
     const newPostAccount0 = await userProgram.account.user.fetch(newUserAccount.publicKey);
     console.log(newPostAccount0);
-
+ 
   })
+
 it("New Message Account", async () => {
 
     const messageProgram = anchor.workspace.Message as Program<Message>;
@@ -63,6 +64,16 @@ it("New Message Account", async () => {
 
     const newBlock = await blockProgram.account.block.fetch(newBlockAccount.publicKey);
     console.log(newBlock);
+await blockProgram.methods.changeImage("alan").accounts(
+      {
+        block: newBlockAccount.publicKey,
+        owner: provider.wallet.publicKey,
+      },
+    ).rpc()
+    console.log('changed');
+const newBlock0 = await blockProgram.account.block.fetch(newBlockAccount.publicKey);
+    console.log(newBlock0);
+    
   })
   it("New Post", async () => {
     const postProgram = anchor.workspace.Post as Program<Post>;

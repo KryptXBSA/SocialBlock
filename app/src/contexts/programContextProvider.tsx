@@ -17,7 +17,7 @@ import { Block } from "../program/block/block-type";
 import { useCommentProgram } from "../program/comment-program";
 import { getAllMessages } from "../program/message/message-methods";
 import { Message } from "../program/message/message-type";
-import { useMessageProgram } from "../program/message/messageProgram";
+import { useMessageProgram } from "../program/message/message-program";
 import { useProgram } from "../program/useProgram";
 import { getUserByPubkey } from "../program/user/user-methods";
 import { useUserProgram } from "../program/user/user-program";
@@ -37,6 +37,7 @@ export interface InitialState {
   image: string;
   timestamp?: anchor.BN;
   bookmarks?: anchor.web3.PublicKey[];
+  publickey ?: anchor.web3.PublicKey;
   foundUser: boolean;
  };
  didWelcome: boolean;
@@ -111,6 +112,8 @@ export function ProgramWrapper({ children }: any) {
    setMessages([]);
    return;
   }
+  console.log(messages);
+  
   messages.sort(function (a, b) {
    return a.timestamp.toNumber() - b.timestamp.toNumber();
   });
@@ -171,7 +174,7 @@ export function ProgramWrapper({ children }: any) {
     index === users.findIndex((other) => user.publickeyString === other.publickeyString)
   );
 
-  setUsers(users!);
+  setUsers(users);
   setMessages(filteredMessages);
  }
  useEffect(() => {
@@ -197,6 +200,7 @@ export function ProgramWrapper({ children }: any) {
    let userr = {
     timestamp: user.timestamp,
     username: user.username,
+    publickey:user.publicKey,
     image: user.image,
     foundUser: true,
    };
