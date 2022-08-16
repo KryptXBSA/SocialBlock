@@ -13,8 +13,8 @@ export function ProfileModal({ message, setShowModal, username }: any) {
  const [error, setError] = useState("");
  const { notify } = useNotifier();
  useEffect(() => {
-  imageRef.current.value = programContext?.state.user.image;
-  usernameInputRef.current.value = programContext?.state.user.username;
+   if (!usernameInputRef.current.value)  imageRef.current.value = programContext?.state.user.image;
+ if (!imageRef.current.value)  usernameInputRef.current.value = programContext?.state.user.username;
  }, [programContext]);
  async function changeUser(e: any) {
   e.preventDefault();
