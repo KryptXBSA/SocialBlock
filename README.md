@@ -23,4 +23,4 @@ Roadmap:
  - [ ] Messages end to end encryption.
  - [ ] More Visual feedback when taking actions.
 
-Also i'm looking forward to work with on this project with someone, DM me on twiiter if you're interested.
+Also i'm looking forward to work with on this project with someone, DM me on twitter if you're interested.
