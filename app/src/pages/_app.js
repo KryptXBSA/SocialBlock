@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <ThemeProvider enableSystem={true} attribute="class">
+      <ThemeProvider defaultTheme='dark' enableSystem={false} attribute="class">
         <WalletProvider autoConnect={true}>
           <ProgramWrapper>
             <NotifierContextProvider

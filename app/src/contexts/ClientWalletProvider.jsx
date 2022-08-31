@@ -23,25 +23,10 @@ export function ClientWalletProvider(
 ){
   const wallets = useMemo(
     () => [
-      // getPhantomWallet(),
-      // getSolflareWallet(),
-      // getTorusWallet({
-      //   options: {
-      //     // TODO: Get your own tor.us wallet client Id
-      //     clientId:
-      //       "BOM5Cl7PXgE9Ylq1Z1tqzhpydY0RVr8k90QQ85N7AKI5QGSrr9iDC-3rvmy0K_hF0JfpLMiXoDhta68JwcxS1LQ",
-      //   },
-      // }),
-      // getLedgerWallet(),
-      // getSolongWallet(),
-      // getMathWallet(),
-      // getSolletWallet(),
-
-
    new PhantomWalletAdapter(),
             new GlowWalletAdapter(),
             new SlopeWalletAdapter(),
-            // new SolflareWalletAdapter({ network }),
+            new SolflareWalletAdapter(),
             new TorusWalletAdapter(),
 
     ],
