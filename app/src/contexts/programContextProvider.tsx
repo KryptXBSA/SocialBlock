@@ -25,8 +25,7 @@ import { User } from "../program/user/user-type";
 import { getDate } from "../utils/get-date-moment";
 import { useNotifier } from "react-headless-notifier";
 import { InfoAlert } from "../components/alert";
-const endpoint =
- "https://responsive-dawn-sponge.solana-devnet.quiknode.pro/2c9e6acd14a57270687f2920c37e9c56f2bb1f36";
+const endpoint ="https://api.devnet.solana.com";
 export const connection = new anchor.web3.Connection(endpoint);
 
 let initialState: InitialState = {
