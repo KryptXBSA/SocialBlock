@@ -1,6 +1,9 @@
 # SocialBlock
 
-⚠️ This Project ~~is sill in active development~~, and it's not ready for production.
+⚠️ ~~This Project is sill in active development~~, and it's not ready for production.
+
+This project is no longer being actively developed, but may be updated in the future.
+
 
 **Social Block is a web3-based Decentralized social media built with anchor-framework, Features:**
 
